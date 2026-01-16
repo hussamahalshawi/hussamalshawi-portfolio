@@ -1,4 +1,6 @@
 import os
+from datetime import datetime, timezone
+
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import FileUploadField
 from config import Config
@@ -46,3 +48,65 @@ class EducationView(ModelView):
         'start_date': 'تاريخ البدء',
         'end_date': 'تاريخ التخرج'
     }
+
+class CourseView(ModelView):
+    # column_list = ('course_name', 'start_date', 'end_date')
+    #
+    # column_searchable_list = ('course_name', 'start_date', 'end_date')
+    # column_filters = ('organization', 'start_date')
+
+    column_formatters = {
+        'acquired_skills': lambda v,c,m,p:', '.join(m.acquired_skills) if m.acquired_skills else "",
+    }
+
+    column_labels = {
+        'course_name': 'اسم الكورس',
+        'organization': 'المؤسسة/الشركة',
+        'project_summary': 'نبذة عن المشروع التطبيقي',
+        'start_date': 'تاريخ البدء',
+        'end_date': 'تاريخ الانتهاء',
+        'acquired_skills': 'المهارات المكتسبة',
+        'last_updated': 'آخر تعديل'
+    }
+
+    def on_model_change(self, form, model, is_created):
+        model.last_updated = datetime.now(timezone.utc)
+
+
+class ProjectView(ModelView):
+    column_list = ('project_name', 'github_url', 'last_updated')
+    column_searchable_list = ('project_name', 'description')
+
+    # column_filters = ('acquired_skills', 'last_updated')
+
+    form_overrides = {
+        'project_image': FileUploadField,
+        'project_video': FileUploadField
+    }
+
+    form_args = {
+        'project_image': {
+            'label': 'Project Image',
+            'base_path': Config.UPLOAD_PATH,
+            'relative_path': '',
+            'allow_overwrite': True
+        },
+        'project_video': {
+            'label': 'Project Video',
+            'base_path': Config.UPLOAD_PATH,
+            'relative_path': '',
+            'allow_overwrite': True
+        }
+    }
+    column_labels = {
+        'project_name': 'project_name',
+        'github_url': 'github_url',
+        'last_updated': 'last_updated',
+        'project_video': 'project_video',
+        'acquired_skills': 'acquired_skills',
+        'description': 'description',
+        'LAST_UPDATED': 'LAST_UPDATED'
+    }
+
+    def on_model_change(self, form, model, is_created):
+        model.last_updated = datetime.now(timezone.utc)
