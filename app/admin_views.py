@@ -28,3 +28,21 @@ class ProfileView(ModelView):
                 'allow_overwrite': True
             }
         }
+
+
+class EducationView(ModelView):
+    # الأعمدة التي تظهر في الجدول
+    column_list = ('institution', 'degree', 'major', 'start_date', 'end_date')
+
+    # البحث والفلترة
+    column_searchable_list = ('institution', 'major')
+    column_filters = ('degree',)
+
+    # تسمية الحقول بالعربية
+    column_labels = {
+        'institution': 'المؤسسة التعليمية',
+        'degree': 'الدرجة العلمية',
+        'major': 'التخصص',
+        'start_date': 'تاريخ البدء',
+        'end_date': 'تاريخ التخرج'
+    }
