@@ -110,3 +110,61 @@ class ProjectView(ModelView):
 
     def on_model_change(self, form, model, is_created):
         model.last_updated = datetime.now(timezone.utc)
+
+
+
+class SelfStudyView(ModelView):
+    column_list = ('title', 'platform_name', 'last_updated')
+
+    column_searchable_list = ('title', 'platform_name')
+
+
+    form_overrides = {
+        'cover_image': FileUploadField,
+        'sample_video': FileUploadField
+    }
+
+    form_args = {
+        'cover_image': {
+            'label': 'Cover Image',
+            'base_path': Config.UPLOAD_PATH,
+            'relative_path': '',
+            'allow_overwrite': True
+        },
+        'sample_video': {
+            'label': 'Sample Video',
+            'base_path': Config.UPLOAD_PATH,
+            'relative_path': '',
+            'allow_overwrite': True
+        }
+    }
+
+    column_labels = {
+        'title': 'Title',
+        'platform_name': 'Platform Name',
+        'last_updated': 'Last Updated',
+        'cover_image': 'Cover Image',
+        'sample_video': 'Sample Video',
+    }
+    def on_model_change(self, form, model, is_current):
+        model.last_updated = datetime.now(timezone.utc)
+
+class ExperienceView(ModelView):
+    column_list = ('job_title', 'company_name')
+    column_searchable_list = ('job_title', 'company_name')
+
+    column_filters = ('is_current', 'start_date')
+
+    column_labels = {
+        'job_title': 'Job Title',
+        'company_name': 'Company Name',
+        'start_date': 'Start Date',
+        'end_date': 'End Date',
+        'is_current': 'Is Created',
+        'skills': 'Skills',
+    }
+
+    def on_model_change(self, form, model, is_current):
+        model.last_updated = datetime.now(timezone.utc)
+        if model.is_current:
+            model.end_date = None
