@@ -168,3 +168,25 @@ class ExperienceView(ModelView):
         model.last_updated = datetime.now(timezone.utc)
         if model.is_current:
             model.end_date = None
+
+
+class AchievementView(ModelView):
+    column_list = ('title', 'issuing_organization', 'date_obtained')
+    # column_searchable_list = ('title', 'issuing_organization', 'date_obtained')
+    # column_filters = ('date_obtained', 'skills_demonstrated')
+
+    column_labels = {
+        'title': 'Title',
+        'issuing_organization': 'Issuing Organization',
+        'date_obtained': 'Date Obtained',
+        'skills_demonstrated': 'Skills Demonstrated',
+        'description': 'Description',
+        'last_updated': 'Last Updated',
+    }
+
+    def on_model_change(self, form, model, is_created):
+        model.last_updated = datetime.now(timezone.utc)
+
+
+
+

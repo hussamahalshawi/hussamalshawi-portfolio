@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.form import FileUploadField
-from app.admin_views import ProfileView, EducationView, CourseView, ProjectView, SelfStudyView, ExperienceView
+from app.admin_views import ProfileView, EducationView, CourseView, ProjectView, SelfStudyView, ExperienceView, AchievementView
 from app.models.database import init_db
 from config import Config
 from app.routes import portfolio
@@ -13,6 +13,7 @@ from app.models import (
     Project,
     SelfStudy,
     Experience,
+    Achievement,
 )
 
 
@@ -27,6 +28,7 @@ def create_app():
     admin.add_view(ProjectView(Project, name='Project'))
     admin.add_view(SelfStudyView(SelfStudy, name='SelfStudy'))
     admin.add_view(ExperienceView(Experience, name='Experience'))
+    admin.add_view(AchievementView(Achievement, name='Achievement'))
     init_db(app)
 
     app.register_blueprint(portfolio)
