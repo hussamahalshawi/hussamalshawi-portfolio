@@ -5,3 +5,9 @@ from .project import Project
 from .self_study import SelfStudy
 from .experience import Experience
 from .achievement import Achievement
+from .skill import SkillType
+from .skill import Skill
+from  .goal import Goal
+from  .feedback import Feedback
+from  .language import Language
+from  .post import Post
