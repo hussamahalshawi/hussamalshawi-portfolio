@@ -10,7 +10,7 @@ class Project(Document):
     project_image = StringField()
     project_video = StringField()
 
-    acquired_skills = ListField(StringField())
+    skills_used = ListField(StringField())
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
 
 

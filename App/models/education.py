@@ -15,7 +15,7 @@ class Education(Document):
     end_date = StringField()
     grade = StringField()
     description = StringField()
-    related_skills = ListField(StringField())
+    skills_learned = ListField(StringField())
 
     meta = {
         'collection': 'education',

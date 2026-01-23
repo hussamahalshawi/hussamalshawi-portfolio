@@ -1,12 +1,12 @@
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.form import FileUploadField
-from app.admin_views import ProfileView, EducationView, CourseView, ProjectView, SelfStudyView, ExperienceView, AchievementView, SkillTypeView, SkillView, GoalView, FeedbackView, LanguageView, PostView
-from app.models.database import init_db
+from App.admin_views import ProfileView, EducationView, CourseView, ProjectView, SelfStudyView, ExperienceView, AchievementView, SkillTypeView, SkillView, GoalView, FeedbackView, LanguageView, PostView
+from App.models.database import init_db
 from config import Config
-from app.routes import portfolio
+from App.routes import portfolio
 from flask_admin.contrib.mongoengine import ModelView
-from app.models import (
+from App.models import (
     Profile,
     Education,
     Course,
@@ -27,6 +27,8 @@ from app.models import (
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    init_db(app)
+    app.register_blueprint(portfolio)
     admin = Admin(app, name='Hussam Portfolio Admin', url='/admin')
     admin.add_view(ProfileView(Profile, name='Profile'))
     admin.add_view(EducationView(Education, name='Education'))
@@ -41,8 +43,11 @@ def create_app():
     admin.add_view(FeedbackView(Feedback, name='Feedback'))
     admin.add_view(LanguageView(Language, name='Language'))
     admin.add_view(PostView(Post, name='Post'))
-    init_db(app)
 
-    app.register_blueprint(portfolio)
+    with app.app_context():
+        try:
+            import App.signals
+        except ImportError as e:
+            App.logger.error(f"Could not import signals: {e}")
 
     return app

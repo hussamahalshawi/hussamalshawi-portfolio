@@ -4,8 +4,10 @@ from datetime import datetime,timezone
 
 class Goal(Document):
     goal_name = StringField(required=True)
+    description = StringField()
+    target_score = IntField(default=100)
+    current_score = IntField(default=0)
     required_skills = ListField(StringField())
-    goal_score = IntField(default=0)
     last_updated = DateTimeField(default=datetime.now(timezone.utc))
 
     meta = {
@@ -14,4 +16,4 @@ class Goal(Document):
     }
 
     def __str__(self):
-        return f"{self.goal_name} ({self.goal_score}%)"
+        return f"{self.goal_name} ({self.current_score}%)"

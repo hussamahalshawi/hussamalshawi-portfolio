@@ -198,16 +198,7 @@ class SkillView(ModelView):
 
 
 class GoalView(ModelView):
-    column_list = ('goal_name')
-
-    column_labels = {
-        'goal_name': 'Goal Name',
-        'goal_score': 'Goal Score',
-        'last_updated': 'Last Updated'
-    }
-
-    def on_model_change(self, form, model, is_created):
-        model.last_updated = datetime.now(timezone.utc)
+    pass
 
 
 class FeedbackView(ModelView):
