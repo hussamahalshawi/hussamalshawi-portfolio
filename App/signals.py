@@ -1,99 +1,110 @@
+from mongoengine import signals
+from App.models.goal import Goal
 from App.models.project import Project
 from App.models.course import Course
 from App.models.experience import Experience
 from App.models.education import Education
 from App.models.self_study import SelfStudy
 from App.models.achievement import Achievement
-from App.models.skill import SkillType
-from App.models.skill import Skill
-from mongoengine import signals
+from App.models.skill import Skill, SkillType
 
 
-def update_skill_logic(sender, document, **kwargs):
-    skill_to_process = []
+def clean_and_normalize_input(value):
+    """
+    Cleans the input string by removing leading/trailing whitespaces
+    and converting it to uppercase for consistent database lookups.
+    """
+    # 1. Check if value is None or purely consists of whitespace
+    if value is None or not str(value).strip():
+        return None
 
-    if isinstance(document, Project) and document.skills_used:
-        skill_to_process = [(s, 10) for s in document.skills_used]
+    # 2. Convert to string, remove extra spaces, and transform to uppercase
+    # This ensures 'python', 'Python ', and 'PYTHON' are treated identically
+    normalized_value = str(value).strip().upper()
 
-    elif isinstance(document, Course) and document.acquired_skills:
-        skill_to_process = [(s, 15) for s in document.acquired_skills]
-    elif isinstance(document, Experience) and document.skills_acquired:
-        skill_to_process = [(s, 20) for s in document.skills_acquired]
-    elif isinstance(document, Education) and document.skills_learned:
-        skill_to_process = [(s, 5) for s in document.skills_learned]
-    elif isinstance(document, SelfStudy) and document.skills_learned:
-        skill_to_process = [(s, 8) for s in document.skills_learned]
-    elif isinstance(document, Achievement) and document.skills_demonstrated:
-        skill_to_process = [(s, 30) for s in document.skills_demonstrated]
-
-    for skill_name, weight in skill_to_process:
-        skill = Skill.objects(skill_name__iexact=skill_name.strip()).first()
-        if not skill:
-            skill = Skill(skill_name=skill_name.strip(), skill_type=auto_assign_skilltype(skill_name), level=0)
-
-        skill.level = min(skill.level + weight, 100)
-        skill.save()
+    return normalized_value
 
 
+def get_skill_metadata(skill_name_upper):
+    """
+    Identifies the skill category and the official canonical name by
+    matching input against keywords defined in the SkillType collection.
+    """
+    if not skill_name_upper:
+        return None, None
 
+    # 1. Fetch all skill types to scan their keywords
+    all_types = SkillType.objects.all()
 
+    for s_type in all_types:
+        # Scan the keyword list for a match (Case-Insensitive check)
+        for key in (s_type.keywords or []):
+            if str(key).strip().upper() == str(skill_name_upper).strip():
+                # Success: Return the associated SkillType and the official formatted name
+                # e.g., returns ('Backend', 'Python') even if input was 'PYTHON'
+                return s_type, str(key).strip()
 
-
-def auto_assign_skilltype(skill_name):
-    skill_name_upper = skill_name.upper().strip()
-
-    types = SkillType.objects.all()
-
-    for s_type in types:
-        if skill_name_upper in [s.upper() for s in s_type.keywords]:
-            return s_type
+    # 2. Fallback: If no match is found, assign a default category
     default_type = SkillType.objects(name__iexact="Other technologies").first()
-    if default_type:
-        return default_type
-    return None
+
+    # Format the unknown skill to Title Case for better UI presentation
+    formatted_name = str(skill_name_upper).strip().capitalize()
+
+    return default_type, formatted_name
 
 
-# src/signals.py
+def recalculate_skill_total(official_name, s_type):
+    """
+    Scans all related models to aggregate a skill's total level based on
+    historical data and predefined weights.
+    """
+    if not official_name:
+        return
 
-def remove_skill_logic(sender, document, **kwargs):
-    skills_to_reduce = []
+    # 1. Define models, their specific fields, and their contribution weights
+    search_config = [
+        (Project, 'skills_used', 10),
+        (Course, 'acquired_skills', 15),
+        (Experience, 'skills_acquired', 20),
+        (Education, 'skills_learned', 5),
+        (SelfStudy, 'skills_learned', 8),
+        (Achievement, 'skills_demonstrated', 30)
+    ]
 
-    # 1. تحديد الوزن الذي يجب خصمه بناءً على الموديل المحذوف
-    if isinstance(document, Project) and hasattr(document, 'skills_used') and document.skills_used:
-        skills_to_reduce = [(s, 10) for s in document.skills_used]
+    total_score = 0
+    name_to_search = str(official_name).strip()
 
-    elif isinstance(document, Course) and hasattr(document, 'acquired_skills') and document.acquired_skills:
-        skills_to_reduce = [(s, 15) for s in document.acquired_skills]
+    # 2. Iterate through models and calculate total weighted score
+    for model, field, weight in search_config:
+        # Use iexact to ensure all case variations are counted
+        occurrence_count = model.objects(**{f"{field}__iexact": name_to_search}).count()
+        total_score += (occurrence_count * weight)
 
-    elif isinstance(document, Experience) and hasattr(document, 'skills_acquired') and document.skills_acquired:
-        skills_to_reduce = [(s, 20) for s in document.skills_acquired]
+    # 3. Synchronize with the Skill collection
+    if total_score > 0:
+        # Using update_one with upsert=True to prevent NotUniqueError and ensure consistency
+        Skill.objects(skill_name__iexact=name_to_search).update_one(
+            set__skill_name=name_to_search,
+            set__skill_type=s_type,
+            set__level=min(total_score, 95), # Cap skill level at 95%
+            upsert=True
+        )
+    else:
+        # Remove the skill if it no longer exists in any activity
+        Skill.objects(skill_name__iexact=name_to_search).delete()
 
-    # ... أضف باقي الموديلات (Education, SelfStudy, etc.) بنفس الأوزان التي استخدمتها في الإضافة ...
+# --- 3. إدارة مستويات المهارات ---
+def handle_skill_level(sender, document, **kwargs):
+    """
+    Acts as a dispatcher that identifies skill fields from different models
+    and triggers a full recalculation for each detected skill.
+    """
+    # 1. Prevent infinite recursion by ignoring Skill and Goal models
+    if sender in [Goal, Skill]:
+        return
 
-    # 2. معالجة الخصم أو الحذف
-    for skill_name, weight in skills_to_reduce:
-        name_clean = skill_name.strip()
-        skill = Skill.objects(skill_name__iexact=name_clean).first()
-
-        if skill:
-            # خصم الوزن من المستوى الحالي
-            new_level = max((skill.level or 0) - weight, 0)
-
-            if new_level <= 0:
-                # إذا وصل المستوى لـ 0، نحذف المهارة تماماً
-                skill.delete()
-                print(f"🗑️ تم حذف المهارة بالكامل: {name_clean}")
-            else:
-                # إذا لا يزال هناك مستوى، نقوم بتحديثه فقط
-                skill.level = new_level
-                skill.save()
-                print(f"📉 تم تقليل مستوى المهارة {name_clean} إلى {new_level}%")
-
-
-def update_goal_scoring(sender, document, **kwargs):
-    from App.models.goal import Goal
-
-    model_skills_map = {
+    # 2. Configuration mapping for models and their respective skill fields
+    model_field_map = {
         'Project': 'skills_used',
         'Course': 'acquired_skills',
         'Experience': 'skills_acquired',
@@ -102,38 +113,118 @@ def update_goal_scoring(sender, document, **kwargs):
         'Achievement': 'skills_demonstrated'
     }
 
-    # 2. استخراج المهارات بناءً على نوع الموديل (sender)
     model_name = sender.__name__
-    skills_field = model_skills_map.get(model_name)
-
-    # جلب قائمة المهارات من الوثيقة باستخدام getattr
-    skills_in_doc = getattr(document, skills_field, []) if skills_field else []
-
-    if not skills_in_doc:
+    if model_name not in model_field_map:
         return
 
-    # 3. تنظيف المهارات وتجهيزها للمقارنة
-    skills_in_doc_lower = [s.lower().strip() for s in skills_in_doc]
+    # 3. Retrieve skills from the document and remove duplicates in the same entry
+    target_field = model_field_map[model_name]
+    raw_skills = getattr(document, target_field, []) or []
 
-    # 4. تحديث الأهداف المرتبطة
+    # Use set() to avoid recalculating the same skill multiple times for one document
+    unique_skills = list(set(raw_skills))
+
+    for s_name in unique_skills:
+        # Clean and normalize the skill name (e.g., ' python ' -> 'PYTHON')
+        clean_name_upper = clean_and_normalize_input(s_name)
+        if not clean_name_upper:
+            continue
+
+        # Fetch official metadata and canonical name
+        s_type, official_name = get_skill_metadata(clean_name_upper)
+
+        # Determine the final display name: Use official name or capitalize the input
+        final_name = official_name if official_name else str(s_name).strip().capitalize()
+
+        # Trigger the comprehensive recalculation engine
+        recalculate_skill_total(final_name, s_type)
+
+
+def master_sync_signal(sender, document, **kwargs):
+    """
+    The central coordinator that synchronizes skills, goals, and profile metrics
+    whenever a change occurs in the tracked models.
+    """
+    from App.models.profile import Profile
+    from App.models.goal import Goal
+
+    # 1. Goal Personalization: Ensure required skills are formatted correctly
+    if isinstance(document, Goal) and document.required_skills:
+        # Format skills to Title Case for UI consistency
+        formatted_skills = [str(s).strip().capitalize() for s in document.required_skills]
+
+        # Direct database update to avoid triggering the signal recursively
+        Goal.objects(id=document.id).update_one(set__required_skills=formatted_skills)
+        document.required_skills = formatted_skills
+
+    # 2. Skill Level Processing: Recalculate levels for all affected skills
+    handle_skill_level(sender, document)
+
+    # 3. Goals Synchronization: Update the progress score for all goals
     all_goals = Goal.objects.all()
     for goal in all_goals:
-        # تحويل مهارات الهدف للور كيس للمقارنة العادلة
-        goal_skills_lower = [gs.lower().strip() for gs in goal.required_skills]
+        # Calculate new progress based on updated skill levels
+        updated_score = goal.sync_with_existing_skills()
+        Goal.objects(id=goal.id).update_one(set__current_score=updated_score)
 
-        # التأكد من وجود تقاطع (Intersection) بين مهارات الإنجاز ومهارات الهدف
-        has_match = any(skill in goal_skills_lower for skill in skills_in_doc_lower)
+    # 4. Profile Finalization: Update global experience and overall achievement score
+    user_profile = Profile.objects.first()
+    if user_profile:
+        new_experience = user_profile.calculate_total_experience()
+        new_total_score = user_profile.calculate_overall_score()
 
-        if has_match:
-            # زيادة السكور (مثلاً 10 نقاط للمشاريع و 5 للكورسات)
-            points = 5 if model_name == 'Project' else 25
-            goal.current_score = min(goal.current_score + points, goal.target_score)
-            goal.save()
+        # Final persistence of profile metrics
+        Profile.objects(id=user_profile.id).update_one(
+            set__experience_years=new_experience,
+            set__overall_score=new_total_score
+        )
 
-models_to_watch = [Project, Course, Experience, Education, SelfStudy, Achievement]
+        # Logging for development tracking
+        model_name = sender.__name__.upper()
+        print(f"🚀 Master Sync [SUCCESS]: {model_name} synced | Exp: {new_experience}Y | Score: {new_total_score}%")
+
+
+def master_delete_signal(sender, document, **kwargs):
+    """
+    Handles the cleanup process after a document is deleted.
+    It recalculates skills, goals, and profile metrics to ensure data integrity.
+    """
+    from App.models.profile import Profile
+    from App.models.goal import Goal
+
+    # 1. Skill Cleanup: Trigger recalculation for skills linked to the deleted document
+    # Since the document is already removed from DB, count() will naturally decrease
+    handle_skill_level(sender, document)
+
+    # 2. Goal Resync: Refresh all goals to reflect potential drops in skill levels
+    active_goals = Goal.objects.all()
+    for goal in active_goals:
+        updated_goal_score = goal.sync_with_existing_skills()
+        Goal.objects(id=goal.id).update_one(set__current_score=updated_goal_score)
+
+    # 3. Profile Update: Recalculate total years of experience and overall score
+    user_profile = Profile.objects.first()
+    if user_profile:
+        # Reflect the loss of the deleted item in the global metrics
+        current_exp = user_profile.calculate_total_experience()
+        current_overall = user_profile.calculate_overall_score()
+
+        Profile.objects(id=user_profile.id).update_one(
+            set__experience_years=current_exp,
+            set__overall_score=current_overall
+        )
+
+    # Audit log to track deletion sync
+    deleted_model = sender.__name__.upper()
+    print(f"🗑️ Delete Sync [SUCCESS]: {deleted_model} removed | System metrics updated.")
+
+
+# --- Signal Registration Section ---
+# List of models to monitor for any changes or deletions
+models_to_watch = [Project, Course, Experience, Education, SelfStudy, Achievement, Goal, Skill]
 
 for model in models_to_watch:
-    # نحن هنا نقول لـ MongoEngine: "عند حفظ أي وثيقة من هذه الموديلات، نادِ دالة update_skill_logic"
-    signals.post_save.connect(update_skill_logic, sender=model)
-    signals.post_save.connect(update_goal_scoring, sender=model)
-    signals.post_delete.connect(remove_skill_logic, sender=model)
+    # Connect saving events to the master sync logic
+    signals.post_save.connect(master_sync_signal, sender=model)
+    # Connect deletion events to the cleanup logic
+    signals.post_delete.connect(master_delete_signal, sender=model)
