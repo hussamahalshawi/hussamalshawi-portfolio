@@ -14,7 +14,7 @@ class Language(Document):
         ('C2', 'C2 - Proficient/Native'),
     ]
 
-    level = StringField(required=True, choices=LEVEL_CHOICES)
+    level = StringField(required=True, choices=LEVEL_CHOICES, unique=True)
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
 
     meta = {

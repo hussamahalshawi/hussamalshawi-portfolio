@@ -5,11 +5,12 @@ from datetime import datetime, timezone
 class Project(Document):
     project_name = StringField(required=True, unique=True)
     description = StringField(required=True)
-    github_url = URLField(required=True)
+    github_url = URLField(null=True, blank=True)
 
     project_image = StringField()
     project_video = StringField()
-
+    start_date = DateTimeField(required=True)
+    end_date = DateTimeField(required=True)
     skills_used = ListField(StringField())
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
 

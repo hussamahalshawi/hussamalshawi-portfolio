@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 
 class Feedback(Document):
     person_name = StringField(required=True)
-    job_title = StringField(required=True)
-    feedback_text = StringField(required=True)
+    job_title = StringField()
+    feedback_text = StringField()
     contact_email = EmailField(required=True)
     contact_info = StringField(required=False)
     created_at = DateTimeField(default=lambda: datetime.now(timezone.utc))

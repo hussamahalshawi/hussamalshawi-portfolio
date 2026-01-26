@@ -4,10 +4,10 @@ from datetime import datetime, timezone
 
 
 class Experience(Document):
-    job_title = StringField(required=True, max_length=200)
-    company_name = StringField(required=True, max_length=200)
+    job_title = StringField(required=True)
+    company_name = StringField(required=True)
     start_date = DateTimeField(required=True)
-    end_date = DateTimeField()
+    end_date = DateTimeField(required=True)
     is_current = BooleanField(default=False)
     skills_acquired = ListField(StringField())
     last_updated = DateTimeField(default=datetime.now(timezone.utc))

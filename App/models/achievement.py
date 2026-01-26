@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 class Achievement(Document):
     title = StringField(required=True)
-    issuing_organization = StringField(required=True)
+    issuing_organization = StringField()
     date_obtained = DateTimeField(required=True)
     description = StringField()
     skills_demonstrated = ListField(StringField())

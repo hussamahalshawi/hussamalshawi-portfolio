@@ -3,13 +3,14 @@ from datetime import datetime, timezone
 
 
 class SelfStudy(Document):
-    title = StringField(required=True, max_length=200)
-    platform_name = StringField(required=True, max_length=200)
+    title = StringField(required=True)
+    platform_name = StringField(required=True)
 
     summary = StringField()
     cover_image = StringField()
     sample_video = StringField()
-
+    start_date = DateTimeField(required=True)
+    end_date = DateTimeField(required=True)
     skills_learned = ListField(StringField())
 
     created_at = DateTimeField(default=datetime.now(timezone.utc))
