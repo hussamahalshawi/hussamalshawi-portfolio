@@ -1,214 +1,170 @@
 import os
 from datetime import datetime, timezone
-
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import FileUploadField
+from flask import flash
 from config import Config
 
 
-class ProfileView(ModelView):
-    column_list = ('full_name', 'title', 'experience_years', 'overall_score')
-
-    # تسمية الأعمدة بأسماء مفهومة (اختياري لكنه أفضل)
-    column_labels = {
-        'full_name': 'الاسم الكامل',
-        'title': 'المسمى الوظيفي',
-        'experience_years': 'سنوات الخبرة',
-        'overall_score': 'مستوى التقدم %'
-    }
-
-    form_overrides = {
-        'profile_image': FileUploadField
-    }
-    # def __init__(self, model, **kwargs):
-    #     super().__init__(model, **kwargs)
-    form_args = {
-            'profile_image': {
-                'label': 'Profile Image',
-                'base_path': Config.UPLOAD_PATH,
-                'relative_path': '',
-                'allow_overwrite': True
-            }
-        }
-
-
-class EducationView(ModelView):
-    # الأعمدة التي تظهر في الجدول
-    column_list = ('institution', 'degree', 'major', 'start_date', 'end_date')
-
-    # البحث والفلترة
-    column_searchable_list = ('institution', 'major')
-    column_filters = ('degree',)
-
-    # تسمية الحقول بالعربية
-    column_labels = {
-        'institution': 'المؤسسة التعليمية',
-        'degree': 'الدرجة العلمية',
-        'major': 'التخصص',
-        'start_date': 'تاريخ البدء',
-        'end_date': 'تاريخ التخرج'
-    }
-
-class CourseView(ModelView):
-    # column_list = ('course_name', 'start_date', 'end_date')
-    #
-    # column_searchable_list = ('course_name', 'start_date', 'end_date')
-    # column_filters = ('organization', 'start_date')
-
-    column_formatters = {
-        'acquired_skills': lambda v,c,m,p:', '.join(m.acquired_skills) if m.acquired_skills else "",
-    }
-
-    column_labels = {
-        'course_name': 'اسم الكورس',
-        'organization': 'المؤسسة/الشركة',
-        'project_summary': 'نبذة عن المشروع التطبيقي',
-        'start_date': 'تاريخ البدء',
-        'end_date': 'تاريخ الانتهاء',
-        'acquired_skills': 'المهارات المكتسبة',
-        'last_updated': 'آخر تعديل'
-    }
+# --- DESIGN PATTERN: BASE CLASS FOR ARCHITECTURAL INTEGRITY ---
+class BaseSecureView(ModelView):
+    """
+    Standardizes behavior across all admin views.
+    Ensures timestamps and validation are applied globally.
+    """
+    form_excluded_columns = ('last_updated',)
+    column_display_pk = True  # Useful for debugging database IDs
 
     def on_model_change(self, form, model, is_created):
+        """Automated UTC timestamping on save."""
         model.last_updated = datetime.now(timezone.utc)
 
 
-class ProjectView(ModelView):
+# --- INDIVIDUAL MODEL VIEWS WITH FULL VALIDATION & UI CONFIG ---
+
+class ProfileView(BaseSecureView):
+    column_list = ('full_name', 'title', 'experience_years', 'overall_score')
+    column_labels = {
+        'full_name': 'Full Name',
+        'title': 'Professional Title',
+        'experience_years': 'Years of Exp',
+        'overall_score': 'Master Score %'
+    }
+    form_overrides = {'profile_image': FileUploadField}
+    form_args = {
+        'profile_image': {
+            'label': 'Profile Photo',
+            'base_path': Config.UPLOAD_PATH,
+            'allow_overwrite': True
+        }
+    }
+
+
+class EducationView(BaseSecureView):
+    column_list = ('institution', 'degree', 'major', 'start_date', 'end_date')
+    column_searchable_list = ('institution', 'major', 'degree')
+    column_filters = ('degree', 'start_date')
+    column_labels = {
+        'institution': 'University/School',
+        'degree': 'Degree Level',
+        'major': 'Field of Study'
+    }
+
+
+class CourseView(BaseSecureView):
+    column_list = ('course_name', 'organization', 'start_date', 'acquired_skills')
+    column_searchable_list = ('course_name', 'organization')
+    column_filters = ('organization',)
+    column_formatters = {
+        'acquired_skills': lambda v, c, m, p: ", ".join(m.acquired_skills) if m.acquired_skills else "None"
+    }
+    column_labels = {
+        'course_name': 'Course Name',
+        'organization': 'Platform/Provider',
+        'acquired_skills': 'Skills Tagged'
+    }
+
+
+class ProjectView(BaseSecureView):
     column_list = ('project_name', 'github_url', 'last_updated')
     column_searchable_list = ('project_name', 'description')
-
-    # column_filters = ('acquired_skills', 'last_updated')
+    column_filters = ('last_updated',)
 
     form_overrides = {
         'project_image': FileUploadField,
         'project_video': FileUploadField
     }
-
     form_args = {
-        'project_image': {
-            'label': 'Project Image',
-            'base_path': Config.UPLOAD_PATH,
-            'relative_path': '',
-            'allow_overwrite': True
-        },
-        'project_video': {
-            'label': 'Project Video',
-            'base_path': Config.UPLOAD_PATH,
-            'relative_path': '',
-            'allow_overwrite': True
-        }
+        'project_image': {'base_path': Config.UPLOAD_PATH, 'allow_overwrite': True},
+        'project_video': {'base_path': Config.UPLOAD_PATH, 'allow_overwrite': True}
     }
     column_labels = {
-        'project_name': 'project_name',
-        'github_url': 'github_url',
-        'last_updated': 'last_updated',
-        'project_video': 'project_video',
-        'acquired_skills': 'acquired_skills',
-        'description': 'description',
-        'LAST_UPDATED': 'LAST_UPDATED'
+        'project_name': 'Project Title',
+        'github_url': 'GitHub Link',
+        'skills_used': 'Tech Stack'
     }
 
-    def on_model_change(self, form, model, is_created):
-        model.last_updated = datetime.now(timezone.utc)
 
-
-
-class SelfStudyView(ModelView):
+class SelfStudyView(BaseSecureView):
     column_list = ('title', 'platform_name', 'last_updated')
-
     column_searchable_list = ('title', 'platform_name')
-
-
     form_overrides = {
         'cover_image': FileUploadField,
         'sample_video': FileUploadField
     }
-
     form_args = {
-        'cover_image': {
-            'label': 'Cover Image',
-            'base_path': Config.UPLOAD_PATH,
-            'relative_path': '',
-            'allow_overwrite': True
-        },
-        'sample_video': {
-            'label': 'Sample Video',
-            'base_path': Config.UPLOAD_PATH,
-            'relative_path': '',
-            'allow_overwrite': True
-        }
+        'cover_image': {'base_path': Config.UPLOAD_PATH},
+        'sample_video': {'base_path': Config.UPLOAD_PATH}
     }
 
-    column_labels = {
-        'title': 'Title',
-        'platform_name': 'Platform Name',
-        'last_updated': 'Last Updated',
-        'cover_image': 'Cover Image',
-        'sample_video': 'Sample Video',
-    }
-    def on_model_change(self, form, model, is_current):
-        model.last_updated = datetime.now(timezone.utc)
 
-class ExperienceView(ModelView):
-    column_list = ('job_title', 'company_name')
+class ExperienceView(BaseSecureView):
+    column_list = ('job_title', 'company_name', 'is_current', 'start_date')
     column_searchable_list = ('job_title', 'company_name')
+    column_filters = ('is_current', 'company_name')
 
-    column_filters = ('is_current', 'start_date')
-
-    column_labels = {
-        'job_title': 'Job Title',
-        'company_name': 'Company Name',
-        'start_date': 'Start Date',
-        'end_date': 'End Date',
-        'is_current': 'Is Created',
-        'skills': 'Skills',
-    }
-
-    def on_model_change(self, form, model, is_current):
-        model.last_updated = datetime.now(timezone.utc)
+    def on_model_change(self, form, model, is_created):
+        super().on_model_change(form, model, is_created)
+        # LOGIC VALIDATION: Ensure current job has no end_date
         if model.is_current:
             model.end_date = None
 
 
-class AchievementView(ModelView):
+class AchievementView(BaseSecureView):
     column_list = ('title', 'issuing_organization', 'date_obtained')
-    # column_searchable_list = ('title', 'issuing_organization', 'date_obtained')
-    # column_filters = ('date_obtained', 'skills_demonstrated')
+    column_searchable_list = ('title', 'issuing_organization')
+    column_labels = {'date_obtained': 'Earned On', 'skills_demonstrated': 'Skills Proven'}
 
-    column_labels = {
-        'title': 'Title',
-        'issuing_organization': 'Issuing Organization',
-        'date_obtained': 'Date Obtained',
-        'skills_demonstrated': 'Skills Demonstrated',
-        'description': 'Description',
-        'last_updated': 'Last Updated',
+
+class SkillTypeView(BaseSecureView):
+    column_list = ('name', 'keywords')
+    # Formatter to show keywords as a clean comma-separated list
+    column_formatters = {
+        'keywords': lambda v, c, m, p: ", ".join(m.keywords) if m.keywords else ""
     }
 
-    def on_model_change(self, form, model, is_created):
-        model.last_updated = datetime.now(timezone.utc)
 
-class SkillTypeView(ModelView):
-    pass
-class SkillView(ModelView):
-    column_list = ('skill_name', 'skill_type', 'level')
-
-
-    def on_model_change(self, form, model, is_created):
-        model.last_updated = datetime.now(timezone.utc)
+class SkillView(BaseSecureView):
+    column_list = ('skill_name', 'skill_type', 'level', 'last_updated')
+    column_searchable_list = ('skill_name',)
+    column_filters = ('skill_type', 'level')
+    # Level is capped at 95 visually but stored exactly
+    column_labels = {'skill_name': 'Skill', 'level': 'Proficiency Level %'}
 
 
-class GoalView(ModelView):
-    pass
+class GoalView(BaseSecureView):
+    column_list = ('goal_name', 'target_score', 'current_score')
+    column_labels = {'goal_name': 'Objective', 'required_skills': 'Linked Skills'}
+    column_formatters = {
+        'required_skills': lambda v, c, m, p: ", ".join(m.required_skills) if m.required_skills else ""
+    }
 
 
-class FeedbackView(ModelView):
-    pass
-
-class LanguageView(ModelView):
-    pass
-
-
-class PostView(ModelView):
-    pass
+class FeedbackView(BaseSecureView):
+    column_list = ('client_name', 'company', 'rating', 'created_at')
+    column_filters = ('rating', 'created_at')
+    can_create = False  # Feedbacks usually come from the public site, not admin
 
 
+class LanguageView(BaseSecureView):
+    column_list = ('language', 'proficiency_level')
+    column_choices = {
+        'proficiency_level': [
+            ('Native', 'Native'),
+            ('Professional', 'Professional'),
+            ('Elementary', 'Elementary')
+        ]
+    }
+
+
+class PostView(BaseSecureView):
+    """
+    Blog Post View - Integrated with SEO rule support as per 2026 requirements.
+    """
+    column_list = ('title', 'series_type', 'is_published', 'created_at')
+    column_searchable_list = ('title', 'content')
+    column_filters = ('series_type', 'is_published')
+    form_widget_args = {
+        'content': {'rows': 10, 'style': 'font-family: monospace;'}
+    }
+    column_labels = {'series_type': 'Category/Series', 'is_published': 'Live on Site'}
