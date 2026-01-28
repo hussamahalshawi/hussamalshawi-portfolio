@@ -3,28 +3,47 @@ from datetime import datetime, timezone
 
 
 class Profile(Document):
+    """
+    The Central Hub of the portfolio.
+    Manages personal identity and orchestrates global score calculations.
+    """
+
+    # --- IDENTITY & CONTACT ---
     full_name = StringField(required=True, default="Hussam Alshawi")
     title = StringField(required=True)
     bio = StringField(required=True)
     email = EmailField(required=True, unique=True)
     phone = StringField()
-    address = StringField(help_text="المدينة، الدولة")
-    # social_links = DictField(help_text="أدخل المفتاح كاسم المنصة والرابط كقيمة. مثال: {'github': 'url'}")
+    address = StringField(help_text="City, Country")
+
+    # --- SOCIAL ECOSYSTEM ---
     github_url = StringField()
     linkedin_url = StringField()
     facebook_url = StringField()
     instagram_url = StringField()
+
+    # --- ASSETS & METRICS ---
     profile_image = StringField()
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
-    career_start_date = DateTimeField(required=True, help_text="start date of career")
 
+    # PERSISTED METRICS: These are recalculated via signals
     experience_years = FloatField(default=0.0)
     overall_score = FloatField(default=0.0)
 
-
     meta = {
-        'collection': 'profile'
+        'collection': 'profile',
+        'indexes': ['email']  # Optimized for fast identity retrieval
     }
+
+    # --- LOGIC: REFRESH ALL METRICS ---
+    def refresh_metrics(self):
+        """
+        Global trigger to recalculate everything.
+        Ensures deleted items are removed from the total count.
+        """
+        self.experience_years = self.calculate_total_experience()
+        self.overall_score = self.calculate_overall_score()
+        self.save()
 
     def calculate_total_experience(self):
         """
