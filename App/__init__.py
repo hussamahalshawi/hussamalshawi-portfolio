@@ -8,12 +8,12 @@ from App.admin_views import (
     ProfileView, EducationView, CourseView, ProjectView,
     SelfStudyView, ExperienceView, AchievementView,
     SkillTypeView, SkillView, GoalView, FeedbackView,
-    LanguageView, PostView
+    LanguageView, PostView, CategoryView,
 )
 from App.models import (
     Profile, Education, Course, Project, SelfStudy,
     Experience, Achievement, SkillType, Skill,
-    Goal, Feedback, Language, Post
+    Goal, Feedback, Language, Post, Category
 )
 
 
@@ -30,6 +30,7 @@ def configure_admin(app):
         admin.add_view(EducationView(Education, name='Education'))
         admin.add_view(CourseView(Course, name='Course'))
         admin.add_view(ProjectView(Project, name='Project'))
+        admin.add_view(CategoryView(Category, name='Category'))
         admin.add_view(SelfStudyView(SelfStudy, name='Self-Study'))
         admin.add_view(ExperienceView(Experience, name='Experience'))
         admin.add_view(AchievementView(Achievement, name='Achievement'))

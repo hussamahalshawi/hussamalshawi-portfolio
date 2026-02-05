@@ -1,5 +1,7 @@
-from mongoengine import Document, StringField, DateTimeField, ListField
+from mongoengine import Document, StringField, DateTimeField, ListField, ReferenceField
 from datetime import datetime, timezone
+from App.models.category import Category
+
 
 
 class SelfStudy(Document):
@@ -12,6 +14,10 @@ class SelfStudy(Document):
     title = StringField(required=True)
     platform_name = StringField(required=True)  # e.g., Coursera, Udemy, YouTube
     summary = StringField()  # Brief overview of what was studied
+
+    # --- DYNAMIC LINKING ---
+    # Now linked to a separate document. Deleting a track won't delete the study.
+    track = ReferenceField(Category)
 
     # --- MEDIA ASSETS ---
     # Stores paths or URLs for the study materials

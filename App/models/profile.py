@@ -103,6 +103,7 @@ class Profile(Document):
         from App.models.goal import Goal
 
         goals = Goal.objects.all()
+        total_goals_count = goals.count()
         if not goals:
             return 0.0
 
@@ -118,7 +119,7 @@ class Profile(Document):
             total_progress_percentage += min(progress, 100)
 
         # Calculate the mean (average) across all goals
-        overall_average = total_progress_percentage / len(goals)
+        overall_average = total_progress_percentage / total_goals_count
 
         return round(overall_average, 1)
     def __str__(self):

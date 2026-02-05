@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timezone
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import FileUploadField
-from flask import flash
+from markupsafe import Markup
 from config import Config
 
 
@@ -69,10 +69,9 @@ class CourseView(BaseSecureView):
 
 
 class ProjectView(BaseSecureView):
-    column_list = ('project_name', 'github_url', 'skills_used', 'last_updated')
+    column_list = ('project_name', 'category', 'github_url', 'skills_used')
+    column_filters = ('category', 'last_updated')  # This creates a dropdown filter in Admin
     column_searchable_list = ('project_name', 'description')
-    column_filters = ('last_updated',)
-    column_labels = {'skills_used': 'Required Tech Stack'}
 
     form_overrides = {'project_image': FileUploadField, 'project_video': FileUploadField}
     form_args = {
@@ -80,6 +79,9 @@ class ProjectView(BaseSecureView):
         'project_video': {'base_path': Config.UPLOAD_PATH, 'allow_overwrite': True}
     }
 
+class CategoryView(BaseSecureView):
+    column_list = ('name', 'description', 'created_at')
+    column_searchable_list = ('name',)
 
 class SelfStudyView(BaseSecureView):
     column_list = ('title', 'platform_name', 'skills_learned', 'last_updated')
@@ -122,8 +124,64 @@ class SkillView(BaseSecureView):
 
 
 class GoalView(BaseSecureView):
-    column_list = ('goal_name', 'target_score', 'current_score', 'required_skills')
-    column_labels = {'required_skills': 'Required Skills'}
+    """
+    Administrative interface for managing career goals.
+    Features automated score synchronization and read-only progress metrics.
+    """
+
+    # --- DISPLAY CONFIGURATION ---
+    # Defines columns visible in the main list view
+    column_list = [
+        'goal_name',
+        'target_year',
+        'current_score',
+        'target_score',
+        'last_updated'
+    ]
+
+    # Custom labels for better UI clarity
+    column_labels = {
+        'goal_name': 'Goal Milestone',
+        'target_year': 'Target Year',
+        'current_score': 'Current Progress',
+        'target_score': 'Success Threshold',
+        'last_updated': 'Last Synced'
+    }
+
+    # --- SEARCH & FILTERING ---
+    column_searchable_list = ('goal_name', 'sub_title')
+    column_filters = ('target_year', 'current_score')
+    column_default_sort = ('target_year', False)
+
+    # --- FORM CUSTOMIZATION ---
+    # Prevents manual tampering with auto-calculated fields
+    form_widget_args = {
+        'current_score': {'readonly': True},
+        'last_updated': {'readonly': True}
+    }
+
+    # --- FORMATTERS ---
+    column_formatters = {
+        'last_updated': lambda v, c, m, p: m.last_updated.strftime('%Y-%m-%d %H:%M') if m.last_updated else "Never",
+        'current_score': lambda v, c, m, p: Markup(f"<b>{m.current_score}%</b>")
+    }
+
+    def on_model_change(self, form, model, is_created):
+        """
+        Event hook triggered before saving a document.
+        Ensures the score is synchronized with the latest skill levels.
+        """
+        try:
+            # Update the timestamp using a timezone-aware object
+            model.last_updated = datetime.now(timezone.utc)
+
+            # Trigger the internal synchronization logic defined in the Model
+            # This ensures the score reflects the actual skill proficiency
+            model.sync_with_existing_skills()
+
+        except Exception as e:
+            # Standard error handling logic for Admin interfaces
+            raise Exception(f"Failed to synchronize goal data: {str(e)}")
 
 
 class FeedbackView(BaseSecureView):

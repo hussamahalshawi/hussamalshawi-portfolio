@@ -1,5 +1,6 @@
-from mongoengine import Document, StringField, ListField, URLField, DateTimeField
+from mongoengine import Document, StringField, ListField, URLField, DateTimeField, ReferenceField
 from datetime import datetime, timezone
+from App.models.category import Category
 
 
 class Project(Document):
@@ -15,6 +16,10 @@ class Project(Document):
 
     # URLField provides built-in validation for correct link formatting
     github_url = URLField(null=True, blank=True)
+
+    # --- CATEGORIZATION (DYNAMIC LINK) ---
+    # Links each project to a category managed via the admin panel
+    category = ReferenceField(Category)
 
     # --- MEDIA ASSETS ---
     # Stores relative paths to images and videos for visual presentation
