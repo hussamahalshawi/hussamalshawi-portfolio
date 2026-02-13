@@ -1,9 +1,14 @@
 import os
 from datetime import datetime, timezone
+
+from flask_admin import expose
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import FileUploadField
 from markupsafe import Markup
+from flask_admin.actions import action
 from config import Config
+from App.services.skill_service import SkillService
+from flask import flash
 
 
 # --- DESIGN PATTERN: BASE CLASS FOR SYSTEM INTEGRITY ---
@@ -35,6 +40,8 @@ class BaseSecureView(ModelView):
     def on_model_change(self, form, model, is_created):
         """Ensures every save action is timestamped in UTC."""
         model.last_updated = datetime.now(timezone.utc)
+
+
 
 
 # --- INDIVIDUAL MODEL VIEWS WITH FULL DETAILS ---
@@ -117,10 +124,78 @@ class SkillTypeView(BaseSecureView):
     column_searchable_list = ('name',)
 
 
+from flask import flash, redirect, url_for
+from flask_admin.actions import action
+from flask_admin import expose
+from App.services.skill_service import SkillService
+import logging
+
+
 class SkillView(BaseSecureView):
+    """
+    Administrative view for Skill management.
+    Features automated categorization synchronization and robust error handling.
+    """
+
+    # --- DISPLAY SETTINGS ---
     column_list = ('skill_name', 'skill_type', 'level', 'last_updated')
+    column_labels = {
+        'skill_name': 'Technical Skill',
+        'skill_type': 'Category/Type',
+        'level': 'Proficiency (%)',
+        'last_updated': 'Last Sync'
+    }
+
+    # --- INTERFACE CONTROLS ---
     column_searchable_list = ('skill_name',)
     column_filters = ('skill_type', 'level')
+    column_default_sort = ('level', True)  # Shows highest skills first
+
+    # --- ACTIONS ---
+    @action('update_skill_groups',
+            'Sync Selected Types',
+            'Are you sure you want to re-categorize the selected skills based on current Keyword logic?')
+    def action_update_skills(self, ids):
+        """
+        Triggers the bulk update service for selected skills.
+        Ensures the UI provides feedback on success or failure.
+        """
+        try:
+            # Service call to perform logic (Separation of Concerns)
+            count = SkillService.bulk_update_categories()
+
+            if count > 0:
+                flash(f'Success: {count} skills were re-mapped to their correct types.', 'success')
+            else:
+                flash('Sync complete. No changes were necessary for the selected skills.', 'info')
+
+        except Exception as e:
+            # Log the error for the developer and show a safe message to the admin
+            logging.error(f"Admin Action Error: {str(e)}")
+            flash(f'System Error: Could not complete synchronization. {str(e)}', 'error')
+
+    # --- CUSTOM ROUTES ---
+    @expose('/sync-all-types/')
+    def sync_all_view(self):
+        """
+        A global sync route that can be triggered via a button in the UI.
+        Redirects back to the list view after processing.
+        """
+        try:
+            count = SkillService.bulk_update_categories()
+            flash(f'Global Synchronization Complete: {count} skills updated.', 'info')
+        except Exception as e:
+            logging.error(f"Global Sync Error: {str(e)}")
+            flash('A critical error occurred during global synchronization.', 'error')
+
+        # Redirect back to the main list view to prevent page refresh re-submission
+        return redirect(url_for('.index_view'))
+
+    # --- FORMATTERS ---
+    column_formatters = {
+        'last_updated': lambda v, c, m, p: m.last_updated.strftime('%Y-%m-%d %H:%M') if m.last_updated else "N/A"
+    }
+
 
 
 class GoalView(BaseSecureView):

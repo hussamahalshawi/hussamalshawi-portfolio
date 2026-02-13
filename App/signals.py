@@ -25,32 +25,49 @@ def clean_and_normalize_input(value):
     return normalized_value
 
 
-def get_skill_metadata(skill_name_upper):
+def get_skill_metadata(skill_name_raw):
     """
-    Identifies the skill category and the official canonical name by
-    matching input against keywords defined in the SkillType collection.
+    Advanced Skill Categorization using Tokenization logic.
+    Ensures that newly added skills are categorized based on word-match scores.
     """
-    if not skill_name_upper:
+    if not skill_name_raw:
         return None, None
 
-    # 1. Fetch all skill types to scan their keywords
+    # 1. Normalize and Tokenize the input skill
+    skill_tokens = set(str(skill_name_raw).lower().strip().split())
+
     all_types = SkillType.objects.all()
+    best_matched_type = None
+    highest_match_score = 0
+    official_name = str(skill_name_raw).strip().capitalize()
 
+    # 2. Advanced Token Matching Logic
     for s_type in all_types:
-        # Scan the keyword list for a match (Case-Insensitive check)
-        for key in (s_type.keywords or []):
-            if str(key).strip().upper() == str(skill_name_upper).strip():
-                # Success: Return the associated SkillType and the official formatted name
-                # e.g., returns ('Backend', 'Python') even if input was 'PYTHON'
-                return s_type, str(key).strip()
+        if not s_type.keywords:
+            continue
 
-    # 2. Fallback: If no match is found, assign a default category
-    default_type = SkillType.objects(name__iexact="Other technologies").first()
+        # Double Tokenization: Split all keywords in the category into words
+        type_tokens = set()
+        for keyword in s_type.keywords:
+            type_tokens.update(str(keyword).lower().strip().split())
 
-    # Format the unknown skill to Title Case for better UI presentation
-    formatted_name = str(skill_name_upper).strip().capitalize()
+        # Intersection check (Exact word matching)
+        common_words = skill_tokens.intersection(type_tokens)
+        match_score = len(common_words)
 
-    return default_type, formatted_name
+        if match_score > highest_match_score:
+            highest_match_score = match_score
+            best_matched_type = s_type
+
+    # 3. Final Assignment Logic
+    if highest_match_score > 0:
+        # If we found a match, we can also try to find the 'canonical' name from the keywords
+        # For simplicity, we keep the user's input capitalized as the official name
+        return best_matched_type, official_name
+
+    # Fallback to "Other technologies" if score is 0
+    other_tech_type = SkillType.objects(name__iexact="Other technologies").first()
+    return other_tech_type, official_name
 
 
 def recalculate_skill_total(official_name, s_type):

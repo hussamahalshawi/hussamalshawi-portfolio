@@ -15,16 +15,26 @@ from App.models import (
     Experience, Achievement, SkillType, Skill,
     Goal, Feedback, Language, Post, Category
 )
-
+from App.admin_dashboard import ProfessionalDashboardView
 
 def configure_admin(app):
     """
-    Initializes Flask-Admin and registers all model views.
-    Enforces centralized administration management.
+    Initializes Flask-Admin with a Custom Professional Dashboard.
+    Registers all model views while ensuring the Dashboard is the entry point.
     """
-    admin = Admin(app, name='Hussam Portfolio Admin', url='/admin')
+    # 1. Initialize Admin with the Custom Dashboard FIRST
+    # We pass 'index_view' during initialization to make it the default 'Home'
+    admin = Admin(
+        app,
+        name='Hussam Portfolio Admin',
+        url='/admin',
+        index_view=ProfessionalDashboardView(
+            name='Home',
+            template='admin/hussam_dashboard.html'
+        )
+    )
 
-    # Validation: Ensure all views are associated with their respective models correctly
+    # 2. Add other model views with robust error handling
     try:
         admin.add_view(ProfileView(Profile, name='Profile'))
         admin.add_view(EducationView(Education, name='Education'))
@@ -40,6 +50,9 @@ def configure_admin(app):
         admin.add_view(FeedbackView(Feedback, name='Feedback'))
         admin.add_view(LanguageView(Language, name='Language Proficiency'))
         admin.add_view(PostView(Post, name='Blog Posts'))
+
+        app.logger.info("[+] Admin Interface with Professional Dashboard loaded.")
+
     except Exception as admin_error:
         app.logger.error(f"[-] Admin Interface Registration Error: {admin_error}")
 

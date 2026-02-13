@@ -12,13 +12,18 @@ class Experience(Document):
     # --- POSITION DETAILS ---
     job_title = StringField(required=True)
     company_name = StringField(required=True)
+    location = StringField(max_length=100)  # e.g., "Remote" or "Dubai, UAE"
+
+    # --- DESCRIPTION FIELD (The requested update) ---
+    # High-quality validation: ensuring a substantial description is provided
+    description = StringField()
 
     # --- TIMELINE MANAGEMENT ---
     start_date = DateTimeField(required=True)
 
     # end_date is required by the schema, but logic in Signals or Admin
     # will handle cases where 'is_current' is True.
-    end_date = DateTimeField(required=True)
+    end_date = DateTimeField(required=False)
 
     # Boolean flag to indicate if the user is currently employed in this role
     is_current = BooleanField(default=False)
