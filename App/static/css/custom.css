@@ -1,0 +1,30 @@
+/* Custom properties for consistency */
+:root {
+    --accent-blue: #00d2ff;
+    --neon-green: #3affaa;
+}
+
+/* Roadmap Circuit Line */
+.circuit-line {
+    background-image: radial-gradient(var(--accent-blue) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.1;
+}
+
+/* Glassmorphism Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Smooth Scroll */
+html { scroll-behavior: smooth; }
+
+/* Hide scrollbar for clean UI */
+.no-scrollbar::-webkit-scrollbar { display: none; }

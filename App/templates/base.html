@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hussam Alshawi - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { darkBg: '#050a18', darkCard: '#0b1426', accentBlue: '#00d2ff' } } }
+        }
+    </script>
+</head>
+<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-800 dark:text-white transition-all duration-500 font-sans">
+
+    <nav class="fixed w-full z-50 px-10 py-4 flex justify-between items-center bg-white/80 dark:bg-darkBg/80 backdrop-blur-md border-b dark:border-slate-800">
+        <div class="text-xl font-black text-blue-600 dark:text-accentBlue uppercase tracking-tighter">Husam.</div>
+        <div class="flex items-center space-x-6">
+            <button onclick="toggleTheme()" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-300">
+                <i id="theme-icon" class="fas fa-moon"></i>
+            </button>
+            <div class="hidden md:flex space-x-6 text-sm font-bold uppercase">
+                <a href="/" class="hover:text-blue-500 transition">Home</a>
+                <a href="#projects" class="hover:text-blue-500 transition">Projects</a>
+                <a href="#blog" class="hover:text-blue-500 transition">Blog</a>
+                <button class="bg-blue-600 text-white px-5 py-2 rounded-full text-xs">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

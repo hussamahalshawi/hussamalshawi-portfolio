@@ -23,7 +23,7 @@ class Project(Document):
 
     # --- MEDIA ASSETS ---
     # Stores relative paths to images and videos for visual presentation
-    project_image = StringField()
+    project_image = ListField(StringField())
     project_video = StringField()
 
     # --- PROJECT TIMELINE ---

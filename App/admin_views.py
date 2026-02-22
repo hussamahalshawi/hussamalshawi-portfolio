@@ -1,15 +1,19 @@
 import os
 from datetime import datetime, timezone
-
-from flask_admin import expose
+import os
+from flask_admin.form import ImageUploadField
+from wtforms import MultipleFileField
+from werkzeug.utils import secure_filename
 from flask_admin.contrib.mongoengine import ModelView
 from flask_admin.form import FileUploadField
 from markupsafe import Markup
-from flask_admin.actions import action
 from config import Config
+from flask import flash, redirect, url_for
+from flask_admin.actions import action
+from flask_admin import expose
 from App.services.skill_service import SkillService
-from flask import flash
-
+import logging
+from flask import request
 
 # --- DESIGN PATTERN: BASE CLASS FOR SYSTEM INTEGRITY ---
 class BaseSecureView(ModelView):
@@ -75,16 +79,48 @@ class CourseView(BaseSecureView):
     column_labels = {'acquired_skills': 'Required Skills'}
 
 
-class ProjectView(BaseSecureView):
-    column_list = ('project_name', 'category', 'github_url', 'skills_used')
-    column_filters = ('category', 'last_updated')  # This creates a dropdown filter in Admin
-    column_searchable_list = ('project_name', 'description')
+class ProjectView(ModelView):
+    """
+    إدارة مشاريع حسام: تتيح اختيار صور متعددة من الجهاز
+    وتخزين مساراتها في ListField.
+    """
 
-    form_overrides = {'project_image': FileUploadField, 'project_video': FileUploadField}
-    form_args = {
-        'project_image': {'base_path': Config.UPLOAD_PATH, 'allow_overwrite': True},
-        'project_video': {'base_path': Config.UPLOAD_PATH, 'allow_overwrite': True}
+    # 2. إضافة حقل اختيار الملفات من الجهاز (بدلاً من الكتابة اليدوية)
+    form_extra_fields = {
+        'image_selector': MultipleFileField('اختر صور المشروع من جهازك')
     }
+
+    # 3. إخفاء حقل القائمة الأصلي لكي لا يظهر كصندوق نصي (String)
+    form_excluded_columns = ['project_image']
+
+    def on_model_change(self, form, model, is_created):
+        """
+        هذا الكود يعمل عند الضغط على Save:
+        يأخذ الملفات من جهازك، يحفظها في المجلد، ويضع روابطها في الداتابيز.
+        """
+        # جلب الملفات المرفوعة من الحقل الإضافي 'image_selector'
+        files = request.files.getlist('image_selector')
+
+        # التأكد من أن المستخدم اختار ملفات فعلاً
+        if files and files[0].filename != '':
+            model.project_image = []
+
+            for file in files:
+                if file:
+                    # تنظيف اسم الملف وحفظه في السيرفر المحلي
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(Config.UPLOAD_PATH, filename))
+
+                    # حفظ المسار النسبي (Relative Path) لسهولة العرض بـ url_for
+                    db_path = f"{Config.UPLOAD_PATH}/{filename}"
+
+                    # إضافة المسار للقائمة (ListField)
+                    if filename not in model.project_image:
+                        model.project_image.append(filename)
+
+        # ملاحظة: يمكنك إضافة دالة هنا لمسح الصور القديمة إذا أردت (اختياري)
+        print(f"✅ تم رفع {len(model.project_image)} صور للمشروع بنجاح.")
+
 
 class CategoryView(BaseSecureView):
     column_list = ('name', 'description', 'created_at')
@@ -124,11 +160,7 @@ class SkillTypeView(BaseSecureView):
     column_searchable_list = ('name',)
 
 
-from flask import flash, redirect, url_for
-from flask_admin.actions import action
-from flask_admin import expose
-from App.services.skill_service import SkillService
-import logging
+
 
 
 class SkillView(BaseSecureView):
