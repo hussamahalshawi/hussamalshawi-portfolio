@@ -2,10 +2,12 @@
 :root {
     --accent-blue: #00d2ff;
 }
-/* أضف هذا الكود في ملف CSS الخاص بك */
 html {
+    scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
-    scroll-snap-type: y mandatory; /* تفعيل القفز التلقائي للسكشن التالي */
+}
+.snap-section {
+    scroll-snap-align: start;
 }
 
 section {
@@ -51,3 +53,11 @@ section {
 .animate-scroll-dot {
     animation: scroll-dot 2.2s cubic-bezier(0.15, 0.41, 0.69, 0.94) infinite;
 }
+
+@keyframes float-slow {
+        0%, 100% { transform: translateY(0); opacity: 0; }
+        50% { transform: translateY(-100px); opacity: 0.5; }
+    }
+    .animate-float-slow {
+        animation: float-slow 8s infinite ease-in-out;
+    }

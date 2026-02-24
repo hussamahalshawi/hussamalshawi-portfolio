@@ -27,3 +27,7 @@ def index():
         print(f"Error fetching data: {e}")
         # تمرير كائنات فارغة لتجنب تعطل الصفحة (Graceful Degradation)
         return render_template('index.html', user=None, projects=[], experiences=[])
+
+# @portfolio.route('/portfolio')
+# def portfolio(): # هذا هو الاسم الذي يبحث عنه url_for
+#     pass
