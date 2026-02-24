@@ -12,6 +12,7 @@ except Exception as e:
     print(f"[-] Critical Error: Failed to initialize HussamAlshawi-Portfolio: {e}")
     sys.exit(1)
 
+
 def run_server():
     """
     Orchestrates the server startup with environment validation.
@@ -34,6 +35,7 @@ def run_server():
         )
     except Exception as startup_error:
         print(f"[-] Runtime Error: Server crashed during startup: {startup_error}")
+
 
 if __name__ == '__main__':
     # ENTRY POINT VALIDATION:

@@ -2,6 +2,16 @@
 :root {
     --accent-blue: #00d2ff;
 }
+/* أضف هذا الكود في ملف CSS الخاص بك */
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory; /* تفعيل القفز التلقائي للسكشن التالي */
+}
+
+section {
+    scroll-snap-align: start; /* محاذاة بداية السكشن مع أعلى الشاشة */
+    scroll-snap-stop: always;
+}
 
 /* Glassmorphism Effect */
 .glass {
@@ -30,3 +40,14 @@
 
 /* Transitions */
 .transition-all { transition: all 0.5s ease; }
+
+@keyframes scroll-dot {
+    0% { transform: translateY(0); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(20px); opacity: 0; }
+}
+
+.animate-scroll-dot {
+    animation: scroll-dot 2.2s cubic-bezier(0.15, 0.41, 0.69, 0.94) infinite;
+}
