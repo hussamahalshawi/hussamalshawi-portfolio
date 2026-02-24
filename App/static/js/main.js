@@ -83,3 +83,17 @@ window.addEventListener('resize', () => {
         if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
     }
 });
+
+function scrollToNextSection(element) {
+    // العثور على السكشن الحالي الذي يحتوي على الزر
+    const currentSection = element.closest('section');
+    // العثور على السكشن الذي يليه مباشرة في الـ DOM
+    const nextSection = currentSection.nextElementSibling;
+
+    if (nextSection) {
+        nextSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}

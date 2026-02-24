@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from App.models import Profile, Project, Experience, Skill, Course
+from App.models import Profile, Project, Experience, Skill, Course, Goal
 
 portfolio = Blueprint('portfolio', __name__)
 
@@ -11,6 +11,7 @@ def index():
         user_data = Profile.objects.first()
         skills_count = Skill.objects.count()
         courses_count = Course.objects.count()
+        goals = Goal.objects.order_by('target_year')
         # جلب المشاريع والخبرات
         projects = Project.objects.all()
         experiences = Experience.objects.all()
@@ -20,6 +21,7 @@ def index():
                                user=user_data,
                                skills_count=skills_count,
                                courses_count=courses_count,
+                               goals=goals,
                                projects=projects,
                                experiences=experiences)
 

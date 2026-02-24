@@ -61,3 +61,115 @@ section {
     .animate-float-slow {
         animation: float-slow 8s infinite ease-in-out;
     }
+
+
+/* تحسين شكل شريط التمرير العرضي */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+}
+/* تصغير حجم الخطوط العامة لتناسب التصميم النحيف */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 4px;
+}
+.bg-white.dark\:bg-slate-900\/60 {
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* جعل السنة داخل البطاقة واضحة جداً */
+    .text-slate-900.dark\:text-white.font-black {
+        letter-spacing: -0.5px;
+    }
+
+    /* شريط التمرير */
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #3b82f6;
+        border-radius: 10px;
+    }
+
+    /* تأثير الخط الموصل عند السكرول */
+    .overflow-x-auto {
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+/* تأثير التوهج للكبسولات عند تمرير الماوس على البطاقة */
+.group:hover .bg-slate-800\/50 {
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* موازنة المسافات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .min-h-\[450px\] {
+        min-h-[400px];
+    }
+}
+@keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(40px, -50px) rotate(15deg); }
+}
+@keyframes float-delayed {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-40px, 40px) rotate(-15deg); }
+}
+.animate-float-slow { animation: float-slow 6s infinite ease-in-out; }
+.animate-float-delayed { animation: float-delayed 8s infinite ease-in-out; }
+
+/* تحسين الرؤية في المود الفاتح */
+.bg-white .fixed div i {
+    opacity: 0.9 !important;
+    filter: saturate(2);
+}
+
+/* تطبيق الفلتر على السيشن الأول والثاني معاً */
+.snap-section .absolute i,
+.snap-section .absolute span {
+    opacity: 1 !important;
+    /* رفعنا الـ saturate والـ contrast لضمان الظهور فوق أي خلفية */
+    filter: saturate(2.8) contrast(1.3) brightness(0.8);
+}
+
+/* في المود الغامق، نحتاج لزيادة السطوع قليلاً بدل تقليله */
+.dark .snap-section .absolute i {
+    filter: saturate(2) brightness(1.2);
+}
+@keyframes scroll-dot {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, 20px); opacity: 0; }
+}
+
+.animate-scroll-dot {
+    animation: scroll-dot 1.5s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+/* لمسة إضافية: جعل النص يتوهج قليلاً */
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+}
+@keyframes scroll-dot {
+    0% { transform: translate(-50%, 0); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translate(-50%, 15px); opacity: 0; }
+}
+
+.animate-scroll-dot {
+    animation: scroll-dot 2s infinite ease-in-out;
+}
+
+/* إخفاء المؤشر في آخر سكشن تلقائياً */
+section:last-of-type .scroll-indicator-wrapper {
+    display: none;
+}
