@@ -24,6 +24,7 @@ class Profile(Document):
 
     # --- ASSETS & METRICS ---
     profile_image = StringField()
+    profile_image2 = StringField()
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
 
     # PERSISTED METRICS: These are recalculated via signals

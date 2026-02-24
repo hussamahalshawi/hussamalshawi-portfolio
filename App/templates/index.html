@@ -2,34 +2,104 @@
 {% block content %}
 
 <section class="pt-40 px-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
+
     <div class="lg:w-1/2" data-aos="fade-right">
-        <div class="flex items-center space-x-6 mb-8">
-            <div class="w-32 h-32 rounded-full border-4 border-blue-500 p-1 shadow-lg shadow-blue-500/20">
-                <img src="/static/images/profile.png" class="rounded-full w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500">
+        <div class="flex items-center space-x-8 mb-10">
+
+            <div class="flex-shrink-0">
+                <div class="w-40 h-40 md:w-48 md:h-48 rounded-full border-4 border-blue-500 p-1.5 shadow-2xl shadow-blue-500/30 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/' + (user.profile_image or 'default.png')) }}"
+                         class="rounded-full w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+                </div>
             </div>
+
             <div>
-                <h1 class="text-4xl font-bold">Hussam Alshawi</h1>
-                <p class="text-blue-600 dark:text-accentBlue font-bold uppercase text-xs tracking-widest mt-1">Full Stack Developer</p>
-                <div class="flex space-x-4 mt-4 text-slate-400">
-                    <a href="#" class="hover:text-blue-500"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="hover:text-white"><i class="fab fa-github"></i></a>
-                    <a href="#" class="hover:text-blue-400"><i class="fab fa-twitter"></i></a>
+                <h1 class="text-4xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+                    {{ user.full_name | default('Hussam Alshawi') }}
+                </h1>
+
+                <p class="text-blue-600 dark:text-accentBlue font-bold uppercase text-sm tracking-[0.2em] mt-3">
+                    {{ user.title | default('Full Stack Developer') }}
+                </p>
+
+                <div class="flex space-x-5 mt-6 text-2xl text-slate-400">
+                    {% if user.linkedin_url %}
+                    <a href="{{ user.linkedin_url }}" target="_blank" class="hover:text-blue-500 transition-all hover:-translate-y-1"><i class="fab fa-linkedin"></i></a>
+                    {% endif %}
+
+                    {% if user.github_url %}
+                    <a href="{{ user.github_url }}" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-all hover:-translate-y-1"><i class="fab fa-github"></i></a>
+                    {% endif %}
+
+                    {% if user.instagram_url %}
+                    <a href="{{ user.instagram_url }}" target="_blank" class="hover:text-pink-600 transition-all hover:-translate-y-1"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+
+                    {% if user.facebook_url %}
+                    <a href="{{ user.facebook_url }}" target="_blank" class="hover:text-blue-600 transition-all hover:-translate-y-1"><i class="fab fa-facebook"></i></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 mt-10">
-            <div class="bg-white dark:bg-darkCard p-4 rounded-2xl shadow-sm border dark:border-slate-800 text-center">
-                <span class="block text-2xl font-black">3</span>
-                <span class="text-[9px] uppercase font-bold text-slate-400 tracking-tighter">Years Exp.</span>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+
+    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-md border border-slate-50 dark:border-slate-800 text-center transform hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="100">
+        <div class="mb-4 flex justify-center">
+            <div class="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
+                <i class="fas fa-brain text-2xl text-indigo-500"></i>
             </div>
-            </div>
+        </div>
+        <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wide block mb-1">Total Skills</span>
+        <span class="text-3xl font-black text-slate-800 dark:text-white">
+            {{ skills_count | default(0) }}
+        </span>
     </div>
+
+    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-md border border-slate-50 dark:border-slate-800 text-center transform hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="200">
+        <div class="mb-4 flex justify-center">
+            <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+                <i class="fas fa-chart-line text-2xl text-emerald-500"></i>
+            </div>
+        </div>
+        <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wide block mb-1">Overall Score</span>
+        <span class="text-3xl font-black text-slate-800 dark:text-white">
+            {{ user.overall_score | default(0) }}<span class="text-sm ml-1 text-slate-400">%</span>
+        </span>
+    </div>
+
+    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-md border border-slate-50 dark:border-slate-800 text-center transform hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="300">
+        <div class="mb-4 flex justify-center">
+            <div class="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+                <i class="fas fa-certificate text-2xl text-amber-500"></i>
+            </div>
+        </div>
+        <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wide block mb-1">Courses</span>
+        <span class="text-3xl font-black text-slate-800 dark:text-white">
+            {{ courses_count | default(0) }}
+        </span>
+    </div>
+
+    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-md border border-slate-50 dark:border-slate-800 text-center transform hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="400">
+        <div class="mb-4 flex justify-center">
+            <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl">
+                <i class="fas fa-briefcase text-2xl text-rose-500"></i>
+            </div>
+        </div>
+        <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wide block mb-1">Exp. Years</span>
+        <span class="text-3xl font-black text-slate-800 dark:text-white">
+            {{ user.experience_years | default(0) }}<span class="text-sm ml-1 text-slate-400">yrs</span>
+        </span>
+    </div>
+</div>
+    </div>
+
     <div class="lg:w-1/2" data-aos="zoom-in">
         <div class="relative rounded-3xl overflow-hidden border-8 border-white dark:border-slate-800 shadow-2xl">
-            <img src="/static/images/hero-image.jpg" class="w-full h-auto object-cover">
+            <img src="{{ url_for('static', filename='images/' + (user.profile_image2 or 'hero-image.jpg')) }}" class="w-full h-auto object-cover">
         </div>
     </div>
+
 </section>
 
 <section id="roadmap" class="py-24 px-10 max-w-7xl mx-auto">
@@ -71,8 +141,6 @@
     </div>
 </section>
 
-<footer class="py-12 text-center text-slate-400 text-xs uppercase tracking-widest">
-    <p>&copy; 2026 Hussam Alshawi - Built with Python & Integrity</p>
-</footer>
+
 
 {% endblock %}

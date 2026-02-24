@@ -57,9 +57,12 @@ class ProfileView(BaseSecureView):
         'experience_years': 'Years of Exp',
         'overall_score': 'Master Score %'
     }
-    form_overrides = {'profile_image': FileUploadField}
+    form_overrides = {'profile_image': FileUploadField, 'profile_image2': FileUploadField}
     form_args = {
         'profile_image': {'label': 'Avatar Image',
+                          'base_path': Config.UPLOAD_PATH,
+                          'allow_overwrite': True},
+        'profile_image2': {'label': 'Avatar Image2',
                           'base_path': Config.UPLOAD_PATH,
                           'allow_overwrite': True}
     }
