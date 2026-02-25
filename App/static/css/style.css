@@ -296,3 +296,11 @@ section:last-of-type .scroll-indicator-wrapper {
 .dark .adaptive-shadow {
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
 }
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+    animation: shimmer 3s infinite linear;
+}
