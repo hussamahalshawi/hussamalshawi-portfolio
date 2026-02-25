@@ -173,3 +173,126 @@ section {
 section:last-of-type .scroll-indicator-wrapper {
     display: none;
 }
+
+/* Custom Scroll Wheel Animation */
+@keyframes scroll-wheel-animation {
+    0% {
+        transform: translateY(-8px);
+        opacity: 0;
+    }
+    20% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+}
+
+.animate-scroll-wheel {
+    animation: scroll-wheel-animation 2s ease-in-out infinite;
+}
+
+/* Optional: Fade in the indicator on load */
+.scroll-down-indicator {
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards 1.5s; /* Delay it a bit after page load */
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* حركة النبض والوميض للخلفية */
+@keyframes cyber-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 25px rgba(59, 130, 246, 0.8); }
+}
+
+/* حركة النقطة الذكية (Smart Dot) */
+@keyframes smart-drop {
+    0% { transform: translateY(-15px); opacity: 0; }
+    30% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(20px); opacity: 0; }
+}
+
+/* حركة التموجات (Wave) */
+@keyframes wave-effect {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+    100% { transform: translateY(0); }
+}
+
+.cyber-scroll-container {
+    animation: wave-effect 3s ease-in-out infinite;
+}
+
+.pulse-bg {
+    animation: cyber-pulse 2s infinite;
+}
+
+.dot-move {
+    animation: smart-drop 2.5s cubic-bezier(0.15, 0.41, 0.69, 0.94) infinite;
+}
+
+@keyframes cyber-pulse-dark {
+    0%, 100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 15px rgba(30, 58, 138, 0.6); }
+    50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 30px rgba(37, 99, 235, 0.9); }
+}
+
+/* حركة النقطة - تدرج لوني أعمق */
+@keyframes smart-drop-dark {
+    0% { transform: translateY(-12px); opacity: 0; }
+    30% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(18px); opacity: 0; }
+}
+
+.cyber-scroll-dark {
+    /* رفعنا الموقع من bottom-12 إلى bottom-20 */
+    bottom: 5rem;
+}
+
+.pulse-bg-dark {
+    animation: cyber-pulse-dark 2s infinite;
+    background: rgba(29, 78, 216, 0.2); /* أغمق */
+}
+
+.dot-move-dark {
+    animation: smart-drop-dark 2.2s cubic-bezier(0.15, 0.41, 0.69, 0.94) infinite;
+    background: linear-gradient(to bottom, #2563eb, #1e40af); /* أزرق ملكي غامق */
+}
+/* حركة النبض الذكية */
+@keyframes cyber-pulse-adaptive {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.15); opacity: 0.8; }
+}
+
+/* حركة النقطة */
+@keyframes smart-drop-adaptive {
+    0% { transform: translateY(-12px); opacity: 0; }
+    30% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(18px); opacity: 0; }
+}
+
+.adaptive-pulse {
+    animation: cyber-pulse-adaptive 2s infinite;
+}
+
+.adaptive-dot {
+    animation: smart-drop-adaptive 2.2s infinite;
+}
+
+/* ظل خفيف في الوضع الفاتح وتوهج قوي في المظلم */
+.adaptive-shadow {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.dark .adaptive-shadow {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
