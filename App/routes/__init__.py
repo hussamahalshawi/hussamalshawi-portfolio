@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template
-from App.models import Profile, Project, Experience, Skill, Course, Goal
+from flask import Blueprint, render_template, redirect, url_for
+from App.models import Profile, Project, Experience, Skill, Course, Goal, Category
 
 portfolio = Blueprint('portfolio', __name__)
+
 
 @portfolio.route('/')
 def index():
@@ -13,7 +14,26 @@ def index():
         courses_count = Course.objects.count()
         goals = Goal.objects.order_by('target_year')
         # جلب المشاريع والخبرات
-        projects = Project.objects.all()
+        projects = Project.objects.order_by('-id').all()
+        # 1. جلب الفئات من قاعدة البيانات
+        db_categories = Category.objects.all()
+
+        # 2. تعريف الترتيب الذي تريده بالضبط
+        custom_order = [
+            'Python Development',
+            'Web Development',
+            'Data Structures',
+            'Data Analysis',
+            'Problem Solving',
+            'Artificial Intelligence',
+            'Mobile Development',
+            'Software Engineering'
+        ]
+
+        # 3. ترتيب الفئات بناءً على القائمة أعلاه
+        # سيتم وضع أي فئة غير موجودة في القائمة في نهاية المتصفح
+        sorted_categories = sorted(db_categories,
+                                   key=lambda x: custom_order.index(x.name) if x.name in custom_order else 999)
         experiences = Experience.objects.all()
 
         # إرسال البيانات للقالب
@@ -23,13 +43,42 @@ def index():
                                courses_count=courses_count,
                                goals=goals,
                                projects=projects,
+                               categories=sorted_categories,
                                experiences=experiences)
 
+    # في بلوك الـ except داخل routes/__init__.py
+
     except Exception as e:
+
         print(f"Error fetching data: {e}")
-        # تمرير كائنات فارغة لتجنب تعطل الصفحة (Graceful Degradation)
-        return render_template('index.html', user=None, projects=[], experiences=[])
+
+        # تمرير قيم افتراضية آمنة تمنع Jinja2 من الانهيار
+
+        return render_template('index.html',
+
+                               user={'overall_score': 0},
+
+                               projects=[],
+
+                               experiences=[],
+
+                               goals=[],
+
+                               skills_count=0,
+
+                               courses_count=0)
+
 
 # @portfolio.route('/portfolio')
 # def portfolio(): # هذا هو الاسم الذي يبحث عنه url_for
 #     pass
+
+@portfolio.route('/project/<project_id>')
+def project_details(project_id):
+    try:
+        # البحث عن المشروع باستخدام المعرف النصي
+        project = Project.objects.get_or_404(id=project_id)
+        return render_template('project_details.html', project=project)
+    except Exception as e:
+        print(f"Error: {e}")
+        return redirect(url_for('index'))

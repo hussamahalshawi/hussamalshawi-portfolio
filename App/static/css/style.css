@@ -304,3 +304,4 @@ section:last-of-type .scroll-indicator-wrapper {
 .animate-shimmer {
     animation: shimmer 3s infinite linear;
 }
+.hidden-project { display: none !important; }

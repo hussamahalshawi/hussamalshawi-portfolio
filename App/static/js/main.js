@@ -97,3 +97,34 @@ function scrollToNextSection(element) {
         });
     }
 }
+function filterProjects(category) {
+    const cards = document.querySelectorAll('.project-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // تحديث الأزرار
+    buttons.forEach(btn => btn.classList.remove('active', 'bg-blue-600', 'text-white'));
+    event.currentTarget.classList.add('active', 'bg-blue-600', 'text-white');
+
+    cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category').trim();
+        const cardIndex = parseInt(card.getAttribute('data-index'));
+
+        if (category === 'all') {
+            // عند اختيار الكل: أظهر أول 4 فقط وأخفِ الباقي (للحفاظ على جمالية الصفحة)
+            if (cardIndex <= 4) {
+                card.style.display = 'block';
+                card.classList.remove('hidden-project');
+            } else {
+                card.style.display = 'none';
+            }
+        } else {
+            // عند اختيار تصنيف معين: أظهر كل المشاريع التي تنتمي لهذا التصنيف
+            if (cardCat === category) {
+                card.style.display = 'block';
+                card.classList.remove('hidden-project');
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
+}
