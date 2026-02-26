@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from App.models import Profile, Project, Experience, Skill, Course, Goal, Category
+from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language
 
 portfolio = Blueprint('portfolio', __name__)
 
@@ -17,6 +17,7 @@ def index():
         projects = Project.objects.order_by('-id').all()
         # 1. جلب الفئات من قاعدة البيانات
         db_categories = Category.objects.all()
+        languages = Language.objects.all().order_by('-level')
 
         # 2. تعريف الترتيب الذي تريده بالضبط
         custom_order = [
@@ -44,6 +45,7 @@ def index():
                                goals=goals,
                                projects=projects,
                                categories=sorted_categories,
+                               languages=languages,
                                experiences=experiences)
 
     # في بلوك الـ except داخل routes/__init__.py
