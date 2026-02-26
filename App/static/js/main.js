@@ -128,3 +128,41 @@ function filterProjects(category) {
         }
     });
 }
+
+function filterAllProjects(category) {
+    const cards = document.querySelectorAll('.project-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // 1. تحديث الأزرار فوراً
+    buttons.forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-600', 'text-white');
+        btn.classList.add('text-slate-500');
+    });
+    event.currentTarget.classList.add('active', 'bg-blue-600', 'text-white');
+
+    // 2. الفلترة مع حركة ناعمة جداً
+    cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category').trim();
+
+        // إخفاء العنصر بسلاسة أولاً
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+
+        setTimeout(() => {
+            if (category === 'all' || cardCat === category) {
+                card.style.display = 'block';
+                // طلب إعادة رسم (Reflow) لضمان عمل الـ transition
+                card.offsetHeight;
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+            } else {
+                card.style.display = 'none';
+            }
+        }, 300); // مدة التلاشي
+    });
+
+    // 3. الأهم: تحديث AOS بعد انتهاء الحركة
+    setTimeout(() => {
+        AOS.refreshHard(); // يجبر AOS على إعادة حساب المواقع
+    }, 400);
+}

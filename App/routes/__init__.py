@@ -69,9 +69,46 @@ def index():
                                courses_count=0)
 
 
-# @portfolio.route('/portfolio')
-# def portfolio(): # هذا هو الاسم الذي يبحث عنه url_for
-#     pass
+@portfolio.route('/projects')
+def all_projects():
+    """
+    عرض صفحة أرشيف المشاريع الكاملة
+    يتم جلب جميع المشاريع مرتبة من الأحدث إلى الأقدم
+    """
+    try:
+        # 1. جلب جميع المشاريع من قاعدة البيانات وترتيبها (الأحدث أولاً)
+        # الترتيب حسب '-id' أو '-created_at' يضمن ظهور آخر عمل قمت به في البداية
+        projects = Project.objects.order_by('-id').all()
+
+        # 2. جلب جميع التصنيفات لغايات الفلترة في الصفحة
+        categories = Category.objects.all()
+
+        # 3. تعريف الترتيب المخصص للتصنيفات (اختياري كما فعلنا سابقاً)
+        custom_order = [
+            'Python Development', 'Web Development', 'Data Structures',
+            'Data Analysis', 'Problem Solving', 'Artificial Intelligence',
+            'Mobile Development', 'Software Engineering'
+        ]
+
+        # ترتيب التصنيفات برمجياً بناءً على القائمة أعلاه
+        sorted_categories = sorted(
+            categories,
+            key=lambda x: custom_order.index(x.name.strip()) if x.name.strip() in custom_order else 999
+        )
+
+        # 4. رندر الصفحة وإرسال البيانات
+        return render_template(
+            'projects.html',
+            projects=projects,
+            categories=sorted_categories,
+            title="Project Archive | Hussam Alshawi"
+        )
+
+    except Exception as e:
+        # التعامل مع الخطأ في حال تعذر جلب البيانات من MongoDB
+        print(f"Error fetching projects: {e}")
+        return render_template('errors/500.html'), 500
+
 
 @portfolio.route('/project/<project_id>')
 def project_details(project_id):
