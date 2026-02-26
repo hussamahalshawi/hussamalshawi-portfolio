@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %} Hussam Alshawi | Software Engineer & Python Developer {% endblock %}
 {% block content %}
 
 <section
@@ -472,11 +473,10 @@
                         {{ project.description }}</p>
 
                     <div class="flex items-center justify-between mt-auto">
-                        <a href="{{ url_for('project.details_view', project_id=project.id|string) }}"
-                           class="flex items-center gap-2 text-[9px] font-black uppercase text-blue-500 tracking-widest flex items-center gap-2 group/link">
-                            Details <i
-                                class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
-                        </a>
+                        <a href="{{ url_for('portfolio.project_details', project_id=project.id|string) }}"
+   class="flex items-center gap-2 text-[10px] font-black uppercase text-blue-500 tracking-widest group/link">
+    View Details <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+</a>
                         {% if project.github_url %}
                         <a href="{{ project.github_url }}" target="_blank"
                            class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-blue-600 hover:text-white transition-all duration-300">

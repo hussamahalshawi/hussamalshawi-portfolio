@@ -308,3 +308,12 @@ section:last-of-type .scroll-indicator-wrapper {
 
 .filter-btn.active { background-color: #2563eb; color: white; }
 #all-projects-grid { transition: all 0.5s ease; }
+
+html, body {
+    scroll-snap-type: none !important;
+    scroll-behavior: smooth; /* لضمان نعومة السكرول بدون القفز */
+}
+#main-project-image {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    will-change: opacity, transform;
+}

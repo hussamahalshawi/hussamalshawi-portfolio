@@ -166,3 +166,24 @@ function filterAllProjects(category) {
         AOS.refreshHard(); // يجبر AOS على إعادة حساب المواقع
     }, 400);
 }
+function fullSwapImage(thumbnailElement) {
+    const mainImage = document.getElementById('main-project-image');
+
+    // 1. حفظ المسارات الحالية
+    const currentMainSrc = mainImage.src;
+    const newMainSrc = thumbnailElement.src;
+
+    // 2. تأثير حركي ناعم (Animation)
+    mainImage.style.opacity = '0';
+    thumbnailElement.style.opacity = '0';
+
+    setTimeout(() => {
+        // 3. التبديل الفعلي (Swap)
+        mainImage.src = newMainSrc;            // المصغرة تصبح كبيرة
+        thumbnailElement.src = currentMainSrc; // الكبيرة تصبح مصغرة
+
+        // 4. إعادة الإظهار
+        mainImage.style.opacity = '1';
+        thumbnailElement.style.opacity = '1';
+    }, 250);
+}

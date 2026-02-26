@@ -114,8 +114,8 @@ def all_projects():
 def project_details(project_id):
     try:
         # البحث عن المشروع باستخدام المعرف النصي
-        project = Project.objects.get_or_404(id=project_id)
+        project = Project.objects.get(id=project_id)
         return render_template('project_details.html', project=project)
     except Exception as e:
         print(f"Error: {e}")
-        return redirect(url_for('index'))
+        return redirect(url_for('portfolio.index'))

@@ -1,17 +1,25 @@
 {% extends "base.html" %}
-
+{% block title %} All Projects | Hussam Alshawi {% endblock %}
 {% block content %}
 <section id="all-projects-page"
          class="min-h-screen w-full pt-32 pb-24 relative overflow-hidden bg-white dark:bg-[#0a0f1a] flex flex-col items-center">
 
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div class="absolute top-[10%] left-[5%] text-blue-600/40 dark:text-blue-400/30 text-7xl animate-float-slow"><i class="fab fa-python"></i></div>
-        <div class="absolute top-[40%] left-[2%] text-orange-600/40 dark:text-orange-400/30 text-6xl animate-float-delayed"><i class="fas fa-code-branch"></i></div>
-        <div class="absolute bottom-[15%] left-[8%] text-slate-700/40 dark:text-slate-300/30 text-6xl animate-float-slow"><i class="fas fa-terminal"></i></div>
-        <div class="absolute top-[5%] left-[45%] text-amber-600/40 dark:text-amber-400/30 text-4xl animate-pulse"><i class="fas fa-microchip"></i></div>
-        <div class="absolute top-[50%] left-[48%] text-purple-600/40 dark:text-purple-400/30 text-5xl animate-float-slow"><i class="fas fa-brain"></i></div>
-        <div class="absolute top-[15%] right-[5%] text-emerald-600/40 dark:text-emerald-400/30 text-7xl animate-float-slow"><i class="fas fa-database"></i></div>
-        <div class="absolute bottom-[20%] right-[4%] text-rose-600/30 dark:text-rose-400/25 text-8xl font-mono animate-float-slow">All</div>
+        <div class="absolute top-[10%] left-[5%] text-blue-600/40 dark:text-blue-400/30 text-7xl animate-float-slow"><i
+                class="fab fa-python"></i></div>
+        <div class="absolute top-[40%] left-[2%] text-orange-600/40 dark:text-orange-400/30 text-6xl animate-float-delayed">
+            <i class="fas fa-code-branch"></i></div>
+        <div class="absolute bottom-[15%] left-[8%] text-slate-700/40 dark:text-slate-300/30 text-6xl animate-float-slow">
+            <i class="fas fa-terminal"></i></div>
+        <div class="absolute top-[5%] left-[45%] text-amber-600/40 dark:text-amber-400/30 text-4xl animate-pulse"><i
+                class="fas fa-microchip"></i></div>
+        <div class="absolute top-[50%] left-[48%] text-purple-600/40 dark:text-purple-400/30 text-5xl animate-float-slow">
+            <i class="fas fa-brain"></i></div>
+        <div class="absolute top-[15%] right-[5%] text-emerald-600/40 dark:text-emerald-400/30 text-7xl animate-float-slow">
+            <i class="fas fa-database"></i></div>
+        <div class="absolute bottom-[20%] right-[4%] text-rose-600/30 dark:text-rose-400/25 text-8xl font-mono animate-float-slow">
+            All
+        </div>
 
         <div class="absolute top-[10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-500/10 blur-[150px] rounded-full"></div>
         <div class="absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-500/10 blur-[150px] rounded-full"></div>
@@ -22,7 +30,7 @@
         <div class="w-full mb-16 flex flex-col items-center">
             <div class="text-center" data-aos="fade-down">
                 <h1 class="text-5xl md:text-7xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
-                    Project <span class="text-blue-500">Archive</span>
+                    Projects
                 </h1>
                 <p class="text-slate-500 dark:text-slate-400 font-mono text-xs uppercase tracking-[0.4em]">
                     A deep dive into my technical journey and solutions
@@ -74,9 +82,10 @@
                     </p>
 
                     <div class="flex items-center justify-between mt-auto">
-                        <a href="{{ url_for('project.details_view', project_id=project.id|string) }}"
+                        <a href="{{ url_for('portfolio.project_details', project_id=project.id|string) }}"
                            class="flex items-center gap-2 text-[10px] font-black uppercase text-blue-500 tracking-widest group/link">
-                            View Details <i class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
+                            View Details <i
+                                class="fas fa-arrow-right group-hover/link:translate-x-1 transition-transform"></i>
                         </a>
                         {% if project.github_url %}
                         <a href="{{ project.github_url }}" target="_blank"
