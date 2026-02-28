@@ -297,7 +297,6 @@ class GoalView(BaseSecureView):
 class FeedbackView(BaseSecureView):
     column_list = ('person_name', 'job_title', 'contact_email', 'created_at')
     column_searchable_list = ('person_name', 'feedback_text')
-    can_create = False  # Testimonials are usually submitted via public form
 
 
 class LanguageView(BaseSecureView):

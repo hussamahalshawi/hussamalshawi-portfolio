@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for
 from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback
+from flask import request, jsonify
+import json
+from datetime import datetime, timezone
 
 portfolio = Blueprint('portfolio', __name__)
 
@@ -133,3 +136,64 @@ def project_details(project_id):
     except Exception as e:
         print(f"Error: {e}")
         return redirect(url_for('portfolio.index'))
+
+
+@portfolio.context_processor
+def inject_feedbacks():
+    try:
+        # 1. جلب البيانات والتأكد من أنها ليست فارغة
+        feedbacks_query = Feedback.objects.all().order_by('-created_at')[:10]
+
+        # 2. تحويلها يدوياً لمصفوفة بسيطة (Plain Dictionary)
+        feedbacks_list = []
+        for f in feedbacks_query:
+            feedbacks_list.append({
+                "person_name": str(f.person_name),
+                "job_title": str(f.job_title or "Professional"),
+                "feedback_text": str(f.feedback_text or "")
+            })
+
+        # 3. تحويل القائمة لنص JSON
+        json_data = json.dumps(feedbacks_list)
+
+        # طباعة للفحص في الـ Terminal (ليس المتصفح)
+        print(f"DEBUG: Feedback Count: {len(feedbacks_list)}")
+
+        return dict(feedbacks_json=json_data)
+    except Exception as e:
+        print(f"CRITICAL ERROR in context_processor: {e}")
+        return dict(feedbacks_json="[]")
+
+
+
+# @portfolio.route('/api/feedback/submit', methods=['POST'])
+# def submit_feedback():
+#     try:
+#         # 1. جلب البيانات من الطلب (Request)
+#         data = request.get_json()
+#
+#         # 2. التحقق الأساسي من البيانات (Validation)
+#         if not data.get('person_name') or not data.get('contact_email'):
+#             return jsonify({"error": "Name and Email are strictly required."}), 400
+#
+#         # 3. إنشاء كائن الفيدباك بناءً على الـ Model الخاص بك
+#         new_feedback = Feedback(
+#             person_name=data.get('person_name'),
+#             job_title=data.get('job_title'),
+#             feedback_text=data.get('feedback_text'),
+#             contact_email=data.get('contact_email'),
+#             contact_info=data.get('contact_info'),
+#             created_at=datetime.now(timezone.utc)
+#         )
+#
+#         # 4. الحفظ في قاعدة البيانات
+#         new_feedback.save()
+#
+#         return jsonify({
+#             "message": "Thank you, Hussam has received your testimonial!",
+#             "status": "success"
+#         }), 201
+#
+#     except Exception as e:
+#         # معالجة الأخطاء غير المتوقعة
+#         return jsonify({"error": "Something went wrong, please try again later."}), 500
