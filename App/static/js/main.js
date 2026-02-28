@@ -187,3 +187,71 @@ function fullSwapImage(thumbnailElement) {
         thumbnailElement.style.opacity = '1';
     }, 250);
 }
+//
+//const feedbacksRaw = '{{ feedbacks_json | safe if feedbacks_json else '[]' }}';
+//
+//let feedbacks = [];
+//try {
+//    feedbacks = JSON.parse(feedbacksRaw);
+//} catch (e) {
+//    console.error("Error parsing feedback data:", e);
+//    feedbacks = []; // مصفوفة فارغة في حال حدوث خطأ لمنع تعطل السكريبت
+//}
+//console.log("Feedbacks received from Server:", feedbacks);
+//let feedbackIndex = 0;
+//
+//function showNextFeedback() {
+//    if (feedbacks.length === 0) return;
+//
+//    const feedback = feedbacks[feedbackIndex];
+//    const container = document.getElementById('feedback-toast-container');
+//
+//    // إنشاء عنصر الإشعار
+//    const toast = document.createElement('div');
+//    toast.className = "flex items-center gap-4 p-4 bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 transition-all duration-1000 opacity-0 translate-y-10 w-72 md:w-80 pointer-events-auto";
+//
+//    // داخل دالة showNextFeedback
+//    toast.innerHTML = `
+//    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/20">
+//        <span class="text-white text-[10px] font-black">${feedback.person_name.charAt(0)}</span>
+//    </div>
+//    <div class="flex-1">
+//        <div class="flex justify-between items-start">
+//            <p class="text-[10px] font-black dark:text-white uppercase tracking-tighter">${feedback.person_name}</p>
+//            <span class="text-[7px] text-slate-400 font-mono">${feedback.job_title}</span>
+//        </div>
+//        <p class="text-[9px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+//            "${feedback.feedback_text}"
+//        </p>
+//    </div>
+//`;
+//
+//    container.appendChild(toast);
+//
+//    // أنيميشن الظهور (للوسط تقريباً)
+//    setTimeout(() => {
+//        toast.classList.remove('opacity-0', 'translate-y-10');
+//        toast.classList.add('opacity-100', '-translate-y-4');
+//    }, 100);
+//
+//    // أنيميشن الاختفاء بعد 5 ثواني
+//    setTimeout(() => {
+//        toast.classList.add('opacity-0', '-translate-y-20');
+//        setTimeout(() => toast.remove(), 1000);
+//    }, 5000);
+//
+//    // الانتقال للفيدباك التالي
+//    feedbackIndex = (feedbackIndex + 1) % feedbacks.length;
+//
+//    // تكرار العملية كل 8 ثواني
+//    setTimeout(showNextFeedback, 8000);
+//}
+//
+//// بدء التشغيل عند تحميل الصفحة
+//window.addEventListener('load', () => {
+//    if(feedbacks.length > 0) {
+//        setTimeout(showNextFeedback, 3000);
+//    } else {
+//        console.warn("No feedbacks to display in the toast system.");
+//    }
+//});
