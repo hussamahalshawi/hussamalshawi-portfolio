@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language
+from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback
 
 portfolio = Blueprint('portfolio', __name__)
 
@@ -36,6 +36,12 @@ def index():
         sorted_categories = sorted(db_categories,
                                    key=lambda x: custom_order.index(x.name) if x.name in custom_order else 999)
         experiences = Experience.objects.all()
+        courses = Course.objects.all()
+        educations = Education.objects.all()
+        selfStudys = SelfStudy.objects.all()
+        skills = Skill.objects.all()
+        achievements = Achievement.objects.all()
+        feedbacks = Feedback.objects.all()
 
         # إرسال البيانات للقالب
         return render_template('index.html',
@@ -46,6 +52,12 @@ def index():
                                projects=projects,
                                categories=sorted_categories,
                                languages=languages,
+                               courses=courses,
+                               educations=educations,
+                               selfStudys=selfStudys,
+                               skills=skills,
+                               achievements=achievements,
+                               feedbacks=feedbacks,
                                experiences=experiences)
 
     # في بلوك الـ except داخل routes/__init__.py
