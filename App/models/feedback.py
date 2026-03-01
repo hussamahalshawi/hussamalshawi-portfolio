@@ -21,7 +21,7 @@ class Feedback(Document):
     contact_email = EmailField(required=True)
 
     # Optional field for LinkedIn profile URL or Phone Number
-    contact_info = StringField(required=False)
+    linkedin_url = StringField(required=False)
 
     # --- AUDIT & TIMELINES ---
     # Automatically captures the exact moment the feedback was submitted
@@ -29,11 +29,12 @@ class Feedback(Document):
 
     meta = {
         'collection': 'feedback',
-        'ordering': ['-created_at'],  # Displays latest testimonials first
+        'ordering': ['-created_at'],
+        'strict': False,  # <--- هذا السطر هو الحل الجذري للخطأ الذي ظهر لك
         'indexes': [
             'person_name',
             'contact_email',
-            '-created_at'  # Optimized for dashboard and public view performance
+            '-created_at'
         ]
     }
 

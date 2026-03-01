@@ -142,24 +142,22 @@ def project_details(project_id):
 def inject_feedbacks():
     try:
         # 1. جلب البيانات والتأكد من أنها ليست فارغة
-        feedbacks_query = Feedback.objects.all().order_by('-created_at')[:10]
+        feedbacks_query = Feedback.objects.all().order_by('-created_at')
 
         # 2. تحويلها يدوياً لمصفوفة بسيطة (Plain Dictionary)
         feedbacks_list = []
-        for f in feedbacks_query:
+        for f in Feedback.objects.all():
             feedbacks_list.append({
-                "person_name": str(f.person_name),
-                "job_title": str(f.job_title or "Professional"),
-                "feedback_text": str(f.feedback_text or "")
+                "person_name": f.person_name,
+                "job_title": f.job_title or "Professional",
+                "feedback_text": f.feedback_text,
+                "contact_email": f.contact_email,
+                "linkedin_url": getattr(f, 'linkedin_url', ""),  # استخدام getattr للأمان
+                "created_at": f.created_at.isoformat() if f.created_at else ""
             })
 
-        # 3. تحويل القائمة لنص JSON
-        json_data = json.dumps(feedbacks_list)
-
-        # طباعة للفحص في الـ Terminal (ليس المتصفح)
-        print(f"DEBUG: Feedback Count: {len(feedbacks_list)}")
-
-        return dict(feedbacks_json=json_data)
+        # إرسالها للقالب
+        return dict(feedbacks_json=json.dumps(feedbacks_list))
     except Exception as e:
         print(f"CRITICAL ERROR in context_processor: {e}")
         return dict(feedbacks_json="[]")
