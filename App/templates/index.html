@@ -313,134 +313,130 @@
         </h2>
         <p class="text-slate-500 dark:text-slate-400 mt-4 font-mono">Strategic Growth & Technology Mastery</p>
     </div>
-    <div class="relative max-w-full mx-auto px-4 pb-4 w-full flex flex-col mt-2">
+    <div class="relative max-w-full mx-auto px-4 pb-20 w-full flex flex-col mt-2">
 
-        <!--    <div class="absolute top-[45px] left-0 w-full h-[1px] bg-blue-500/20 dark:bg-blue-500/30 z-0"></div>-->
-        <div class="absolute top-[108px] left-10 right-10 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full z-0 overflow-hidden">
-            <div class="h-full transition-all duration-[2000ms] ease-out shadow-[0_0_15px_rgba(59,130,246,0.5)]
-                {% if user.overall_score >= 80 %} bg-emerald-500
-                {% elif user.overall_score >= 50 %} bg-blue-500
-                {% else %} bg-amber-500 {% endif %}"
-                 style="width: {{ user.overall_score | default(0) }}%">
-                <div class="w-full h-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)] bg-[size:200%_100%] animate-shimmer"></div>
-            </div>
-        </div>
-        <div class="flex flex-nowrap gap-4 overflow-x-auto pb-6 no-scrollbar relative z-10 items-start">
-
-            {% for goal in goals %}
-
-            <div class="min-w-[180px] md:min-w-[210px] flex-1 group" data-aos="fade-up"
-                 data-aos-delay="{{ loop.index * 100 }}">
-
-                <div class="flex flex-col items-center mb-6 relative">
-                    <div class="relative flex items-center justify-center w-24 h-24">
-                        <svg class="absolute transform -rotate-90 w-full h-full">
-                            <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
-                                    class="text-slate-200 dark:text-slate-800"/>
-
-                            {% set offset = 251 - (251 * goal.current_score / 100) %}
-                            <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
-                                    stroke-dasharray="251"
-                                    stroke-dashoffset="{{ offset }}"
-                                    stroke-linecap="round"
-                                    class="transition-all duration-1000
-                    {% if goal.current_score >= 80 %} text-emerald-500
-                    {% elif goal.current_score >= 50 %} text-blue-500
-                    {% else %} text-amber-500 {% endif %} shadow-lg"/>
-                        </svg>
-
-                        <div class="z-10 flex flex-col items-center">
-                            <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Year</span>
-                            <span class="text-lg font-black text-slate-900 dark:text-white leading-none">
-                {{ goal.target_year }}
-            </span>
-                        </div>
-
-                        <div class="absolute -top-1 px-2 py-0.5 mt-20 rounded-md text-white text-[9px] font-black shadow-xl transition-colors duration-500
-                                {% if goal.current_score >= 80 %}
-                                    bg-emerald-500 shadow-emerald-500/20
-                                {% elif goal.current_score >= 50 %}
-                                    bg-blue-600 shadow-blue-500/20
-                                {% else %}
-                                    bg-amber-500 shadow-amber-500/20
-                                {% endif %}">
-                            {{ goal.current_score }}%
-                        </div>
-                    </div>
-
-                    <div class="mt-2 w-4 h-4 rounded-full border-4 border-white dark:border-[#0a0f1a] z-20 transition-all duration-500
-    {% if goal.current_score >= 80 %}
-        bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]
-    {% elif goal.current_score >= 50 %}
-        bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]
-    {% else %}
-        bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.8)]
-    {% endif %}">
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-xl border-2 rounded-[2rem] p-6 shadow-xl transition-all duration-500 hover:-translate-y-3 flex flex-col min-h-[480px]
-    {% if goal.current_score >= 80 %}
-        border-emerald-500/40 shadow-emerald-500/10 group-hover:border-emerald-500
-    {% elif goal.current_score >= 50 %}
-        border-blue-500/40 shadow-blue-500/10 group-hover:border-blue-500
-    {% else %}
-        border-amber-500/40 shadow-amber-500/10 group-hover:border-amber-500
-    {% endif %}">
-                    <!--                    <div class="flex justify-between items-center mb-5">-->
-                    <!--                    <span class="text-slate-900 dark:text-white font-black text-lg tracking-tighter bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">-->
-                    <!--                        {{ goal.target_year }}-->
-                    <!--                    </span>-->
-                    <!--                        <div class="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">-->
-                    <!--                            <i class="fas fa-rocket text-blue-500 text-sm"></i>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
-                    <h3 class="text-xl font-black mb-2 leading-tight transition-colors duration-500
-    {% if goal.current_score >= 80 %}
-        text-emerald-600 dark:text-emerald-400
-    {% elif goal.current_score >= 50 %}
-        text-blue-600 dark:text-blue-400
-    {% else %}
-        text-amber-600 dark:text-amber-400
-    {% endif %}">
-                        {{ goal.goal_name }}
-                    </h3>
-                    <p class="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] mb-6">
-                        {{ goal.sub_title }}
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        {% for skill in goal.required_skills %}
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-[10px] text-slate-700 dark:text-slate-300 font-bold hover:bg-blue-500 hover:text-white transition-all">
-                        {{ skill }}
-                    </span>
-                        {% endfor %}
-                    </div>
-
-                    <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800">
-                        <div class="flex justify-between items-end mb-4">
-                            <div class="flex flex-col">
-                                <span class="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-bold">Progress Status</span>
-                                <span class="text-xs font-black text-slate-800 dark:text-slate-200">Processing Plan</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-2xl font-black text-blue-600 dark:text-blue-400">{{ goal.current_score }}</span>
-                                <span class="text-[10px] text-slate-400 block font-bold">/ {{ goal.target_score }}</span>
-                            </div>
-                        </div>
-
-                        {% set progress = (goal.current_score / goal.target_score) * 100 %}
-                        <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-transparent">
-                            <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000"
-                                 style="width: {{ progress }}%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+    <div class="hidden lg:block absolute top-[108px] left-20 right-20 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full z-0 overflow-hidden">
+        <div class="h-full transition-all duration-[2000ms] ease-out shadow-[0_0:15px_rgba(59,130,246,0.5)]
+            {% if user.overall_score >= 80 %} bg-emerald-500
+            {% elif user.overall_score >= 50 %} bg-blue-500
+            {% else %} bg-amber-500 {% endif %}"
+             style="width: {{ user.overall_score | default(0) }}%">
+            <div class="w-full h-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)] bg-[size:200%_100%] animate-shimmer"></div>
         </div>
     </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr gap-y-24 lg:gap-8 relative z-10 items-start">
+        {% for goal in goals %}
+
+        <div class="relative min-w-0 group" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+
+            {% if not loop.last %}
+                <div class="absolute -bottom-20 left-1/2 -translate-x-1/2 w-1 h-20 bg-slate-200 dark:bg-slate-800 lg:hidden">
+                     <div class="w-full bg-blue-500 transition-all duration-1000" style="height: {{ 100 if goal.current_score > 0 else 0 }}%"></div>
+                </div>
+            {% endif %}
+
+            <div class="flex flex-col items-center mb-6 relative">
+                <div class="relative flex items-center justify-center w-24 h-24 bg-slate-50 dark:bg-[#0a0f1a] rounded-full z-10">
+                    <svg class="absolute transform -rotate-90 w-full h-full">
+                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
+                                class="text-slate-200 dark:text-slate-800"/>
+
+                        {% set offset = 251 - (251 * goal.current_score / 100) %}
+                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
+                                stroke-dasharray="251"
+                                stroke-dashoffset="{{ offset }}"
+                                stroke-linecap="round"
+                                class="transition-all duration-1000
+                {% if goal.current_score >= 80 %} text-emerald-500
+                {% elif goal.current_score >= 50 %} text-blue-500
+                {% else %} text-amber-500 {% endif %} shadow-lg"/>
+                    </svg>
+
+                    <div class="z-10 flex flex-col items-center">
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Year</span>
+                        <span class="text-lg font-black text-slate-900 dark:text-white leading-none">
+                            {{ goal.target_year }}
+                        </span>
+                    </div>
+
+                    <div class="absolute -top-1 px-2 py-0.5 mt-20 rounded-md text-white text-[9px] font-black shadow-xl transition-colors duration-500
+                            {% if goal.current_score >= 80 %}
+                                bg-emerald-500 shadow-emerald-500/20
+                            {% elif goal.current_score >= 50 %}
+                                bg-blue-600 shadow-blue-500/20
+                            {% else %}
+                                bg-amber-500 shadow-amber-500/20
+                            {% endif %}">
+                        {{ goal.current_score }}%
+                    </div>
+                </div>
+
+                <div class="mt-2 w-4 h-4 rounded-full border-4 border-white dark:border-[#0a0f1a] z-20 transition-all duration-500
+                {% if goal.current_score >= 80 %}
+                    bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]
+                {% elif goal.current_score >= 50 %}
+                    bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]
+                {% else %}
+                    bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.8)]
+                {% endif %}">
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900/60 backdrop-blur-xl border-2 rounded-[2rem] p-6 shadow-xl transition-all duration-500 hover:-translate-y-3 flex flex-col min-h-[480px]
+            {% if goal.current_score >= 80 %}
+                border-emerald-500/40 shadow-emerald-500/10 group-hover:border-emerald-500
+            {% elif goal.current_score >= 50 %}
+                border-blue-500/40 shadow-blue-500/10 group-hover:border-blue-500
+            {% else %}
+                border-amber-500/40 shadow-amber-500/10 group-hover:border-amber-500
+            {% endif %}">
+
+                <h3 class="text-xl font-black mb-2 leading-tight transition-colors duration-500
+                {% if goal.current_score >= 80 %}
+                    text-emerald-600 dark:text-emerald-400
+                {% elif goal.current_score >= 50 %}
+                    text-blue-600 dark:text-blue-400
+                {% else %}
+                    text-amber-600 dark:text-amber-400
+                {% endif %}">
+                    {{ goal.goal_name }}
+                </h3>
+                <p class="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] mb-6">
+                    {{ goal.sub_title }}
+                </p>
+
+                <div class="flex flex-wrap gap-2 mb-8">
+                    {% for skill in goal.required_skills %}
+                    <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-[10px] text-slate-700 dark:text-slate-300 font-bold hover:bg-blue-500 hover:text-white transition-all">
+                        {{ skill }}
+                    </span>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800">
+                    <div class="flex justify-between items-end mb-4">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-bold">Progress Status</span>
+                            <span class="text-xs font-black text-slate-800 dark:text-slate-200">Processing Plan</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-2xl font-black text-blue-600 dark:text-blue-400">{{ goal.current_score }}</span>
+                            <span class="text-[10px] text-slate-400 block font-bold">/ {{ goal.target_score }}</span>
+                        </div>
+                    </div>
+
+                    {% set progress = (goal.current_score / goal.target_score) * 100 %}
+                    <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-transparent">
+                        <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000"
+                             style="width: {{ progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 <!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
 <!--         onclick="scrollToNextSection(this)">-->
 
@@ -469,7 +465,7 @@
 
 
 <section id="projects-section"
-             class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
+        class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
 
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
 
@@ -622,7 +618,7 @@
 </section>
 
 <section id="professional-backbone"
-         class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
+        class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
 
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <div class="absolute top-[10%] right-[15%] text-amber-500/10 text-8xl animate-float-slow rotate-12"><i class="fas fa-crown"></i></div>
@@ -656,7 +652,7 @@
             <div class="lg:col-span-2 space-y-8">
                 <div class="flex items-center gap-4 mb-10">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent"></div>
-                    <span class="text-[10px] font-black tracking-[0.4em] text-blue-600">Work History</span>
+                    <span class="text-[15px] font-black tracking-[0.4em] text-blue-600">Work History</span>
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent"></div>
                 </div>
 
@@ -701,7 +697,7 @@
 
             <div class="space-y-8">
                 <div class="flex items-center gap-4 mb-10">
-                    <span class="text-[10px] font-black tracking-[0.3em] text-amber-500">Recognition</span>
+                    <span class="text-[15px] font-black tracking-[0.3em] text-amber-500">Recognition</span>
                     <div class="h-px flex-1 bg-gradient-to-r from-slate-200 dark:from-slate-800 to-transparent"></div>
                 </div>
 
