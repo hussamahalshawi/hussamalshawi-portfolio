@@ -39,7 +39,7 @@ class Experience(Document):
 
     meta = {
         'collection': 'experience',
-        'ordering': ['-start_date'],  # Displays most recent professional roles first
+        'ordering': ['-end_date'],  # Displays most recent professional roles first
         'indexes': [
             'job_title',
             'company_name',
