@@ -6,10 +6,14 @@
          class="min-h-screen w-full pt-32 pb-24 relative overflow-hidden bg-white dark:bg-[#0a0f1a] flex flex-col items-center">
 
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div class="absolute top-[10%] left-[5%] text-blue-600/40 dark:text-blue-400/30 text-7xl animate-float-slow"><i class="fab fa-python"></i></div>
-        <div class="absolute top-[40%] left-[2%] text-orange-600/40 dark:text-orange-400/30 text-6xl animate-float-delayed"><i class="fas fa-code-branch"></i></div>
-        <div class="absolute bottom-[15%] left-[8%] text-slate-700/40 dark:text-slate-300/30 text-6xl animate-float-slow"><i class="fas fa-terminal"></i></div>
-        <div class="absolute top-[15%] right-[5%] text-emerald-600/40 dark:text-emerald-400/30 text-7xl animate-float-slow"><i class="fas fa-database"></i></div>
+        <div class="absolute top-[10%] left-[5%] text-blue-600/40 dark:text-blue-400/30 text-7xl animate-float-slow"><i
+                class="fab fa-python"></i></div>
+        <div class="absolute top-[40%] left-[2%] text-orange-600/40 dark:text-orange-400/30 text-6xl animate-float-delayed">
+            <i class="fas fa-code-branch"></i></div>
+        <div class="absolute bottom-[15%] left-[8%] text-slate-700/40 dark:text-slate-300/30 text-6xl animate-float-slow">
+            <i class="fas fa-terminal"></i></div>
+        <div class="absolute top-[15%] right-[5%] text-emerald-600/40 dark:text-emerald-400/30 text-7xl animate-float-slow">
+            <i class="fas fa-database"></i></div>
 
         <div class="absolute top-[10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-500/10 blur-[150px] rounded-full"></div>
         <div class="absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-500/10 blur-[150px] rounded-full"></div>
@@ -27,7 +31,7 @@
                     </nav>
                     <h2 class="text-blue-600 text-xs font-black uppercase tracking-[0.3em] mb-2">Portfolio</h2>
                     <h1 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter uppercase">
-                        Technical <span class="text-blue-600">Solutions</span>
+                        Technical <span class="text-blue-600">Project</span>
                     </h1>
                 </div>
                 <div class="bg-blue-600/10 border border-blue-600/20 px-6 py-3 rounded-2xl backdrop-blur-md">
@@ -40,7 +44,7 @@
         <div class="flex flex-wrap justify-center bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md mt-6 mb-16 mx-auto w-full max-w-6xl"
              data-aos="fade-up">
             <button onclick="filterAllProjects('all', event)"
-                    class="filter-btn active px-8 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all duration-300 bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+                    class="filter-btn px-8 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all duration-300 text-slate-500 hover:text-blue-500">
                 All Projects
             </button>
             {% for cat in categories %}
@@ -51,7 +55,8 @@
             {% endfor %}
         </div>
 
-        <div id="all-projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-8 items-stretch max-w-7xl mx-auto">
+        <div id="all-projects-grid"
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-8 items-stretch max-w-7xl mx-auto">
             {% for project in projects %}
             <div class="project-card group relative bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200/60 dark:border-slate-800/60 rounded-[3rem] p-3 transition-all duration-500 hover:-translate-y-4 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]"
                  data-category="{{ project.category.name|replace(' ', '-') if project.category else 'all' }}"
@@ -64,7 +69,8 @@
 
                     <div class="relative h-52 overflow-hidden m-2 rounded-[2.2rem]">
                         <img src="{{ url_for('static', filename='images/' + (project.project_image[0] if project.project_image else 'default.jpg')) }}"
-                             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ project.project_name }}">
+                             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                             alt="{{ project.project_name }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0d1321]/90 via-transparent to-transparent opacity-60"></div>
                         <div class="absolute top-4 left-4">
                             <span class="px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white rounded-xl text-[8px] font-black uppercase tracking-tighter">
@@ -107,26 +113,26 @@
 </section>
 
 <script>
-function filterAllProjects(category, event) {
-    // تحديث الأزرار
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
-        btn.classList.add('text-slate-500');
-    });
-    event.currentTarget.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+    function filterAllProjects(category, event) {
+        // تحديث الأزرار
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+            btn.classList.add('text-slate-500');
+        });
+        event.currentTarget.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
 
-    // الفلترة
-    const projects = document.querySelectorAll('.project-card');
-    projects.forEach(project => {
-        if (category === 'all' || project.getAttribute('data-category') === category) {
-            project.style.display = 'block';
-            setTimeout(() => { project.style.opacity = '1'; project.style.transform = 'scale(1)'; }, 10);
-        } else {
-            project.style.opacity = '0';
-            project.style.transform = 'scale(0.95)';
-            setTimeout(() => { project.style.display = 'none'; }, 300);
-        }
-    });
-}
+        // الفلترة
+        const projects = document.querySelectorAll('.project-card');
+        projects.forEach(project => {
+            if (category === 'all' || project.getAttribute('data-category') === category) {
+                project.style.display = 'block';
+                setTimeout(() => { project.style.opacity = '1'; project.style.transform = 'scale(1)'; }, 10);
+            } else {
+                project.style.opacity = '0';
+                project.style.transform = 'scale(0.95)';
+                setTimeout(() => { project.style.display = 'none'; }, 300);
+            }
+        });
+    }
 </script>
 {% endblock %}

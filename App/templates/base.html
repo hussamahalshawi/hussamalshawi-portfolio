@@ -45,6 +45,7 @@
         <div class="hidden md:flex flex-1 justify-center items-center space-x-8 text-sm font-bold uppercase tracking-wide">
             <a href="/" class="hover:text-blue-500 transition-colors">Home</a>
             <a href="{{ url_for('portfolio.all_projects') }}" class="hover:text-blue-500 transition-colors">Projects</a>
+            <a href="{{ url_for('portfolio.all_skills') }}" class="hover:text-blue-500 transition-colors">Skills</a>
         </div>
 
         <div class="flex-1 flex justify-end items-center space-x-4">
@@ -73,6 +74,7 @@
          class="absolute top-full left-0 w-full bg-white dark:bg-darkBg border-b dark:border-slate-800 hidden flex-col p-8 space-y-6 shadow-2xl md:hidden text-center animate-fade-in">
         <a href="/" class="text-lg font-bold">Home</a>
         <a href="{{ url_for('portfolio.all_projects') }}" class="text-lg font-bold">Projects</a>
+        <a href="{{ url_for('portfolio.all_skills') }}" class="text-lg font-bold">Skills</a>
 
     </div>
 </nav>

@@ -46,7 +46,7 @@ def index():
                              "Frameworks",
                              "Database",
                              "Soft skills",
-                             "API(Web Technologies & APIs)",
+                             "API (Web Technologies & APIs)",
                              "DevOps & Cloud",
                              "AI & Data Science",
                              "Business",
@@ -58,7 +58,7 @@ def index():
 
         # 3. جلب المهارات التي تنتمي لهذه الأنواع فقط، مرتبة تنازلياً حسب السكور
         # نستخدم [:10] لجلب أعلى 10 فقط كما في الكود الخاص بك
-        skills = Skill.objects(skill_type__in=selected_types, level__gt=50).order_by('skill_type', '-level')[:12]
+        skills = Skill.objects(skill_type__in=selected_types, level__gt=75).order_by('skill_type', '-level')[:12]
         achievements = Achievement.objects.all()
         feedbacks = Feedback.objects.all()
 
