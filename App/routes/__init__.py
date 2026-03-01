@@ -41,7 +41,7 @@ def index():
         experiences = Experience.objects.all()
         courses = Course.objects.all()
         educations = Education.objects.all()
-        selfStudys = SelfStudy.objects.all()
+        selfstudys = SelfStudy.objects.all()
         target_categories = ["Programming languages",
                              "Frameworks",
                              "Database",
@@ -73,7 +73,7 @@ def index():
                                languages=languages,
                                courses=courses,
                                educations=educations,
-                               selfStudys=selfStudys,
+                               selfstudys=selfstudys,
                                skills=skills,
                                achievements=achievements,
                                feedbacks=feedbacks,
