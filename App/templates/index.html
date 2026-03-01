@@ -797,9 +797,11 @@
             <div class="lg:col-span-4 space-y-10">
 
                 <div class="space-y-6" data-aos="fade-right">
-                    <h3 class="text-xs font-black text-blue-600 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-600"></span> Academic Path
-                    </h3>
+                    <h1 class="text-xl md:text-2xl font-black text-blue-600 uppercase tracking-[0.3em] mb-10 flex items-center justify-center gap-4">
+                        <div class="h-px w-12 bg-blue-600/40"></div>
+                        <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> Education
+                        <div class="h-px w-12 bg-blue-600/40"></div>
+                    </h1>
                     {% for edu in educations %}
                     <div class="p-8 bg-slate-50 dark:bg-[#0d1321] rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-500 hover:scale-[1.02]">
                         <div class="flex justify-between items-start mb-4">
@@ -839,10 +841,11 @@
             </div>
 
             <div class="lg:col-span-8 space-y-6" data-aos="fade-left">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-slate-400"></span> Professional Certifications
+                <h3 class="text-xl md:text-2xl font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em] mb-10 flex items-center justify-center gap-4">
+                    <div class="h-px w-12 bg-slate-400/20"></div>
+                    <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> Course & Certificates
+                    <div class="h-px w-12 bg-slate-400/20"></div>
                 </h3>
-
                 <div class="grid grid-cols-1 gap-4">
                     {% for course in courses %}
                     <div class="group relative bg-white dark:bg-[#0d1321] border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 transition-all duration-700 ease-in-out hover:border-blue-500 hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)] overflow-hidden">
