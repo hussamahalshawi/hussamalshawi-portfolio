@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback
+from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType
 from flask import request, jsonify
 import json
 from datetime import datetime, timezone
@@ -42,7 +42,23 @@ def index():
         courses = Course.objects.all()
         educations = Education.objects.all()
         selfStudys = SelfStudy.objects.all()
-        skills = Skill.objects.all()
+        target_categories = ["Programming languages",
+                             "Frameworks",
+                             "Database",
+                             "Soft skills",
+                             "API(Web Technologies & APIs)",
+                             "DevOps & Cloud",
+                             "AI & Data Science",
+                             "Business",
+                             "Technical Skills",
+                             "Artificial Intelligence"]
+
+        # 2. جلب الـ IDs الخاصة بهذه الأنواع أولاً
+        selected_types = SkillType.objects(name__in=target_categories)
+
+        # 3. جلب المهارات التي تنتمي لهذه الأنواع فقط، مرتبة تنازلياً حسب السكور
+        # نستخدم [:10] لجلب أعلى 10 فقط كما في الكود الخاص بك
+        skills = Skill.objects(skill_type__in=selected_types, level__gt=50).order_by('skill_type', '-level')[:12]
         achievements = Achievement.objects.all()
         feedbacks = Feedback.objects.all()
 
@@ -163,6 +179,31 @@ def inject_feedbacks():
         return dict(feedbacks_json="[]")
 
 
+@portfolio.route('/skills')
+def all_skills():
+    """
+    Route to display all technical skills ordered by proficiency level.
+    Adheres to HussamAlshawi-Portfolio clean code standards.
+    """
+    try:
+        # جلب المهارات مرتبة تنازلياً حسب السكور
+        # إذا كنت تستخدم SQLAlchemy: Skill.query.order_by(Skill.level.desc()).all()
+        # إذا كنت تستخدم MongoEngine: Skill.objects.order_by('-level')
+        all_skills = Skill.objects.order_by('-level')
+        skill_types = SkillType.objects.all()
+
+        # حساب إحصائيات سريعة لتعزيز الـ SEO والمحتوى
+        total_count = all_skills.count()
+
+        return render_template('skills_page.html',
+                               skills=all_skills,
+                               total_count=total_count,
+                               skill_types=skill_types,
+                               title="Technical Stack | All Skills")
+    except Exception as e:
+        # معالجة الخطأ بشكل نظيف
+        print(f"Error fetching skills: {e}")
+        return redirect(url_for('index'))
 
 # @portfolio.route('/api/feedback/submit', methods=['POST'])
 # def submit_feedback():

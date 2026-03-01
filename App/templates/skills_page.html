@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %} All Skills | Hussam Alshawi {% endblock %}
+{% block content %}
+<section class="min-h-screen pt-32 pb-20 px-6 bg-white dark:bg-darkBg">
+    <div class="max-w-6xl mx-auto mb-16" data-aos="fade-down">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <nav class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">
+                    <a href="/" class="hover:text-blue-600 transition-colors">Home</a>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                    <span class="text-blue-600">Full Stack Arsenal</span>
+                </nav>
+                <h2 class="text-blue-600 text-xs font-black uppercase tracking-[0.3em] mb-2">Inventory</h2>
+                <h1 class="text-4xl md:text-6xl font-black dark:text-white tracking-tighter uppercase">
+                    Technical <span class="text-blue-600">Expertise</span>
+                </h1>
+            </div>
+            <div class="bg-blue-600/10 border border-blue-600/20 px-6 py-3 rounded-2xl backdrop-blur-md">
+                <span class="block text-[9px] font-black uppercase tracking-widest text-blue-600 mb-1">Total Assets</span>
+                <span class="text-3xl font-black dark:text-white leading-none">{{ total_count }} Skills</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap justify-center items-center bg-slate-100 dark:bg-slate-900/50 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md w-full max-w-6xl mx-auto mb-12" data-aos="fade-up">
+        <button onclick="filterSkills('all', event)"
+            class="skill-filter-btn px-6 py-2.5 rounded-xl text-[10px] font-black transition-all duration-300 text-slate-500 hover:text-blue-500">
+            All Skills
+    </button>
+        {% for type in skill_types %}
+        <button onclick="filterSkills('{{ type.name|replace(' ', '-') }}', event)"
+                class="skill-filter-btn px-6 py-2.5 rounded-xl text-[10px] font-black transition-all duration-300 text-slate-500 hover:text-blue-500">
+            {{ type.name }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5" id="skills-container">
+        {% for skill in skills %}
+        <div class="skill-card group relative p-5 rounded-2xl bg-white/5 dark:bg-slate-900/40 backdrop-blur-xl border-2 transition-all duration-500 hover:-translate-y-2
+            {% if skill.level >= 90 %} border-emerald-500/20 hover:border-emerald-500 shadow-emerald-500/10
+            {% elif skill.level >= 75 %} border-blue-500/20 hover:border-blue-500 shadow-blue-500/10
+            {% elif skill.level >= 50 %} border-amber-500/20 hover:border-amber-500 shadow-amber-500/10
+            {% else %} border-slate-500/20 hover:border-slate-500 shadow-slate-500/10
+            {% endif %}"
+            data-category="{{ skill.skill_type.name|replace(' ', '-') if skill.skill_type else 'Logic' }}"
+            data-aos="zoom-in">
+
+            <div class="flex flex-col gap-5 h-full justify-between z-10 relative">
+                <div class="flex justify-between items-start">
+                    <div class="p-2.5 rounded-xl bg-slate-500/5 dark:bg-slate-400/5 group-hover:bg-blue-600 transition-colors duration-500">
+                        <i class="fas fa-terminal text-xs text-slate-500 dark:text-slate-400 group-hover:text-white"></i>
+                    </div>
+                    <span class="text-[8px] font-black text-blue-500 uppercase tracking-widest">
+                        {{ skill.skill_type.name if skill.skill_type else 'Logic' }}
+                    </span>
+                </div>
+
+                <div class="text-center py-2">
+                    <h3 class="text-xs md:text-sm font-black dark:text-white uppercase truncate tracking-tight">
+                        {{ skill.skill_name }}
+                    </h3>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-[8px] font-bold text-slate-500 uppercase">Mastery</span>
+                        <span class="text-[9px] font-black text-blue-600">{{ skill.level }}%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-1000 ease-out
+                            {% if skill.level >= 90 %} bg-emerald-500
+                            {% elif skill.level >= 75 %} bg-blue-500
+                            {% elif skill.level >= 50 %} bg-amber-500
+                            {% else %} bg-slate-500
+                            {% endif %}"
+                            style="width: {{ skill.level }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+function filterSkills(category, event) {
+    // 1. تحديث شكل الأزرار فوراً
+    const buttons = document.querySelectorAll('.skill-filter-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/20');
+        btn.classList.add('text-slate-500');
+    });
+
+    event.currentTarget.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/20');
+    event.currentTarget.classList.remove('text-slate-500');
+
+    // 2. فلترة سريعة باستخدام CSS Classes بدلاً من setTimeout الطويل
+    const cards = document.querySelectorAll('.skill-card');
+    cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        } else {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}
