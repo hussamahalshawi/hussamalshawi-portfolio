@@ -233,30 +233,30 @@
 
     </div>
 
-<!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
-<!--         onclick="scrollToNextSection(this)">-->
+    <!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
+    <!--         onclick="scrollToNextSection(this)">-->
 
-<!--    <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
-<!--        Explore-->
-<!--    </span>-->
+    <!--    <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
+    <!--        Explore-->
+    <!--    </span>-->
 
-<!--        <div class="relative w-[34px] h-[54px]">-->
-<!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
+    <!--        <div class="relative w-[34px] h-[54px]">-->
+    <!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
 
-<!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
+    <!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
 
-<!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
+    <!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
 
-<!--                <div class="absolute inset-0 opacity-0 dark:opacity-20 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:5px_5px]"></div>-->
-<!--            </div>-->
-<!--        </div>-->
+    <!--                <div class="absolute inset-0 opacity-0 dark:opacity-20 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:5px_5px]"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
 
-<!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
-<!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
-<!--            <i class="fas fa-chevron-down text-[8px] text-blue-800/50 dark:text-blue-500/50 animate-bounce"-->
-<!--               style="animation-delay: 0.2s"></i>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
+    <!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
+    <!--            <i class="fas fa-chevron-down text-[8px] text-blue-800/50 dark:text-blue-500/50 animate-bounce"-->
+    <!--               style="animation-delay: 0.2s"></i>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </section>
 
 
@@ -315,52 +315,53 @@
     </div>
     <div class="relative max-w-full mx-auto px-4 pb-20 w-full flex flex-col mt-2">
 
-    <div class="hidden lg:block absolute top-[108px] left-20 right-20 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full z-0 overflow-hidden">
-        <div class="h-full transition-all duration-[2000ms] ease-out shadow-[0_0:15px_rgba(59,130,246,0.5)]
+        <div class="hidden lg:block absolute top-[108px] left-20 right-20 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full z-0 overflow-hidden">
+            <div class="h-full transition-all duration-[2000ms] ease-out shadow-[0_0:15px_rgba(59,130,246,0.5)]
             {% if user.overall_score >= 80 %} bg-emerald-500
             {% elif user.overall_score >= 50 %} bg-blue-500
             {% else %} bg-amber-500 {% endif %}"
-             style="width: {{ user.overall_score | default(0) }}%">
-            <div class="w-full h-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)] bg-[size:200%_100%] animate-shimmer"></div>
+                 style="width: {{ user.overall_score | default(0) }}%">
+                <div class="w-full h-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)] bg-[size:200%_100%] animate-shimmer"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr gap-y-24 lg:gap-8 relative z-10 items-start">
-        {% for goal in goals %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr gap-y-24 lg:gap-8 relative z-10 items-start">
+            {% for goal in goals %}
 
-        <div class="relative min-w-0 group" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+            <div class="relative min-w-0 group" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
 
-            {% if not loop.last %}
+                {% if not loop.last %}
                 <div class="absolute -bottom-20 left-1/2 -translate-x-1/2 w-1 h-20 bg-slate-200 dark:bg-slate-800 lg:hidden">
-                     <div class="w-full bg-blue-500 transition-all duration-1000" style="height: {{ 100 if goal.current_score > 0 else 0 }}%"></div>
+                    <div class="w-full bg-blue-500 transition-all duration-1000"
+                         style="height: {{ 100 if goal.current_score > 0 else 0 }}%"></div>
                 </div>
-            {% endif %}
+                {% endif %}
 
-            <div class="flex flex-col items-center mb-6 relative">
-                <div class="relative flex items-center justify-center w-24 h-24 bg-slate-50 dark:bg-[#0a0f1a] rounded-full z-10">
-                    <svg class="absolute transform -rotate-90 w-full h-full">
-                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
-                                class="text-slate-200 dark:text-slate-800"/>
+                <div class="flex flex-col items-center mb-6 relative">
+                    <div class="relative flex items-center justify-center w-24 h-24 bg-slate-50 dark:bg-[#0a0f1a] rounded-full z-10">
+                        <svg class="absolute transform -rotate-90 w-full h-full">
+                            <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
+                                    class="text-slate-200 dark:text-slate-800"/>
 
-                        {% set offset = 251 - (251 * goal.current_score / 100) %}
-                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
-                                stroke-dasharray="251"
-                                stroke-dashoffset="{{ offset }}"
-                                stroke-linecap="round"
-                                class="transition-all duration-1000
+                            {% set offset = 251 - (251 * goal.current_score / 100) %}
+                            <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="6" fill="transparent"
+                                    stroke-dasharray="251"
+                                    stroke-dashoffset="{{ offset }}"
+                                    stroke-linecap="round"
+                                    class="transition-all duration-1000
                 {% if goal.current_score >= 80 %} text-emerald-500
                 {% elif goal.current_score >= 50 %} text-blue-500
                 {% else %} text-amber-500 {% endif %} shadow-lg"/>
-                    </svg>
+                        </svg>
 
-                    <div class="z-10 flex flex-col items-center">
-                        <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Year</span>
-                        <span class="text-lg font-black text-slate-900 dark:text-white leading-none">
+                        <div class="z-10 flex flex-col items-center">
+                            <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Year</span>
+                            <span class="text-lg font-black text-slate-900 dark:text-white leading-none">
                             {{ goal.target_year }}
                         </span>
-                    </div>
+                        </div>
 
-                    <div class="absolute -top-1 px-2 py-0.5 mt-20 rounded-md text-white text-[9px] font-black shadow-xl transition-colors duration-500
+                        <div class="absolute -top-1 px-2 py-0.5 mt-20 rounded-md text-white text-[9px] font-black shadow-xl transition-colors duration-500
                             {% if goal.current_score >= 80 %}
                                 bg-emerald-500 shadow-emerald-500/20
                             {% elif goal.current_score >= 50 %}
@@ -368,11 +369,11 @@
                             {% else %}
                                 bg-amber-500 shadow-amber-500/20
                             {% endif %}">
-                        {{ goal.current_score }}%
+                            {{ goal.current_score }}%
+                        </div>
                     </div>
-                </div>
 
-                <div class="mt-2 w-4 h-4 rounded-full border-4 border-white dark:border-[#0a0f1a] z-20 transition-all duration-500
+                    <div class="mt-2 w-4 h-4 rounded-full border-4 border-white dark:border-[#0a0f1a] z-20 transition-all duration-500
                 {% if goal.current_score >= 80 %}
                     bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]
                 {% elif goal.current_score >= 50 %}
@@ -380,10 +381,10 @@
                 {% else %}
                     bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.8)]
                 {% endif %}">
+                    </div>
                 </div>
-            </div>
 
-            <div class="bg-white dark:bg-slate-900/60 backdrop-blur-xl border-2 rounded-[2rem] p-6 shadow-xl transition-all duration-500 hover:-translate-y-3 flex flex-col min-h-[480px]
+                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-xl border-2 rounded-[2rem] p-6 shadow-xl transition-all duration-500 hover:-translate-y-3 flex flex-col min-h-[480px]
             {% if goal.current_score >= 80 %}
                 border-emerald-500/40 shadow-emerald-500/10 group-hover:border-emerald-500
             {% elif goal.current_score >= 50 %}
@@ -392,7 +393,7 @@
                 border-amber-500/40 shadow-amber-500/10 group-hover:border-amber-500
             {% endif %}">
 
-                <h3 class="text-xl font-black mb-2 leading-tight transition-colors duration-500
+                    <h3 class="text-xl font-black mb-2 leading-tight transition-colors duration-500
                 {% if goal.current_score >= 80 %}
                     text-emerald-600 dark:text-emerald-400
                 {% elif goal.current_score >= 50 %}
@@ -400,72 +401,72 @@
                 {% else %}
                     text-amber-600 dark:text-amber-400
                 {% endif %}">
-                    {{ goal.goal_name }}
-                </h3>
-                <p class="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] mb-6">
-                    {{ goal.sub_title }}
-                </p>
+                        {{ goal.goal_name }}
+                    </h3>
+                    <p class="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] mb-6">
+                        {{ goal.sub_title }}
+                    </p>
 
-                <div class="flex flex-wrap gap-2 mb-8">
-                    {% for skill in goal.required_skills %}
-                    <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-[10px] text-slate-700 dark:text-slate-300 font-bold hover:bg-blue-500 hover:text-white transition-all">
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        {% for skill in goal.required_skills %}
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-[10px] text-slate-700 dark:text-slate-300 font-bold hover:bg-blue-500 hover:text-white transition-all">
                         {{ skill }}
                     </span>
-                    {% endfor %}
-                </div>
-
-                <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800">
-                    <div class="flex justify-between items-end mb-4">
-                        <div class="flex flex-col">
-                            <span class="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-bold">Progress Status</span>
-                            <span class="text-xs font-black text-slate-800 dark:text-slate-200">Processing Plan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-2xl font-black text-blue-600 dark:text-blue-400">{{ goal.current_score }}</span>
-                            <span class="text-[10px] text-slate-400 block font-bold">/ {{ goal.target_score }}</span>
-                        </div>
+                        {% endfor %}
                     </div>
 
-                    {% set progress = (goal.current_score / goal.target_score) * 100 %}
-                    <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-transparent">
-                        <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000"
-                             style="width: {{ progress }}%"></div>
+                    <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800">
+                        <div class="flex justify-between items-end mb-4">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-bold">Progress Status</span>
+                                <span class="text-xs font-black text-slate-800 dark:text-slate-200">Processing Plan</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-black text-blue-600 dark:text-blue-400">{{ goal.current_score }}</span>
+                                <span class="text-[10px] text-slate-400 block font-bold">/ {{ goal.target_score }}</span>
+                            </div>
+                        </div>
+
+                        {% set progress = (goal.current_score / goal.target_score) * 100 %}
+                        <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/50 dark:border-transparent">
+                            <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000"
+                                 style="width: {{ progress }}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
-<!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
-<!--         onclick="scrollToNextSection(this)">-->
+    <!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
+    <!--         onclick="scrollToNextSection(this)">-->
 
-<!--    <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
-<!--        Explore-->
-<!--    </span>-->
-<!---->
-<!--        <div class="relative w-[34px] h-[54px]">-->
-<!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
+    <!--    <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
+    <!--        Explore-->
+    <!--    </span>-->
+    <!---->
+    <!--        <div class="relative w-[34px] h-[54px]">-->
+    <!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
 
-<!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
+    <!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
 
-<!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
+    <!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
 
-<!--                <div class="absolute inset-0 opacity-0 dark:opacity-20 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:5px_5px]"></div>-->
-<!--            </div>-->
-<!--        </div>-->
+    <!--                <div class="absolute inset-0 opacity-0 dark:opacity-20 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:5px_5px]"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
 
-<!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
-<!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
-<!--            <i class="fas fa-chevron-down text-[8px] text-blue-800/50 dark:text-blue-500/50 animate-bounce"-->
-<!--               style="animation-delay: 0.2s"></i>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
+    <!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
+    <!--            <i class="fas fa-chevron-down text-[8px] text-blue-800/50 dark:text-blue-500/50 animate-bounce"-->
+    <!--               style="animation-delay: 0.2s"></i>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </section>
 
 
 <section id="projects-section"
-        class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
+         class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
 
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
 
@@ -544,14 +545,14 @@
     </div>
 
     <div id="projects-grid"
-     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 py-8 items-stretch w-full">
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 py-8 items-stretch w-full">
 
         {% for project in projects %}
-<div class="project-card {{ 'hidden-project' if loop.index > 4 else '' }} group relative bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200/60 dark:border-slate-800/60 rounded-[3rem] p-3 transition-all duration-500 hover:-translate-y-4 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]"
-     data-category="{{ project.category.name if project.category else 'all' }}"
-     data-index="{{ loop.index }}"
-     data-aos="fade-up"
-     data-aos-delay="{{ (loop.index0 % 4) * 100 }}">
+        <div class="project-card {{ 'hidden-project' if loop.index > 4 else '' }} group relative bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200/60 dark:border-slate-800/60 rounded-[3rem] p-3 transition-all duration-500 hover:-translate-y-4 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]"
+             data-category="{{ project.category.name if project.category else 'all' }}"
+             data-index="{{ loop.index }}"
+             data-aos="fade-up"
+             data-aos-delay="{{ (loop.index0 % 4) * 100 }}">
             <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-[3.2rem] opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500 pointer-events-none"></div>
 
             <div class="relative h-full flex flex-col bg-white dark:bg-[#0d1321] rounded-[2.8rem] overflow-hidden z-10 border border-slate-100 dark:border-slate-800/50 group-hover:border-blue-500/30 transition-colors duration-500">
@@ -599,42 +600,54 @@
     </div>
     </div>
 
-<!--    <div class="cyber-scroll-adaptive absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
-<!--         onclick="scrollToNextSection(this)">-->
-<!--        <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
-<!--            Explore-->
-<!--        </span>-->
-<!--        <div class="relative w-[34px] h-[54px]">-->
-<!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
-<!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
-<!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
-<!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="cyber-scroll-adaptive absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
+    <!--         onclick="scrollToNextSection(this)">-->
+    <!--        <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
+    <!--            Explore-->
+    <!--        </span>-->
+    <!--        <div class="relative w-[34px] h-[54px]">-->
+    <!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
+    <!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
+    <!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
+    <!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
 </section>
 
 <section id="professional-backbone"
-        class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
+         class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg px-6 md:px-10">
 
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div class="absolute top-[10%] right-[15%] text-amber-500/10 text-8xl animate-float-slow rotate-12"><i class="fas fa-crown"></i></div>
-        <div class="absolute top-[35%] right-[5%] text-amber-600/10 text-9xl animate-float-delayed -rotate-12"><i class="fas fa-award"></i></div>
-        <div class="absolute bottom-[20%] right-[10%] text-amber-400/10 text-7xl animate-float-slow rotate-45"><i class="fas fa-trophy"></i></div>
-        <div class="absolute top-[60%] right-[18%] text-amber-500/5 text-5xl animate-pulse"><i class="fas fa-certificate"></i></div>
-        <div class="absolute bottom-[5%] right-[25%] text-amber-300/10 text-6xl animate-float-delayed"><i class="fas fa-medal"></i></div>
+        <div class="absolute top-[10%] right-[15%] text-amber-500/10 text-8xl animate-float-slow rotate-12"><i
+                class="fas fa-crown"></i></div>
+        <div class="absolute top-[35%] right-[5%] text-amber-600/10 text-9xl animate-float-delayed -rotate-12"><i
+                class="fas fa-award"></i></div>
+        <div class="absolute bottom-[20%] right-[10%] text-amber-400/10 text-7xl animate-float-slow rotate-45"><i
+                class="fas fa-trophy"></i></div>
+        <div class="absolute top-[60%] right-[18%] text-amber-500/5 text-5xl animate-pulse"><i
+                class="fas fa-certificate"></i></div>
+        <div class="absolute bottom-[5%] right-[25%] text-amber-300/10 text-6xl animate-float-delayed"><i
+                class="fas fa-medal"></i></div>
 
-        <div class="absolute top-[15%] left-[8%] text-blue-500/10 text-7xl animate-float-delayed -rotate-12"><i class="fas fa-briefcase"></i></div>
-        <div class="absolute top-[45%] left-[3%] text-blue-600/10 text-9xl animate-float-slow rotate-6"><i class="fas fa-chart-line"></i></div>
-        <div class="absolute bottom-[25%] left-[10%] text-blue-400/10 text-8xl animate-float-delayed -rotate-45"><i class="fas fa-laptop-code"></i></div>
-        <div class="absolute top-[70%] left-[15%] text-blue-500/5 text-5xl animate-pulse"><i class="fas fa-lightbulb"></i></div>
-        <div class="absolute bottom-[10%] left-[20%] text-blue-300/10 text-6xl animate-float-slow"><i class="fas fa-handshake"></i></div>
+        <div class="absolute top-[15%] left-[8%] text-blue-500/10 text-7xl animate-float-delayed -rotate-12"><i
+                class="fas fa-briefcase"></i></div>
+        <div class="absolute top-[45%] left-[3%] text-blue-600/10 text-9xl animate-float-slow rotate-6"><i
+                class="fas fa-chart-line"></i></div>
+        <div class="absolute bottom-[25%] left-[10%] text-blue-400/10 text-8xl animate-float-delayed -rotate-45"><i
+                class="fas fa-laptop-code"></i></div>
+        <div class="absolute top-[70%] left-[15%] text-blue-500/5 text-5xl animate-pulse"><i
+                class="fas fa-lightbulb"></i></div>
+        <div class="absolute bottom-[10%] left-[20%] text-blue-300/10 text-6xl animate-float-slow"><i
+                class="fas fa-handshake"></i></div>
 
-        <div class="absolute top-[5%] left-[50%] -translate-x-1/2 text-slate-400/10 text-4xl animate-float-slow"><i class="fas fa-gem"></i></div>
-        <div class="absolute bottom-[15%] left-[45%] text-slate-400/10 text-5xl animate-float-delayed rotate-12"><i class="fas fa-rocket"></i></div>
+        <div class="absolute top-[5%] left-[50%] -translate-x-1/2 text-slate-400/10 text-4xl animate-float-slow"><i
+                class="fas fa-gem"></i></div>
+        <div class="absolute bottom-[15%] left-[45%] text-slate-400/10 text-5xl animate-float-delayed rotate-12"><i
+                class="fas fa-rocket"></i></div>
 
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] bg-blue-600/5 blur-[150px] rounded-full"></div>
         <div class="absolute top-[20%] right-[10%] w-[30vw] h-[30vw] bg-amber-500/5 blur-[120px] rounded-full"></div>
@@ -666,16 +679,26 @@
 
                             <div class="flex flex-wrap justify-between items-start gap-4 mb-4 relative z-10">
                                 <div>
-                                    <h3 class="text-xl md:text-2xl font-black dark:text-white tracking-tight leading-none">{{ exp.job_title }}</h3>
+                                    <h3 class="text-xl md:text-2xl font-black dark:text-white tracking-tight leading-none">
+                                        {{ exp.job_title }}</h3>
                                     <div class="flex items-center gap-2 mt-3">
                                         <span class="text-blue-500 font-black text-[10px] uppercase tracking-widest">{{ exp.company_name }}</span>
-                                        <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold">| <i class="fas fa-map-marker-alt mr-1"></i>{{ exp.location }}</span>
+                                        <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold">| <i
+                                                class="fas fa-map-marker-alt mr-1"></i>{{ exp.location }}</span>
                                     </div>
                                 </div>
-                                <span class="px-4 py-2 bg-slate-900 dark:bg-blue-600/10 border border-slate-800 dark:border-blue-500/20 rounded-xl text-[9px] font-black text-white dark:text-blue-400 uppercase tracking-tighter">
-                                    {{ exp.start_date.strftime('%b %Y') }} —
-                                    {% if exp.is_current %} <span class="animate-pulse text-emerald-500 font-black">Present</span> {% else %} {{ exp.end_date.strftime('%b %Y') }} {% endif %}
-                                </span>
+                                <span class="px-4 py-2 bg-slate-900 text-white border border-slate-800
+             dark:bg-white dark:text-slate-900 dark:border-slate-200
+             rounded-xl text-[9px] font-black uppercase tracking-tighter">
+
+    {{ exp.start_date.strftime('%b %Y') }} —
+
+    {% if exp.is_current %}
+        <span class="animate-pulse text-emerald-500 font-black">Present</span>
+    {% else %}
+        {{ exp.end_date.strftime('%b %Y') }}
+    {% endif %}
+</span>
                             </div>
 
                             <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8 font-medium relative z-10">
@@ -717,7 +740,8 @@
                                     {{ award.title }}
                                 </h4>
                                 <span class="text-[10px] text-slate-500 font-black block mt-1 uppercase tracking-tighter">
-                                    <i class="fas fa-building mr-1"></i>{{ award.issuing_organization }} <span class="mx-1">•</span> {{ award.date_obtained.strftime('%Y') }}
+                                    <i class="fas fa-building mr-1"></i>{{ award.issuing_organization }} <span
+                                        class="mx-1">•</span> {{ award.date_obtained.strftime('%Y') }}
                                 </span>
                             </div>
                         </div>
@@ -742,9 +766,11 @@
                     <i class="fas fa-rocket absolute bottom-4 right-8 text-6xl opacity-10 group-hover:-translate-y-4 group-hover:translate-x-4 transition-transform duration-1000"></i>
 
                     <h5 class="text-xl font-black uppercase mb-3 relative z-10 tracking-tighter">The Next Chapter?</h5>
-                    <p class="text-xs text-blue-100 mb-8 relative z-10 font-medium leading-relaxed">I'm currently scouting for ambitious projects and visionary teams. Let's create impact together.</p>
+                    <p class="text-xs text-blue-100 mb-8 relative z-10 font-medium leading-relaxed">I'm currently
+                        scouting for ambitious projects and visionary teams. Let's create impact together.</p>
 
-                    <a href="/contact" class="inline-flex items-center justify-center w-full gap-3 bg-white text-blue-700 px-7 py-4 rounded-2xl text-[10px] font-black uppercase hover:shadow-xl transition-all relative z-10 shadow-lg group/btn">
+                    <a href="/contact"
+                       class="inline-flex items-center justify-center w-full gap-3 bg-white text-blue-700 px-7 py-4 rounded-2xl text-[10px] font-black uppercase hover:shadow-xl transition-all relative z-10 shadow-lg group/btn">
                         Start Collaboration
                         <i class="fas fa-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
                     </a>
