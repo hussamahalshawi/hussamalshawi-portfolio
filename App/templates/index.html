@@ -200,10 +200,10 @@
                     </a>
                 </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-    {% for skill in skills %}
-    <div class="group relative p-[2px] rounded-2xl transition-all duration-500 hover:-translate-y-2"
-         style="background: conic-gradient(
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {% for skill in skills %}
+                    <div class="group relative p-[2px] rounded-2xl transition-all duration-500 hover:-translate-y-2"
+                         style="background: conic-gradient(
             {% if skill.level >= 90 %} #10b981 {{ skill.level }}%, #e2e8f0 0%
             {% elif skill.level >= 75 %} #3b82f6 {{ skill.level }}%, #e2e8f0 0%
             {% elif skill.level >= 50 %} #f59e0b {{ skill.level }}%, #e2e8f0 0%
@@ -211,19 +211,19 @@
             {% endif %}
          );">
 
-        <div class="bg-white dark:bg-[#0d1321] rounded-[calc(1rem-1px)] p-4 h-full w-full flex flex-col items-center justify-center text-center">
+                        <div class="bg-white dark:bg-[#0d1321] rounded-[calc(1rem-1px)] p-4 h-full w-full flex flex-col items-center justify-center text-center">
 
-            <div class="w-full flex flex-col items-center gap-2 z-10">
+                            <div class="w-full flex flex-col items-center gap-2 z-10">
                 <span class="text-[8px] font-black tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
                     {{ skill.skill_type.type_name if skill.skill_type else 'Dev' }}
                 </span>
 
-                <div class="flex flex-row items-center justify-center gap-2 w-full">
-                    <h3 class="text-[13px] font-black text-slate-900 dark:text-white truncate tracking-tight uppercase">
-                        {{ skill.skill_name }}
-                    </h3>
+                                <div class="flex flex-row items-center justify-center gap-2 w-full">
+                                    <h3 class="text-[13px] font-black text-slate-900 dark:text-white truncate tracking-tight uppercase">
+                                        {{ skill.skill_name }}
+                                    </h3>
 
-                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded-md
+                                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded-md
                         {% if skill.level >= 90 %} bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10
                         {% elif skill.level >= 75 %} bg-blue-50 text-blue-600 dark:bg-blue-500/10
                         {% elif skill.level >= 50 %} bg-amber-50 text-amber-600 dark:bg-amber-500/10
@@ -231,14 +231,14 @@
                         {% endif %}">
                         {{ skill.level }}%
                     </span>
-                </div>
+                                </div>
 
-                <i class="fas fa-bolt text-[8px] {% if skill.level >= 75 %} text-amber-500 animate-pulse {% else %} text-slate-500 {% endif %}"></i>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+                                <i class="fas fa-bolt text-[8px] {% if skill.level >= 75 %} text-amber-500 animate-pulse {% else %} text-slate-500 {% endif %}"></i>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
 
