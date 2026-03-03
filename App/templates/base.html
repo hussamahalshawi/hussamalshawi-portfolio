@@ -60,8 +60,9 @@
                 <i id="theme-icon" class="fas fa-moon"></i>
             </button>
 
-            <button class="hidden sm:block bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-blue-700 transition">
-                Contact
+            <button onclick="toggleContactModal()"
+                    class="hidden sm:block bg-blue-600 text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 active:scale-95">
+                Contact Me
             </button>
 
             <button id="mobile-menu-button" class="md:hidden text-slate-600 dark:text-slate-300 p-2">
@@ -78,7 +79,67 @@
 
     </div>
 </nav>
+<div id="contactModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="toggleContactModal()"></div>
 
+    <div class="relative bg-white dark:bg-[#0d1321] w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all"
+         data-aos="zoom-in">
+
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+            <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tighter">Get In Touch</h3>
+            <button onclick="toggleContactModal()" class="text-slate-400 hover:text-rose-500 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-8 space-y-8">
+            <div>
+                <span class="block text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 mb-4">Social Networks</span>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="#"
+                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
+                        <i class="fab fa-linkedin text-blue-600 text-xl"></i>
+                        <span class="text-sm font-bold dark:text-slate-300">LinkedIn</span>
+                    </a>
+                    <a href="#"
+                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
+                        <i class="fab fa-github text-slate-900 dark:text-white text-xl"></i>
+                        <span class="text-sm font-bold dark:text-slate-300">GitHub</span>
+                    </a>
+                    <a href="mailto:hussam@example.com"
+                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
+                        <i class="fas fa-envelope text-rose-500 text-xl"></i>
+                        <span class="text-sm font-bold dark:text-slate-300">Email</span>
+                    </a>
+                    <a href="https://wa.me/yournumber"
+                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
+                        <i class="fab fa-whatsapp text-emerald-500 text-xl"></i>
+                        <span class="text-sm font-bold dark:text-slate-300">WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-blue-600/5 border border-blue-600/10">
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fas fa-clock text-blue-600"></i>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Availability</span>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-500">Sun - Thu:</span>
+                        <span class="font-black dark:text-white">09:00 AM - 05:00 PM</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-500">Fri - Sat:</span>
+                        <span class="text-rose-500 font-black uppercase">Emergencies Only</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-4 italic text-center">* Response time is usually within 2
+                    hours.</p>
+            </div>
+        </div>
+    </div>
+</div>
 <main class="flex-grow">
     {% block content %}{% endblock %}
 </main>
@@ -251,6 +312,18 @@
              </div>
     </div>
 `).join('');
+    }
+}
+    function toggleContactModal() {
+    const modal = document.getElementById('contactModal');
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden'; // منع السكرول عند فتح النافذة
+    } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto'; // إعادة السكرول
     }
 }
 </script>
