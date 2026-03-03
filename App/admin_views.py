@@ -306,7 +306,10 @@ class LanguageView(BaseSecureView):
 
 class PostView(BaseSecureView):
     column_list = ('title', 'series', 'post_tags', 'is_published', 'created_at')
-    column_searchable_list = ('title', 'content')
-    column_filters = ('series', 'is_published')
-    form_widget_args = {'content': {'rows': 10, 'style': 'font-family: monospace;'}}
-    column_labels = {'post_tags': 'Required SEO Skills'}
+    # column_searchable_list = ('title', 'content')
+    # column_filters = ('series', 'is_published')
+    # form_widget_args = {'content': {'rows': 10, 'style': 'font-family: monospace;'}}
+    # column_labels = {'post_tags': 'Required SEO Skills'}
+
+class SeriesView(BaseSecureView):
+    pass

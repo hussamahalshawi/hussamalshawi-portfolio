@@ -12,3 +12,4 @@ from  .goal import Goal
 from  .feedback import Feedback
 from  .language import Language
 from  .post import Post
+from  .post import Series

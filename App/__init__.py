@@ -8,12 +8,12 @@ from App.admin_views import (
     ProfileView, EducationView, CourseView, ProjectView,
     SelfStudyView, ExperienceView, AchievementView,
     SkillTypeView, SkillView, GoalView, FeedbackView,
-    LanguageView, PostView, CategoryView,
+    LanguageView, PostView, CategoryView, SeriesView
 )
 from App.models import (
     Profile, Education, Course, Project, SelfStudy,
     Experience, Achievement, SkillType, Skill,
-    Goal, Feedback, Language, Post, Category
+    Goal, Feedback, Language, Post, Category, Series
 )
 from App.admin_dashboard import ProfessionalDashboardView
 
@@ -50,6 +50,7 @@ def configure_admin(app):
         admin.add_view(FeedbackView(Feedback, name='Feedback'))
         admin.add_view(LanguageView(Language, name='Language Proficiency'))
         admin.add_view(PostView(Post, name='Blog Posts'))
+        admin.add_view(SeriesView(Series, name='Series Posts'))
 
         app.logger.info("[+] Admin Interface with Professional Dashboard loaded.")
 

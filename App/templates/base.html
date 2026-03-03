@@ -96,26 +96,57 @@
             <div>
                 <span class="block text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 mb-4">Social Networks</span>
                 <div class="grid grid-cols-2 gap-4">
-                    <a href="#"
-                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
-                        <i class="fab fa-linkedin text-blue-600 text-xl"></i>
-                        <span class="text-sm font-bold dark:text-slate-300">LinkedIn</span>
+                    {% if user.linkedin_url %}
+                    <a href="{{ user.linkedin_url }}" target="_blank"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#0077B5] transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#0077B5]/10 group-hover:bg-[#0077B5] transition-all duration-300">
+                            <i class="fab fa-linkedin text-[#0077B5] group-hover:text-white text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">LinkedIn</span>
                     </a>
-                    <a href="#"
-                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
-                        <i class="fab fa-github text-slate-900 dark:text-white text-xl"></i>
-                        <span class="text-sm font-bold dark:text-slate-300">GitHub</span>
+                    {% endif %}
+
+                    {% if user.github_url %}
+                    <a href="{{ user.github_url }}" target="_blank"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-slate-900 dark:hover:border-white transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-900/10 dark:bg-white/10 group-hover:bg-slate-900 dark:group-hover:bg-white transition-all duration-300">
+                            <i class="fab fa-github text-slate-900 dark:text-white group-hover:text-white dark:group-hover:text-slate-900 text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">GitHub</span>
                     </a>
-                    <a href="mailto:hussam@example.com"
-                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
-                        <i class="fas fa-envelope text-rose-500 text-xl"></i>
-                        <span class="text-sm font-bold dark:text-slate-300">Email</span>
+                    {% endif %}
+                    <a href="{{ user.facebook_url }}" target="_blank"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#1877F2] transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1877F2]/10 group-hover:bg-[#1877F2] transition-all duration-300">
+                            <i class="fab fa-facebook text-[#1877F2] group-hover:text-white text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Facebook</span>
                     </a>
-                    <a href="https://wa.me/yournumber"
-                       class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all group">
-                        <i class="fab fa-whatsapp text-emerald-500 text-xl"></i>
-                        <span class="text-sm font-bold dark:text-slate-300">WhatsApp</span>
+
+                    <a href="{{ user.instagram_url }}" target="_blank"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#E4405F] transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#E4405F]/10 group-hover:bg-[#E4405F] transition-all duration-300">
+                            <i class="fab fa-instagram text-[#E4405F] group-hover:text-white text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Instagram</span>
                     </a>
+                    <a href="mailto:{{ user.email if user.email else 'hussam@example.com' }}"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#EA4335] transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#EA4335]/10 group-hover:bg-[#EA4335] transition-all duration-300">
+                            <i class="fas fa-envelope text-[#EA4335] group-hover:text-white text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Email</span>
+                    </a>
+
+                    <a href="https://wa.me/{{ user.phone if user.phone else 'yournumber' }}"
+                       target="_blank"
+                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#25D366] transition-all group">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#25D366]/10 group-hover:bg-[#25D366] transition-all duration-300">
+                            <i class="fab fa-whatsapp text-[#25D366] group-hover:text-white text-xl transition-colors"></i>
+                        </div>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">WhatsApp</span>
+                    </a>
+
                 </div>
             </div>
 
