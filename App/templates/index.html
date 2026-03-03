@@ -2,7 +2,9 @@
 {% block title %} Hussam Alshawi | Software Engineer & Python Developer {% endblock %}
 {% block content %}
 
-<section class="snap-section min-h-screen w-full flex flex-col pt-20 lg:pt-16 lg:justify-center relative overflow-hidden bg-white dark:bg-darkBg px-6 md:px-10"> <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+<section
+        class="snap-section min-h-screen w-full flex flex-col pt-20 lg:pt-16 lg:justify-center relative overflow-hidden bg-white dark:bg-darkBg px-6 md:px-10">
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
 
         <div class="absolute top-[10%] left-[5%] text-blue-500/20 dark:text-blue-400/15 text-7xl animate-float-slow"><i
                 class="fab fa-python"></i></div>
@@ -85,7 +87,7 @@
                         {% endif %}
                     </div>
                     <div class="mt-8 w-full grid grid-cols-2 gap-4 lg:max-w-2xl"> {% for lang in languages %}
-    <div class="group p-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl
+                        <div class="group p-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl
         /* خلفية صلبة أو نصف شفافة حسب اختيارنا السابق */
         bg-white dark:bg-[#0d1321] border-2 rounded-2xl
         /* منطق لون الحدود حسب المستوى */
@@ -95,15 +97,15 @@
         {% elif lang.level == 'B1' %} border-yellow-500/30 hover:border-yellow-500
         {% else %} border-amber-600/30 hover:border-amber-600
         {% endif %}"
-         data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                             data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
 
-        <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-center">
+                            <div class="flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
                 <span class="text-xs font-black tracking-widest text-slate-900 dark:text-slate-100 uppercase transition-colors">
                     {{ lang.language_name }}
                 </span>
 
-                <span class="text-[9px] font-black px-2.5 py-1 rounded-lg uppercase
+                                    <span class="text-[9px] font-black px-2.5 py-1 rounded-lg uppercase
                     {% if lang.level == 'C2' %} bg-emerald-500/10 text-emerald-600
                     {% elif lang.level == 'C1' %} bg-green-500/10 text-green-600
                     {% elif lang.level == 'B2' %} bg-lime-500/10 text-lime-600
@@ -112,22 +114,22 @@
                     {% endif %}">
                     {{ lang.level }}
                 </span>
-            </div>
+                                </div>
 
-            <div class="w-full h-2 bg-slate-100 dark:bg-black rounded-full overflow-hidden border border-slate-200/50 dark:border-white/5">
-                <div class="h-full rounded-full transition-all duration-1000 ease-out
+                                <div class="w-full h-2 bg-slate-100 dark:bg-black rounded-full overflow-hidden border border-slate-200/50 dark:border-white/5">
+                                    <div class="h-full rounded-full transition-all duration-1000 ease-out
                     {% if lang.level == 'C2' %} bg-emerald-600 w-[100%]
                     {% elif lang.level == 'C1' %} bg-green-500 w-[85%]
                     {% elif lang.level == 'B2' %} bg-lime-500 w-[70%]
                     {% elif lang.level == 'B1' %} bg-yellow-600 w-[55%]
                     {% else %} bg-amber-700 w-[40%]
                     {% endif %}">
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <div class="flex-1">
@@ -143,49 +145,50 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mt-1" data-aos="fade-up" data-aos-delay="200">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mt-1" data-aos="fade-up"
+                 data-aos-delay="200">
 
-    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-indigo-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
-        <div class="w-10 h-10 shrink-0 bg-indigo-500/10 rounded-xl flex items-center justify-center">
-            <i class="fas fa-brain text-indigo-500 text-xl"></i>
-        </div>
-        <div class="flex flex-col items-start leading-tight">
-            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Skills</span>
-            <span class="text-xl font-black text-slate-900 dark:text-white">{{ skills_count | default(0) }}</span>
-        </div>
-    </div>
+                <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-indigo-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+                    <div class="w-10 h-10 shrink-0 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-brain text-indigo-500 text-xl"></i>
+                    </div>
+                    <div class="flex flex-col items-start leading-tight">
+                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Skills</span>
+                        <span class="text-xl font-black text-slate-900 dark:text-white">{{ skills_count | default(0) }}</span>
+                    </div>
+                </div>
 
-    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-emerald-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
-        <div class="w-10 h-10 shrink-0 bg-emerald-500/10 rounded-xl flex items-center justify-center">
-            <i class="fas fa-chart-line text-emerald-500 text-xl"></i>
-        </div>
-        <div class="flex flex-col items-start leading-tight">
-            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Score</span>
-            <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.overall_score | default(0) }}%</span>
-        </div>
-    </div>
+                <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-emerald-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+                    <div class="w-10 h-10 shrink-0 bg-emerald-500/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-chart-line text-emerald-500 text-xl"></i>
+                    </div>
+                    <div class="flex flex-col items-start leading-tight">
+                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Score</span>
+                        <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.overall_score | default(0) }}%</span>
+                    </div>
+                </div>
 
-    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-amber-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
-        <div class="w-10 h-10 shrink-0 bg-amber-500/10 rounded-xl flex items-center justify-center">
-            <i class="fas fa-certificate text-amber-500 text-xl"></i>
-        </div>
-        <div class="flex flex-col items-start leading-tight">
-            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Courses</span>
-            <span class="text-xl font-black text-slate-900 dark:text-white">{{ courses_count | default(0) }}</span>
-        </div>
-    </div>
+                <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-amber-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+                    <div class="w-10 h-10 shrink-0 bg-amber-500/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-certificate text-amber-500 text-xl"></i>
+                    </div>
+                    <div class="flex flex-col items-start leading-tight">
+                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Courses</span>
+                        <span class="text-xl font-black text-slate-900 dark:text-white">{{ courses_count | default(0) }}</span>
+                    </div>
+                </div>
 
-    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-rose-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
-        <div class="w-10 h-10 shrink-0 bg-rose-500/10 rounded-xl flex items-center justify-center">
-            <i class="fas fa-briefcase text-rose-500 text-xl"></i>
-        </div>
-        <div class="flex flex-col items-start leading-tight">
-            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Exp.</span>
-            <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.experience_years | default(0) }}y</span>
-        </div>
-    </div>
+                <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-rose-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+                    <div class="w-10 h-10 shrink-0 bg-rose-500/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-briefcase text-rose-500 text-xl"></i>
+                    </div>
+                    <div class="flex flex-col items-start leading-tight">
+                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Exp.</span>
+                        <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.experience_years | default(0) }}y</span>
+                    </div>
+                </div>
 
-</div>
+            </div>
 
             <div class="mt-8 w-full max-w-6xl mx-auto" data-aos="fade-up">
                 <div class="flex items-center justify-between mb-6">
@@ -652,9 +655,14 @@
 
         <div class="grid lg:grid-cols-3 gap-12">
             <div class="lg:col-span-2 space-y-8">
-                <div class="flex items-center gap-4 mb-10">
-                    <span class="text-[15px] font-black tracking-[0.4em] text-blue-600 uppercase">Work History</span>
-                    <div class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></div>
+                <div class="flex items-center justify-center gap-6 mb-12" data-aos="fade-up">
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-blue-600/40"></div>
+
+                    <span class="text-xl md:text-2xl font-[1000] tracking-[0.3em] text-slate-900 dark:text-white uppercase text-center">
+        Work <span class="text-blue-600">History</span>
+    </span>
+
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-blue-600/40"></div>
                 </div>
 
                 <div class="relative border-l-4 border-slate-300 dark:border-slate-800 ml-4 pl-8 space-y-12">
@@ -720,10 +728,15 @@
             </div>
 
             <div class="space-y-8">
-                <div class="flex items-center gap-4 mb-10">
-                    <span class="text-[15px] font-black tracking-[0.3em] text-amber-500 uppercase">Recognition</span>
-                    <div class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></div>
-                </div>
+                <div class="flex items-center justify-center gap-6 mb-12" data-aos="fade-up">
+    <div class="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-amber-500/40"></div>
+
+    <span class="text-xl md:text-2xl font-[1000] tracking-[0.3em] text-slate-900 dark:text-white uppercase text-center">
+        Recog<span class="text-amber-500">nition</span>
+    </span>
+
+    <div class="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-amber-500/40"></div>
+</div>
 
                 <div class="space-y-6">
                     {% for award in achievements %}
@@ -758,16 +771,7 @@
                     {% endfor %}
                 </div>
 
-                <div class="p-8 rounded-[3rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xl relative overflow-hidden group mt-12">
-                    <h5 class="text-xl font-black uppercase mb-3 relative z-10 tracking-tighter">The Next Chapter?</h5>
-                    <p class="text-xs opacity-80 mb-8 relative z-10 font-medium leading-relaxed">I'm currently scouting
-                        for ambitious projects. Let's create impact together.</p>
-                    <a href="/contact"
-                       class="inline-flex items-center justify-center w-full gap-3 bg-blue-600 text-white dark:bg-slate-900 dark:text-white px-7 py-4 rounded-2xl text-[10px] font-black uppercase transition-all shadow-lg">
-                        Start Collaboration
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
+
             </div>
         </div>
     </div>
