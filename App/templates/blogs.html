@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %} Articles & Insights | Hussam Alshawi {% endblock %}
+
+{% block content %}
+<section class="min-h-screen pt-32 pb-20 bg-slate-50 dark:bg-[#0d1321] transition-colors duration-500">
+
+    <div class="max-w-7xl mx-auto px-6 mb-16" data-aos="fade-down">
+        <div class="text-center space-y-4">
+            <h2 class="text-blue-600 text-xs font-black uppercase tracking-[0.4em]">Knowledge Base</h2>
+            <h1 class="text-4xl md:text-6xl font-[1000] dark:text-white tracking-tighter uppercase">
+                Insights & <span class="text-blue-600">Stories</span>
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-sm md:text-base font-medium">
+                رحلة تقنية بين سطور الكود وخبايا التفكير البرمجي، حيث تجد السلاسل المفضلة لديك.
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for post in posts %}
+        <article class="group bg-white dark:bg-slate-900/40 rounded-[2.5rem] overflow-hidden border border-slate-200/60 dark:border-slate-800/50 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 flex flex-col h-full" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+
+            <div class="relative aspect-video overflow-hidden">
+                {% if post.post_images %}
+                <img src="{{ post.post_images[0] }}" alt="{{ post.title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                {% else %}
+                <div class="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                    <i class="fas fa-newspaper text-4xl text-slate-400"></i>
+                </div>
+                {% endif %}
+
+                <div class="absolute top-4 left-4">
+                    <span class="bg-blue-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                        {{ post.series.name }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-8 flex flex-col flex-1">
+                <div class="flex items-center gap-4 mb-4">
+                    <time class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        {{ post.created_at.strftime('%B %d, %2026') }}
+                    </time>
+                    <div class="h-px w-8 bg-slate-200 dark:bg-slate-800"></div>
+                    <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">5 min read</span>
+                </div>
+
+                <h2 class="text-xl font-[1000] text-slate-900 dark:text-white mb-4 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
+                    {{ post.title }}
+                </h2>
+
+                <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-6 font-medium leading-relaxed">
+                    {{ post.content | striptags | truncate(120) }}
+                </p>
+
+                <div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-1.5 text-slate-400 text-xs">
+                            <i class="far fa-eye"></i>
+                            <span class="font-bold">{{ post.views_count or 0 }}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-slate-400 text-xs">
+                            <i class="far fa-heart text-rose-500"></i>
+                            <span class="font-bold">{{ post.likes_count or 0 }}</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ post.original_url if post.original_url else '#' }}" target="_blank" class="flex items-center gap-2 text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest hover:text-blue-600 transition-colors">
+                        Read Story <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

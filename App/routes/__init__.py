@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType
+from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType, Post, Series
 from flask import request, jsonify
 import json
 from datetime import datetime, timezone
@@ -205,34 +205,13 @@ def all_skills():
         print(f"Error fetching skills: {e}")
         return redirect(url_for('index'))
 
-# @portfolio.route('/api/feedback/submit', methods=['POST'])
-# def submit_feedback():
-#     try:
-#         # 1. جلب البيانات من الطلب (Request)
-#         data = request.get_json()
-#
-#         # 2. التحقق الأساسي من البيانات (Validation)
-#         if not data.get('person_name') or not data.get('contact_email'):
-#             return jsonify({"error": "Name and Email are strictly required."}), 400
-#
-#         # 3. إنشاء كائن الفيدباك بناءً على الـ Model الخاص بك
-#         new_feedback = Feedback(
-#             person_name=data.get('person_name'),
-#             job_title=data.get('job_title'),
-#             feedback_text=data.get('feedback_text'),
-#             contact_email=data.get('contact_email'),
-#             contact_info=data.get('contact_info'),
-#             created_at=datetime.now(timezone.utc)
-#         )
-#
-#         # 4. الحفظ في قاعدة البيانات
-#         new_feedback.save()
-#
-#         return jsonify({
-#             "message": "Thank you, Hussam has received your testimonial!",
-#             "status": "success"
-#         }), 201
-#
-#     except Exception as e:
-#         # معالجة الأخطاء غير المتوقعة
-#         return jsonify({"error": "Something went wrong, please try again later."}), 500
+
+@portfolio.route('/blogs')
+def blogs():
+    # جلب جميع المنشورات وترتيبها حسب التاريخ (الأحدث أولاً)
+    posts = Post.objects.order_by('-created_at')
+    # جلب السلاسل لغرض التصفية (Filtering) في الصفحة
+    series_list = Series.objects.all()
+    user_data = Profile.objects.first()
+
+    return render_template('blogs.html', posts=posts, user=user_data, series_list=series_list)
