@@ -2,9 +2,7 @@
 {% block title %} Hussam Alshawi | Software Engineer & Python Developer {% endblock %}
 {% block content %}
 
-<section
-        class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white dark:bg-darkBg px-6 md:px-10">
-    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+<section class="snap-section min-h-screen w-full flex flex-col pt-20 lg:pt-16 lg:justify-center relative overflow-hidden bg-white dark:bg-darkBg px-6 md:px-10"> <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
 
         <div class="absolute top-[10%] left-[5%] text-blue-500/20 dark:text-blue-400/15 text-7xl animate-float-slow"><i
                 class="fab fa-python"></i></div>
@@ -86,35 +84,50 @@
                         </a>
                         {% endif %}
                     </div>
-                    <div class="mt-8 w-full grid grid-cols-2 gap-4 lg:max-w-md">
-                        {% for lang in languages %}
-                        <div class="group p-4 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl transition-all duration-300 hover:border-blue-500/30 hover:bg-white dark:hover:bg-slate-900/50"
-                             data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="mt-8 w-full grid grid-cols-2 gap-4 lg:max-w-2xl"> {% for lang in languages %}
+    <div class="group p-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl
+        /* خلفية صلبة أو نصف شفافة حسب اختيارنا السابق */
+        bg-white dark:bg-[#0d1321] border-2 rounded-2xl
+        /* منطق لون الحدود حسب المستوى */
+        {% if lang.level == 'C2' %} border-emerald-500/30 hover:border-emerald-500
+        {% elif lang.level == 'C1' %} border-green-500/30 hover:border-green-500
+        {% elif lang.level == 'B2' %} border-lime-500/30 hover:border-lime-500
+        {% elif lang.level == 'B1' %} border-yellow-500/30 hover:border-yellow-500
+        {% else %} border-amber-600/30 hover:border-amber-600
+        {% endif %}"
+         data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
 
-                            <div class="flex flex-col gap-2">
-                                <div class="flex justify-between items-end">
-                <span class="text-[10px] font-black tracking-widest text-slate-700 dark:text-slate-200 group-hover:text-blue-500 transition-colors">
+        <div class="flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+                <span class="text-xs font-black tracking-widest text-slate-900 dark:text-slate-100 uppercase transition-colors">
                     {{ lang.language_name }}
                 </span>
-                                    <span class="text-[8px] font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-md uppercase">
+
+                <span class="text-[9px] font-black px-2.5 py-1 rounded-lg uppercase
+                    {% if lang.level == 'C2' %} bg-emerald-500/10 text-emerald-600
+                    {% elif lang.level == 'C1' %} bg-green-500/10 text-green-600
+                    {% elif lang.level == 'B2' %} bg-lime-500/10 text-lime-600
+                    {% elif lang.level == 'B1' %} bg-yellow-500/10 text-yellow-600
+                    {% else %} bg-amber-600/10 text-amber-600
+                    {% endif %}">
                     {{ lang.level }}
                 </span>
-                                </div>
+            </div>
 
-                                <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all duration-1000 ease-out
-    {% if lang.level == 'C2' %} bg-emerald-600 w-[100%]   {# أخضر غامق (احتراف تام) #}
-    {% elif lang.level == 'C1' %} bg-green-500 w-[85%]   {# أخضر فاتح #}
-    {% elif lang.level == 'B2' %} bg-lime-500 w-[70%]    {# أخضر ليموني #}
-    {% elif lang.level == 'B1' %} bg-yellow-600 w-[55%]  {# أصفر غامق #}
-    {% else %} bg-amber-700 w-[40%]                      {# بني فاتح/نحاسي (بداية) #}
-    {% endif %}">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+            <div class="w-full h-2 bg-slate-100 dark:bg-black rounded-full overflow-hidden border border-slate-200/50 dark:border-white/5">
+                <div class="h-full rounded-full transition-all duration-1000 ease-out
+                    {% if lang.level == 'C2' %} bg-emerald-600 w-[100%]
+                    {% elif lang.level == 'C1' %} bg-green-500 w-[85%]
+                    {% elif lang.level == 'B2' %} bg-lime-500 w-[70%]
+                    {% elif lang.level == 'B1' %} bg-yellow-600 w-[55%]
+                    {% else %} bg-amber-700 w-[40%]
+                    {% endif %}">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
                 </div>
 
                 <div class="flex-1">
@@ -130,29 +143,49 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-2xl mt-1" data-aos="fade-up"
-                 data-aos-delay="200">
-                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-md p-3 rounded-xl border border-slate-200/50 dark:border-slate-200/10 border-b-4 !border-b-indigo-500 shadow-lg flex flex-col items-center justify-center text-center transform hover:scale-105 transition">
-                    <i class="fas fa-brain text-indigo-500 text-base mb-1"></i>
-                    <span class="text-[7px] uppercase font-bold text-slate-500 tracking-tighter">Skills</span>
-                    <span class="text-lg font-black dark:text-white">{{ skills_count | default(0) }}</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-md p-3 rounded-xl border border-slate-200/50 dark:border-slate-200/10 border-b-4 !border-b-emerald-500 shadow-lg flex flex-col items-center justify-center text-center transform hover:scale-105 transition">
-                    <i class="fas fa-chart-line text-emerald-500 text-base mb-1"></i>
-                    <span class="text-[7px] uppercase font-bold text-slate-500 tracking-tighter">Score</span>
-                    <span class="text-lg font-black dark:text-white">{{ user.overall_score | default(0) }}%</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-md p-3 rounded-xl border border-slate-200/50 dark:border-slate-200/10 border-b-4 !border-b-amber-500 shadow-lg flex flex-col items-center justify-center text-center transform hover:scale-105 transition">
-                    <i class="fas fa-certificate text-amber-500 text-base mb-1"></i>
-                    <span class="text-[7px] uppercase font-bold text-slate-500 tracking-tighter">Courses</span>
-                    <span class="text-lg font-black dark:text-white">{{ courses_count | default(0) }}</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900/60 backdrop-blur-md p-3 rounded-xl border border-slate-200/50 dark:border-slate-200/10 border-b-4 !border-b-rose-500 shadow-lg flex flex-col items-center justify-center text-center transform hover:scale-105 transition">
-                    <i class="fas fa-briefcase text-rose-500 text-base mb-1"></i>
-                    <span class="text-[7px] uppercase font-bold text-slate-500 tracking-tighter">Exp.</span>
-                    <span class="text-lg font-black dark:text-white">{{ user.experience_years | default(0) }}y</span>
-                </div>
-            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mt-1" data-aos="fade-up" data-aos-delay="200">
+
+    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-indigo-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+        <div class="w-10 h-10 shrink-0 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-brain text-indigo-500 text-xl"></i>
+        </div>
+        <div class="flex flex-col items-start leading-tight">
+            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Skills</span>
+            <span class="text-xl font-black text-slate-900 dark:text-white">{{ skills_count | default(0) }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-emerald-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+        <div class="w-10 h-10 shrink-0 bg-emerald-500/10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-chart-line text-emerald-500 text-xl"></i>
+        </div>
+        <div class="flex flex-col items-start leading-tight">
+            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Score</span>
+            <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.overall_score | default(0) }}%</span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-amber-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+        <div class="w-10 h-10 shrink-0 bg-amber-500/10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-certificate text-amber-500 text-xl"></i>
+        </div>
+        <div class="flex flex-col items-start leading-tight">
+            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Courses</span>
+            <span class="text-xl font-black text-slate-900 dark:text-white">{{ courses_count | default(0) }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#0d1321] p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 border-b-4 !border-b-rose-500 shadow-sm flex items-center gap-4 transform hover:scale-105 transition duration-300">
+        <div class="w-10 h-10 shrink-0 bg-rose-500/10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-briefcase text-rose-500 text-xl"></i>
+        </div>
+        <div class="flex flex-col items-start leading-tight">
+            <span class="text-[9px] uppercase font-black text-slate-500 tracking-widest">Exp.</span>
+            <span class="text-xl font-black text-slate-900 dark:text-white">{{ user.experience_years | default(0) }}y</span>
+        </div>
+    </div>
+
+</div>
 
             <div class="mt-8 w-full max-w-6xl mx-auto" data-aos="fade-up">
                 <div class="flex items-center justify-between mb-6">
@@ -167,53 +200,45 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-                    {% for skill in skills %}
-                    <div class="group relative p-3.5 rounded-xl bg-white dark:bg-slate-900/40 backdrop-blur-xl border-2 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-center items-center text-center
-            {% if skill.level >= 90 %} border-emerald-500/20 hover:border-emerald-500
-            {% elif skill.level >= 75 %} border-blue-500/20 hover:border-blue-500
-            {% elif skill.level >= 50 %} border-amber-500/20 hover:border-amber-500
-            {% else %} border-slate-500/20 hover:border-slate-500
-            {% endif %}">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    {% for skill in skills %}
+    <div class="group relative p-[2px] rounded-2xl transition-all duration-500 hover:-translate-y-2"
+         style="background: conic-gradient(
+            {% if skill.level >= 90 %} #10b981 {{ skill.level }}%, #e2e8f0 0%
+            {% elif skill.level >= 75 %} #3b82f6 {{ skill.level }}%, #e2e8f0 0%
+            {% elif skill.level >= 50 %} #f59e0b {{ skill.level }}%, #e2e8f0 0%
+            {% else %} #64748b {{ skill.level }}%, #e2e8f0 0%
+            {% endif %}
+         );">
 
-                        <div class="w-full flex flex-col items-center gap-1.5 z-10">
-                            <div class="flex items-center gap-1">
-                                <span class="text-[8px] font-black tracking-widest text-slate-500 group-hover:text-blue-400">
-                        {{ skill.skill_type.type_name if skill.skill_type else 'Dev' }}
+        <div class="bg-white dark:bg-[#0d1321] rounded-[calc(1rem-1px)] p-4 h-full w-full flex flex-col items-center justify-center text-center">
+
+            <div class="w-full flex flex-col items-center gap-2 z-10">
+                <span class="text-[8px] font-black tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
+                    {{ skill.skill_type.type_name if skill.skill_type else 'Dev' }}
+                </span>
+
+                <div class="flex flex-row items-center justify-center gap-2 w-full">
+                    <h3 class="text-[13px] font-black text-slate-900 dark:text-white truncate tracking-tight uppercase">
+                        {{ skill.skill_name }}
+                    </h3>
+
+                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded-md
+                        {% if skill.level >= 90 %} bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10
+                        {% elif skill.level >= 75 %} bg-blue-50 text-blue-600 dark:bg-blue-500/10
+                        {% elif skill.level >= 50 %} bg-amber-50 text-amber-600 dark:bg-amber-500/10
+                        {% else %} bg-slate-50 text-slate-600 dark:bg-slate-500/10
+                        {% endif %}">
+                        {{ skill.level }}%
                     </span>
-                            </div>
-
-                            <h3 class="text-[11px] font-black dark:text-white truncate w-full px-1  tracking-tight">
-                                {{ skill.skill_name }}
-                            </h3>
-
-                            <div class="w-full mt-1">
-                                <div class="flex justify-between items-center mb-1 px-1">
-                                    <span class="text-[7px] font-bold text-blue-500">{{ skill.level }}%</span>
-                                    <i class="fas fa-bolt text-[7px] {% if skill.level >= 75 %} text-amber-500 animate-pulse {% else %} text-slate-600 {% endif %}"></i>
-                                </div>
-                                <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all duration-1000 ease-out
-                            {% if skill.level >= 90 %} bg-emerald-500
-                            {% elif skill.level >= 75 %} bg-blue-500
-                            {% elif skill.level >= 50 %} bg-amber-500
-                            {% else %} bg-slate-500
-                            {% endif %}"
-                                         style="width: {{ skill.level }}%">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500
-                {% if skill.level >= 90 %} bg-emerald-500
-                {% elif skill.level >= 75 %} bg-blue-500
-                {% else %} bg-amber-500
-                {% endif %}">
-                        </div>
-                    </div>
-                    {% endfor %}
                 </div>
+
+                <i class="fas fa-bolt text-[8px] {% if skill.level >= 75 %} text-amber-500 animate-pulse {% else %} text-slate-500 {% endif %}"></i>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
             </div>
 
 
@@ -232,30 +257,7 @@
 
     </div>
 
-    <!--    <div class="cyber-scroll-adaptive absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer"-->
-    <!--         onclick="scrollToNextSection(this)">-->
 
-    <!--    <span class="text-[10px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.5em] mb-4 group-hover:scale-110 transition-all duration-500">-->
-    <!--        Explore-->
-    <!--    </span>-->
-
-    <!--        <div class="relative w-[34px] h-[54px]">-->
-    <!--            <div class="adaptive-pulse absolute inset-0 rounded-full bg-blue-400/20 dark:bg-blue-500/30 blur-lg"></div>-->
-
-    <!--            <div class="adaptive-shadow relative h-full w-full border-2 border-blue-900/20 dark:border-blue-400/40 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-center overflow-hidden transition-all duration-700 group-hover:border-blue-600">-->
-
-    <!--                <div class="adaptive-dot w-1.5 h-4 rounded-full mt-3 bg-blue-900 dark:bg-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_20px_rgba(37,99,235,1)]"></div>-->
-
-    <!--                <div class="absolute inset-0 opacity-0 dark:opacity-20 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:5px_5px]"></div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-
-    <!--        <div class="flex flex-col items-center mt-2 space-y-1">-->
-    <!--            <i class="fas fa-chevron-down text-[10px] text-blue-900 dark:text-blue-400 animate-bounce"></i>-->
-    <!--            <i class="fas fa-chevron-down text-[8px] text-blue-800/50 dark:text-blue-500/50 animate-bounce"-->
-    <!--               style="animation-delay: 0.2s"></i>-->
-    <!--        </div>-->
-    <!--    </div>-->
 </section>
 
 
@@ -640,7 +642,7 @@
                 class="fas fa-laptop-code"></i></div>
     </div>
 
-    <div class="max-w-7xl mx-auto w-full relative z-10">
+    <div class="max-w-[1800px] mx-auto w-full relative z-10 px-4 md:px-8 lg:px-12">
         <div class="text-center mb-16" data-aos="fade-down">
             <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
                 Experience & <span class="text-amber-500">Honors</span>
