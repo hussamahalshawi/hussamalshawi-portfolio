@@ -7,6 +7,19 @@ from datetime import datetime, timezone
 portfolio = Blueprint('portfolio', __name__)
 
 
+@portfolio.context_processor
+def inject_user_data():
+    """
+    يقوم هذا الكود بحقن بيانات المستخدم في جميع القوالب تلقائياً.
+    سيكون متغير 'user' متاحاً في كل الصفحات دون الحاجة لتمريره في الـ route.
+    """
+
+    # جلب بياناتك (بما أنك صاحب البورتفوليو، غالباً هناك سجل واحد فقط)
+    user_data = Profile.objects.first()
+
+    # يمكنك أيضاً جلب أعداد المهارات أو الكورسات هنا إذا كانت تظهر في base.html
+    return dict(user=user_data)
+
 @portfolio.route('/')
 def index():
     try:
@@ -212,6 +225,5 @@ def blogs():
     posts = Post.objects.order_by('-created_at')
     # جلب السلاسل لغرض التصفية (Filtering) في الصفحة
     series_list = Series.objects.all()
-    user_data = Profile.objects.first()
 
-    return render_template('blogs.html', posts=posts, user=user_data, series_list=series_list)
+    return render_template('blogs.html', posts=posts, series_list=series_list)
