@@ -227,3 +227,36 @@ def blogs():
     series_list = Series.objects.all()
 
     return render_template('blogs.html', posts=posts, series_list=series_list)
+
+
+@portfolio.route('/api/feedback', methods=['POST'])
+def add_feedback():
+    try:
+        data = request.get_json()
+
+        # التحقق من البيانات (Validation) بناءً على قيود المودل
+        if not data.get('person_name') or not data.get('contact_email'):
+            return jsonify({"status": "error", "message": "Name and Email are required!"}), 400
+
+        # إنشاء سجل جديد في قاعدة البيانات
+        new_feedback = Feedback(
+            person_name=data.get('person_name'),
+            job_title=data.get('job_title', 'Client/Colleague'),
+            feedback_text=data.get('feedback_text'),
+            contact_email=data.get('contact_email'),
+            linkedin_url=data.get('linkedin_url', '')
+        )
+
+        # حفظ السجل
+        new_feedback.save()
+
+        return jsonify({
+            "status": "success",
+            "message": f"Thank you {new_feedback.person_name}, your feedback has been saved!"
+        }), 201
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+

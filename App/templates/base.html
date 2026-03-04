@@ -38,19 +38,19 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
 
         <div class="flex-1 flex items-center gap-3">
-    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-600 dark:border-accentBlue shadow-sm">
-        <img
-            src="{{ url_for('static', filename='images/favicon.png') }}"
-            alt="Hussam Alshawi Logo"
-            class="w-full h-full object-cover"
-            onerror="this.style.display='none'"
-        >
-    </div>
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-600 dark:border-accentBlue shadow-sm">
+                <img
+                        src="{{ url_for('static', filename='images/favicon.png') }}"
+                        alt="Hussam Alshawi Logo"
+                        class="w-full h-full object-cover"
+                        onerror="this.style.display='none'"
+                >
+            </div>
 
-    <div class="text-xl font-black text-blue-600 dark:text-accentBlue uppercase tracking-tighter">
-        Hussam Alshawi
-    </div>
-</div>
+            <div class="text-xl font-black text-blue-600 dark:text-accentBlue uppercase tracking-tighter">
+                Hussam Alshawi
+            </div>
+        </div>
 
         <div class="hidden md:flex flex-1 justify-center items-center space-x-8 text-sm font-bold uppercase tracking-wide">
             <a href="/" class="hover:text-blue-500 transition-colors">Home</a>
@@ -211,10 +211,17 @@
                 <h2 class="text-xl font-black dark:text-white uppercase tracking-tighter">Professional Feedbacks</h2>
                 <p class="text-xs text-slate-500 font-medium">What colleagues & clients say about my</p>
             </div>
-            <button onclick="toggleFeedbackModal()"
-                    class="w-10 h-10 rounded-full hover:bg-red-500/10 hover:text-red-500 transition-colors flex items-center justify-center text-slate-400">
-                <i class="fas fa-times text-lg"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="showFeedbackForm()"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-700 transition-all flex items-center gap-2">
+                    <i class="fas fa-plus"></i> ADD FEEDBACK
+                </button>
+
+                <button onclick="toggleFeedbackModal()"
+                        class="w-10 h-10 rounded-full hover:bg-red-500/10 hover:text-red-500 transition-colors flex items-center justify-center text-slate-400">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
         </div>
 
         <div id="modal-feedback-grid"
@@ -225,6 +232,73 @@
 <div id="feedback-toast-container" class="fixed bottom-24 right-6 z-[99] flex flex-col gap-4 pointer-events-none">
 </div>
 <script>
+    function showFeedbackForm() {
+    const grid = document.getElementById('modal-feedback-grid');
+
+    grid.innerHTML = `
+        <div class="col-span-full max-w-2xl mx-auto w-full p-4 animate-in fade-in slide-in-from-bottom-4">
+            <form id="new-feedback-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Full Name</label>
+                    <input type="text" id="fb-name" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                </div>
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Email Address</label>
+                    <input type="email" id="fb-email" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Job Title</label>
+                    <input type="text" id="fb-title" placeholder="e.g. Senior Developer" class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
+                </div>
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">LinkedIn URL (Optional)</label>
+                    <input type="url" id="fb-linkedin" placeholder="https://linkedin.com/in/..." class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Testimonial Content</label>
+                    <textarea id="fb-text" rows="4" required class="w-full p-4 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="md:col-span-2 flex gap-3 pt-4">
+                    <button type="button" onclick="location.reload()" class="flex-1 p-4 rounded-2xl font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase text-xs tracking-widest">Cancel</button>
+                    <button type="submit" class="flex-1 p-4 rounded-2xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/30 transition-all uppercase text-xs tracking-widest">Publish Feedback</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.getElementById('new-feedback-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // تجميع البيانات بأسماء الحقول المطابقة للمودل
+        const payload = {
+            person_name: document.getElementById('fb-name').value,
+            contact_email: document.getElementById('fb-email').value,
+            job_title: document.getElementById('fb-title').value,
+            linkedin_url: document.getElementById('fb-linkedin').value,
+            feedback_text: document.getElementById('fb-text').value
+        };
+
+        try {
+            const response = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                Swal.fire('Success!', result.message, 'success'); // إذا كنت تستخدم SweetAlert
+                toggleFeedbackModal();
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                alert("Error: " + result.message);
+            }
+        } catch (error) {
+            console.error("Submission failed:", error);
+        }
+    });
+}
     // الطريقة الصحيحة والمباشرة لحقن JSON من Flask إلى JS
     // لا تضع علامات تنصيص '' حول القوسين
     const feedbacks = {{ feedbacks_json | safe if feedbacks_json else '[]' }};
