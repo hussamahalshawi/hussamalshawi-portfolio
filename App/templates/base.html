@@ -8,6 +8,7 @@
     </title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -255,7 +256,7 @@
                     <input type="url" id="fb-linkedin" placeholder="https://linkedin.com/in/..." class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Testimonial Content</label>
+                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Feedback Text</label>
                     <textarea id="fb-text" rows="4" required class="w-full p-4 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
                 <div class="md:col-span-2 flex gap-3 pt-4">
@@ -267,37 +268,65 @@
     `;
 
     document.getElementById('new-feedback-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        // تجميع البيانات بأسماء الحقول المطابقة للمودل
-        const payload = {
-            person_name: document.getElementById('fb-name').value,
-            contact_email: document.getElementById('fb-email').value,
-            job_title: document.getElementById('fb-title').value,
-            linkedin_url: document.getElementById('fb-linkedin').value,
-            feedback_text: document.getElementById('fb-text').value
-        };
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-        try {
-            const response = await fetch('/api/feedback', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    // تغيير حالة الزر أثناء الإرسال لتبدو احترافية
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> SENDING...';
+    submitBtn.disabled = true;
 
-            const result = await response.json();
+    const payload = {
+        person_name: document.getElementById('fb-name').value,
+        contact_email: document.getElementById('fb-email').value,
+        job_title: document.getElementById('fb-title').value,
+        linkedin_url: document.getElementById('fb-linkedin').value,
+        feedback_text: document.getElementById('fb-text').value
+    };
 
-            if (response.ok) {
-                Swal.fire('Success!', result.message, 'success'); // إذا كنت تستخدم SweetAlert
-                toggleFeedbackModal();
-                setTimeout(() => location.reload(), 2000);
-            } else {
-                alert("Error: " + result.message);
-            }
-        } catch (error) {
-            console.error("Submission failed:", error);
+    try {
+        const response = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // 1. إظهار رسالة النجاح (باستخدام تنبيه بسيط أو Toast)
+            Swal.fire({
+            title: 'Success!',
+            text: 'Your feedback has been published.',
+            icon: 'success',
+            confirmButtonColor: '#2563eb', // لون أزرق مطابق لبراند موقعك
+            timer: 2000
+             });
+
+            // 2. تبييض (تفريغ) الفورم
+            form.reset();
+
+            // 3. العودة لعرض التقييمات بدلاً من الفورم
+            // يمكنك استدعاء الدالة التي تجلب البيانات وتعرضها مرة أخرى هنا
+            // لنفترض أن اسمها loadFeedbacks()
+            setTimeout(() => {
+                location.reload(); // أو استبدلها بدالة تحديث الـ UI بدون ريفريش
+            }, 500);
+
+        } else {
+            alert("❌ Error: " + result.message);
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         }
-    });
+    } catch (error) {
+        console.error("Submission failed:", error);
+        alert("Something went wrong. Please try again.");
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+    }
+});
 }
     // الطريقة الصحيحة والمباشرة لحقن JSON من Flask إلى JS
     // لا تضع علامات تنصيص '' حول القوسين
