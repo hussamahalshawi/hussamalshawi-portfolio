@@ -268,3 +268,20 @@ def like_post(post_id):
         return jsonify({"status": "success", "new_likes": post.likes_count}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 404
+
+
+@portfolio.route('/api/posts/<post_id>/view', methods=['POST'])
+def increment_view(post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+
+        # زيادة عداد المشاهدات
+        post.views_count = (post.views_count or 0) + 1
+        post.save()
+
+        return jsonify({
+            "status": "success",
+            "new_views": post.views_count
+        }), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 404

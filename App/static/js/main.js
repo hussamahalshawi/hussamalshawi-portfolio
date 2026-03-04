@@ -210,3 +210,49 @@ async function handleLike(postId, btnElement) {
         console.error("Like failed:", error);
     }
 }
+document.addEventListener('DOMContentLoaded', () => {
+    // إعدادات المراقب
+    const options = {
+        root: null, // استخدام شاشة المتصفح كمرجع
+        threshold: 0.6 // احتساب المشاهدة عند ظهور 60% من الكرت
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const postId = entry.target.getAttribute('data-post-id');
+
+                // إرسال الطلب للـ API في الخلفية
+                incrementView(postId);
+
+                // التوقف عن مراقبة هذا العنصر لعدم تكرار الزيادة في نفس الجلسة
+                observer.unobserve(entry.target);
+            }
+        });
+    }, options);
+
+    // تفعيل المراقب على جميع كروت المقالات
+    document.querySelectorAll('.post-card').forEach(card => {
+        observer.observe(card);
+    });
+});
+
+async function incrementView(postId) {
+    try {
+        const response = await fetch(`/api/posts/${postId}/view`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            // تحديث الرقم في الواجهة لحظياً
+            const viewSpan = document.getElementById(`view-count-${postId}`);
+            if (viewSpan) {
+                viewSpan.innerText = data.new_views;
+            }
+        }
+    } catch (error) {
+        console.error("Tracking Error:", error);
+    }
+}

@@ -14,8 +14,9 @@
     <div class="max-w-2xl mx-auto px-4 space-y-8">
         {% for post in posts %}
         <article
-                class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-                data-aos="fade-up">
+        class="post-card bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+        data-post-id="{{ post.id }}"
+        data-aos="fade-up">
 
             <div class="p-5 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -58,10 +59,10 @@
                         <i class="far fa-heart font-bold"></i>
                         <span class="text-xs font-black like-count">{{ post.likes_count or 0 }}</span>
                     </button>
-                    <button class="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors">
+                    <div class="flex items-center gap-1.5 text-slate-400 text-xs">
                         <i class="far fa-eye"></i>
-                        <span class="text-xs font-bold">{{ post.views_count or 0 }}</span>
-                    </button>
+                        <span id="view-count-{{ post.id }}" class="font-bold">{{ post.views_count or 0 }}</span>
+                    </div>
                 </div>
 
                 {% if post.original_url and post.original_url != '#' %}
