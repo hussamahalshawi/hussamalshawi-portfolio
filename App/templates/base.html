@@ -37,11 +37,20 @@
 <nav class="fixed w-full z-50 px-6 md:px-10 py-4 bg-white/80 dark:bg-darkBg/80 backdrop-blur-md border-b dark:border-slate-800">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
 
-        <div class="flex-1">
-            <div class="text-xl font-black text-blue-600 dark:text-accentBlue uppercase tracking-tighter">
-                Hussam Alshawi
-            </div>
-        </div>
+        <div class="flex-1 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-600 dark:border-accentBlue shadow-sm">
+        <img
+            src="{{ url_for('static', filename='images/favicon.png') }}"
+            alt="Hussam Alshawi Logo"
+            class="w-full h-full object-cover"
+            onerror="this.style.display='none'"
+        >
+    </div>
+
+    <div class="text-xl font-black text-blue-600 dark:text-accentBlue uppercase tracking-tighter">
+        Hussam Alshawi
+    </div>
+</div>
 
         <div class="hidden md:flex flex-1 justify-center items-center space-x-8 text-sm font-bold uppercase tracking-wide">
             <a href="/" class="hover:text-blue-500 transition-colors">Home</a>
