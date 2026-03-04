@@ -259,4 +259,12 @@ def add_feedback():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-
+@portfolio.route('/api/posts/<post_id>/like', methods=['POST'])
+def like_post(post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        post.likes_count = (post.likes_count or 0) + 1
+        post.save()
+        return jsonify({"status": "success", "new_likes": post.likes_count}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 404

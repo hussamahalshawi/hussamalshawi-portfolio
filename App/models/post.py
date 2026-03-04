@@ -40,7 +40,7 @@ class Post(Document):
 
     # --- EXTERNAL SYNC ---
     # Stores the link to the original post on LinkedIn, Medium, or personal blog
-    original_url = URLField()
+    original_url = StringField()
 
     # --- ENGAGEMENT ANALYTICS ---
     # These fields can be updated via API integration or manual entry

@@ -187,3 +187,26 @@ function fullSwapImage(thumbnailElement) {
         thumbnailElement.style.opacity = '1';
     }, 250);
 }
+async function handleLike(postId, btnElement) {
+    try {
+        const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
+        const data = await response.json();
+
+        if (response.ok) {
+            // تحديث الرقم في الواجهة
+            const countSpan = btnElement.querySelector('.like-count');
+            countSpan.innerText = data.new_likes;
+
+            // تغيير شكل القلب وتأثير لوني
+            const icon = btnElement.querySelector('i');
+            icon.classList.replace('far', 'fas');
+            icon.classList.add('text-rose-500', 'animate-bounce');
+            btnElement.classList.add('text-rose-500');
+
+            // تعطيل الزر لمنع الإعجاب المتكرر في نفس الجلسة (اختياري)
+            btnElement.onclick = null;
+        }
+    } catch (error) {
+        console.error("Like failed:", error);
+    }
+}
