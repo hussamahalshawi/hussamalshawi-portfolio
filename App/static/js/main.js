@@ -292,3 +292,30 @@ async function openPostModal(postId) {
 function closePostModal() {
     document.getElementById('post-detail-modal').classList.add('hidden');
 }
+document.getElementById('add-post-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const payload = {
+        title: document.getElementById('post-title').value,
+        series_id: document.getElementById('post-series').value,
+        content: document.getElementById('post-content').value,
+        original_url: document.getElementById('post-url').value,
+        tags: document.getElementById('post-tags').value
+    };
+
+    try {
+        const response = await fetch('/api/posts/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            Swal.fire({ icon: 'success', title: 'Success!', text: 'Post Published', timer: 1500 });
+            e.target.reset();
+            setTimeout(() => location.reload(), 1600);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+});

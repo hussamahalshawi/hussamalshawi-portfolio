@@ -3,7 +3,7 @@ from App.models import Profile, Project, Experience, Skill, Course, Goal, Catego
 from flask import request, jsonify
 import json
 from datetime import datetime, timezone
-
+import datetime
 portfolio = Blueprint('portfolio', __name__)
 
 
@@ -246,6 +246,38 @@ def get_post_detail(post_id):
         })
     except:
         return jsonify({"error": "Post not found"}), 404
+
+
+@portfolio.route('/api/posts/create', methods=['POST'])
+def create_post():
+    try:
+        data = request.get_json()
+
+        # تحويل التاجات من نص إلى قائمة
+        tags = [t.strip() for t in data.get('tags', '').split(',')] if data.get('tags') else []
+
+        # إنشاء المنشور بناءً على المودل الخاص بك
+        new_post = Post(
+            title=data.get('title'),
+            content=data.get('content'),
+            series=data.get('series_id'),  # MongoEngine يقبل الـ ID مباشرة هنا
+            original_url=data.get('original_url', '#'),
+            post_tags=tags,
+            views_count=0,
+            likes_count=0,
+            shares_count=0,
+            comments_count=0
+        )
+        new_post.save()
+
+        return jsonify({
+            "status": "success",
+            "message": "Post published successfully!",
+            "post_id": str(new_post.id)
+        }), 201
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
 
 @portfolio.route('/api/feedback', methods=['POST'])
 def add_feedback():
