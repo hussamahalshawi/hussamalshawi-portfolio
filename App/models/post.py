@@ -32,7 +32,6 @@ class Post(Document):
     """
 
     # --- CORE CONTENT ---
-    title = StringField()
     content = StringField()  # Supports long-form text (Markdown/HTML)
 
     # Relational link to the parent series
@@ -61,15 +60,11 @@ class Post(Document):
 
     meta = {
         'collection': 'posts',
+        'strict': False,
         'ordering': ['-created_at'],  # Prioritize latest content
         'indexes': [
-            'title',
             'series',
             '-created_at',  # Optimized for chronological feed generation
             'post_tags'  # Optimized for keyword/category filtering
         ]
     }
-
-    def __str__(self):
-        """Identifies the document by its title in the system logs."""
-        return self.title

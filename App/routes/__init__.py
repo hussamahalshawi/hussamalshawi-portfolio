@@ -258,7 +258,6 @@ def get_post_detail(post_id):
             series_name = "General"
 
         return jsonify({
-            "title": post.title,
             "content": post.content,
             "image": post.post_images[0] if post.post_images else None,
             "date": post.created_at.strftime('%B %d, 2026'),
@@ -280,7 +279,6 @@ def create_post():
 
         # إنشاء المنشور بناءً على المودل الخاص بك
         new_post = Post(
-            title=data.get('title'),
             content=data.get('content'),
             series=data.get('series_id'),  # MongoEngine يقبل الـ ID مباشرة هنا
             original_url=data.get('original_url', '#'),

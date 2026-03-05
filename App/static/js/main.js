@@ -300,9 +300,9 @@ async function openPostModal(postId) {
                     </span>
                 </div>
 
-                <h1 class="text-3xl md:text-5xl font-[1000] text-slate-900 dark:text-white leading-[1.1] tracking-tighter">
-                    ${post.title}
-                </h1>
+                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
+                    ${post.content.replace(/\n/g, '<br>')}
+                </div>
 
                 ${post.image ? `
                     <div class="rounded-[2rem] overflow-hidden shadow-2xl">
@@ -316,9 +316,7 @@ async function openPostModal(postId) {
                     </div>
                 ` : ''}
 
-                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
-                    ${post.content.replace(/\n/g, '<br>')}
-                </div>
+
 
                 <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div class="flex items-center gap-8">
