@@ -35,7 +35,7 @@ class Post(Document):
     content = StringField()  # Supports long-form text (Markdown/HTML)
 
     # Relational link to the parent series
-    series = ReferenceField(Series)
+    series = ReferenceField(Series, reverse_delete_rule=4)
 
     # --- EXTERNAL SYNC ---
     # Stores the link to the original post on LinkedIn, Medium, or personal blog

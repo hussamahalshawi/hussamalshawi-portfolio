@@ -377,3 +377,93 @@ document.getElementById('add-post-form').addEventListener('submit', async (e) =>
     }
     console.log("Sending Tags:", tagsArray);
 });
+
+// 1. تفعيل اختيار الملفات عند الضغط على الأيقونة
+function triggerFileInput() {
+    document.getElementById('post-image-input').click();
+}
+
+// 2. معاينة الصورة المختارة
+function previewImage(input) {
+    const container = document.getElementById('image-preview-container');
+    const preview = document.getElementById('image-preview');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            container.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// 3. حذف الصورة المختارة
+function removeSelectedImage() {
+    document.getElementById('post-image-input').value = "";
+    document.getElementById('image-preview-container').classList.add('hidden');
+}
+
+// 4. إضافة وسوم الكود البرمجي داخل النص
+function insertCodeTag() {
+    const textarea = document.getElementById('post-content');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+
+    // إدراج الوسوم حول النص المحدد أو في مكان المؤشر
+    const before = text.substring(0, start);
+    const selection = text.substring(start, end) || "Your Code Here";
+    const after = text.substring(end);
+
+    textarea.value = before + "```\n" + selection + "\n```" + after;
+    textarea.focus();
+}
+document.getElementById('add-post-form').addEventListener('submit', async (e) => {
+    e.preventDefault(); // منع الصفحة من التحديث التلقائي
+
+    // 1. إنشاء حاوية البيانات (FormData) لدعم رفع الملفات والنصوص معاً
+    const formData = new FormData();
+
+    // 2. إضافة النصوص من المدخلات (حسب الـ IDs الموجودة في الفورم المرتب)
+    formData.append('content', document.getElementById('post-content').value);
+    formData.append('series_id', document.getElementById('post-series').value);
+    formData.append('original_url', document.getElementById('post-url').value);
+    formData.append('tags', document.getElementById('post-tags').value);
+
+    // 3. التحقق من وجود صورة وإضافتها
+    const fileInput = document.getElementById('post-image-input');
+    if (fileInput.files[0]) {
+        formData.append('image', fileInput.files[0]);
+    }
+
+    try {
+        // 4. الإرسال إلى السيرفر
+        const response = await fetch('/api/posts/create', {
+            method: 'POST',
+            body: formData // ملاحظة: لا نضع Headers يدوية هنا، المتصفح سيتكفل بها
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // نجاح العملية
+            Swal.fire({
+                icon: 'success',
+                title: 'Published!',
+                text: 'Your insight has been posted successfully.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            e.target.reset(); // تفريغ الفورم
+            setTimeout(() => location.reload(), 2100); // تحديث الصفحة لرؤية المنشور الجديد
+        } else {
+            // في حال وجود خطأ من السيرفر
+            Swal.fire('Error', result.message || 'Something went wrong', 'error');
+        }
+    } catch (error) {
+        console.error("Submission failed:", error);
+        Swal.fire('Error', 'Connection failed', 'error');
+    }
+});

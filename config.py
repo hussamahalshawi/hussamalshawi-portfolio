@@ -18,6 +18,10 @@ class Config:
     # 2. Path Management (Using Pathlib for modern cross-platform support)
     BASE_DIR = Path(__file__).resolve().parent
     UPLOAD_PATH = BASE_DIR / 'App' / 'static' / 'images'
+    UPLOAD_URL_PREFIX = '/static/images/'
+
+    # تأكد من إنشاء المجلد عند تشغيل التطبيق
+    UPLOAD_PATH.mkdir(parents=True, exist_ok=True)
 
     # 3. Database Defaults
     MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'hussam_portfolio')

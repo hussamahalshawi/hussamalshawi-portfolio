@@ -5,42 +5,78 @@
 <section class="min-h-screen pt-32 pb-20 bg-slate-50 dark:bg-[#0b0f1a] transition-colors duration-500">
 
     <div class="max-w-2xl mx-auto px-4 space-y-8">
+    <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 p-6 shadow-sm mb-8 transition-all hover:border-blue-500/50 group" data-aos="fade-up">
 
-        <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 p-6 shadow-sm mb-8" data-aos="fade-up">
-    <div class="flex items-center gap-4 mb-6">
-        <img src="{{ url_for('static', filename='images/favicon.png') }}" class="w-10 h-10 rounded-full border border-blue-600 p-0.5">
-        <h3 class="text-sm font-black dark:text-white uppercase tracking-widest">Create New Insight</h3>
-    </div>
-
-    <form id="add-post-form" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <select id="post-series"
-                    class="w-full bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-slate-300">
-                <option value="" disabled selected>Select Series</option>
-                {% for s in series_list %}
-                <option value="{{ s.id }}">{{ s.name }}</option>
-                {% endfor %}
-            </select>
+        <div class="flex items-center gap-4 mb-6">
+            <div class="relative">
+                <img src="{{ url_for('static', filename='images/favicon.png') }}" class="w-10 h-10 rounded-full border border-blue-600 p-0.5 shadow-sm">
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
+            </div>
+            <div>
+                <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.2em]">Create New Insight</h3>
+                <p class="text-[9px] text-slate-400 font-bold uppercase italic">Drafting as Hussam</p>
+            </div>
         </div>
 
-        <textarea id="post-content" rows="4" placeholder="Write your technical insight here..."
-                  class="w-full bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-white"></textarea>
+        <form id="add-post-form" class="space-y-5">
+            <div class="relative">
+                <textarea id="post-content" rows="5" required
+                    placeholder="What's your latest technical insight?"
+                    class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-[1.25rem] p-4 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-white placeholder:text-slate-400 resize-none transition-all"></textarea>
+            </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="url" id="post-url" placeholder="Original URL (LinkedIn/Medium)"
-                   class="w-full bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
+            <div class="grid grid-cols-1 gap-4">
+                <div class="relative group/select">
+                    <i class="fas fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <select id="post-series" required
+                        class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs font-bold focus:ring-2 focus:ring-blue-600 outline-none dark:text-slate-300 appearance-none cursor-pointer">
+                        <option value="" disabled selected>Choose a Series...</option>
+                        {% for s in series_list %}
+                        <option value="{{ s.id }}">{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                </div>
+            </div>
 
-            <input type="text" id="post-tags" placeholder="Tags (comma separated: python, web, ai)"
-                   class="w-full bg-slate-50 dark:bg-slate-800/50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="relative">
+                    <i class="fas fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="url" id="post-url" placeholder="Original URL"
+                        class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
+                </div>
 
-        <div class="flex justify-end pt-2">
-            <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-700 hover:scale-105 transition-all shadow-lg shadow-blue-500/25">
-                Publish Insight <i class="fas fa-paper-plane ml-2"></i>
-            </button>
-        </div>
-    </form>
+                <div class="relative">
+                    <i class="fas fa-hashtag absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="post-tags" placeholder="Tags (python, ai...)"
+                        class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/50 mt-4">
+                <div class="flex gap-3 text-slate-400">
+    <button type="button" onclick="triggerFileInput()" class="hover:text-blue-500 transition-colors">
+        <i class="fas fa-image"></i>
+    </button>
+
+    <button type="button" onclick="insertCodeTag()" class="hover:text-blue-500 transition-colors">
+        <i class="fas fa-code"></i>
+    </button>
+
+    <input type="file" id="post-image-input" accept="image/*" class="hidden" onchange="previewImage(this)">
 </div>
+
+<div id="image-preview-container" class="hidden mt-3 relative">
+    <img id="image-preview" src="#" class="w-20 h-20 object-cover rounded-lg border-2 border-blue-600">
+    <button type="button" onclick="removeSelectedImage()" class="absolute -top-2 -left-2 bg-red-500 text-white rounded-full w-5 h-5 text-[10px]"><i class="fas fa-times"></i></button>
+</div>
+                <button type="submit"
+                    class="bg-blue-600 text-white px-10 py-3 rounded-full text-[10px] font-[1000] uppercase tracking-[0.25em] hover:bg-blue-700 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-blue-500/20 flex items-center gap-2">
+                    Publish <i class="fas fa-paper-plane text-[9px]"></i>
+                </button>
+            </div>
+        </form>
+    </div>
 
         {% for post in posts %}
         <article class="post-card group bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"

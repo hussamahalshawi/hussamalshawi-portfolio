@@ -272,32 +272,82 @@ def get_post_detail(post_id):
         return jsonify({"error": "Post details unavailable"}), 404
 
 
+# @portfolio.route('/fix-db-refs')
+# def fix_db_refs():
+#
+#     # 1. جلب أو إنشاء السلسلة الافتراضية بطريقة MongoEngine الصحيحة
+#     default_series = Series.objects(name="General").first()
+#     if not default_series:
+#         default_series = Series(name="General").save()
+#
+#     # 2. جلب كل المنشورات
+#     all_posts = Post.objects.all()
+#     fixed_count = 0
+#     deleted_count = 0
+#
+#     for post in all_posts:
+#         try:
+#             # محاولة اختبار المرجع (Dereferencing Check)
+#             if post.series:
+#                 # محاولة الوصول للاسم؛ إذا لم تكن موجودة سيرمي خطأ DoesNotExist
+#                 _ = post.series.name
+#         except Exception:
+#             # إذا وصلنا هنا، يعني أن المرجع "تالف" (موجود كقيمة ولكن المستند محذوف)
+#             print(f"Fixing broken reference for post: {post.id}")
+#             post.series = default_series
+#             post.save()
+#             fixed_count += 1
+#
+#     return f"Success! Fixed {fixed_count} broken references. Database is now healthy."
+
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
+from flask import current_app, request, jsonify
+
+
 @portfolio.route('/api/posts/create', methods=['POST'])
 def create_post():
     try:
-        data = request.get_json()
+        # 1. التأكد من وجود المجلد مسبقاً (Safety Check)
+        upload_path = current_app.config['UPLOAD_PATH']
+        if not upload_path.exists():
+            upload_path.mkdir(parents=True, exist_ok=True)
 
-        # إنشاء المنشور بناءً على المودل الخاص بك
+        post_images = []
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename != '':
+                # تأمين الاسم
+                filename = secure_filename(file.filename)
+                unique_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+
+                # المسار المادي الكامل (يجب تحويله لـ String لـ Flask)
+                save_path = upload_path / unique_filename
+
+                # الحفظ الفعلي
+                file.save(str(save_path))
+
+                # المسار الذي سيخزن في قاعدة البيانات (الرابط)
+                image_url = f"{current_app.config['UPLOAD_URL_PREFIX']}{unique_filename}"
+                post_images.append(image_url)
+
+        # 2. حفظ البيانات في MongoEngine
         new_post = Post(
-            content=data.get('content'),
-            series=data.get('series_id'),  # MongoEngine يقبل الـ ID مباشرة هنا
-            original_url=data.get('original_url', '#'),
-            post_tags=data.get('tags'),
-            views_count=0,
-            likes_count=0,
-            shares_count=0,
-            comments_count=0
-        )
-        new_post.save()
+            content=request.form.get('content'),
+            series=request.form.get('series_id') or None,
+            post_images=post_images,
+            original_url=request.form.get('original_url', '#'),
+            post_tags=[t.strip() for t in request.form.get('tags', '').split(',')] if request.form.get('tags') else []
+        ).save()
 
-        return jsonify({
-            "status": "success",
-            "message": "Post published successfully!",
-            "post_id": str(new_post.id)
-        }), 201
+        return jsonify({"status": "success", "message": "Uploaded successfully!"}), 201
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
+        # طباعة الخطأ في التيرمينال لتعرف السبب بدقة
+        print(f"CRITICAL UPLOAD ERROR: {str(e)}")
+        return jsonify({"status": "error", "message": f"Server Error: {str(e)}"}), 500
+
 
 @portfolio.route('/api/feedback', methods=['POST'])
 def add_feedback():
