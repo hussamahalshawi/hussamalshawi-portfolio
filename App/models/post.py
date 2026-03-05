@@ -32,11 +32,11 @@ class Post(Document):
     """
 
     # --- CORE CONTENT ---
-    title = StringField(required=True)
+    title = StringField()
     content = StringField()  # Supports long-form text (Markdown/HTML)
 
     # Relational link to the parent series
-    series = ReferenceField(Series, required=True)
+    series = ReferenceField(Series)
 
     # --- EXTERNAL SYNC ---
     # Stores the link to the original post on LinkedIn, Medium, or personal blog

@@ -262,30 +262,86 @@ async function openPostModal(postId) {
     const content = document.getElementById('modal-content');
 
     modal.classList.remove('hidden');
-    content.innerHTML = '<div class="text-center p-10"><i class="fas fa-spinner animate-spin text-3xl text-blue-600"></i></div>';
+    // حالة التحميل
+    content.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-20 space-y-4">
+            <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-slate-500 font-bold animate-pulse uppercase text-xs tracking-widest">Loading Insight...</p>
+        </div>
+    `;
 
     try {
         const response = await fetch(`/api/posts/${postId}`);
         const post = await response.json();
 
+        // منطق زر الرابط الأصلي
+        const hasUrl = post.original_url && post.original_url !== '#' && post.original_url.trim() !== '';
+        const urlButton = hasUrl
+            ? `<a href="${post.original_url}" target="_blank" class="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                View Original Post <i class="fas fa-external-link-alt text-[10px]"></i>
+               </a>`
+            : `<button disabled class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-400 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest cursor-not-allowed">
+                No External Link <i class="fas fa-lock text-[10px]"></i>
+               </button>`;
+
+        // بناء محتوى المودال
         content.innerHTML = `
-            <button onclick="closePostModal()" class="absolute top-6 right-6 text-slate-400 hover:text-red-500"><i class="fas fa-times text-2xl"></i></button>
-            <div class="space-y-6">
-                <span class="text-blue-600 text-xs font-black uppercase tracking-widest">${post.date}</span>
-                <h1 class="text-3xl md:text-4xl font-[1000] dark:text-white leading-tight">${post.title}</h1>
-                ${post.image ? `<img src="${post.image}" class="w-full rounded-2xl shadow-lg">` : ''}
-                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
-                    ${post.content}
+            <button onclick="closePostModal()" class="absolute top-6 right-6 text-slate-400 hover:text-rose-500 transition-colors z-10">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <div class="space-y-8">
+                <div class="flex flex-wrap items-center gap-4">
+                    <span class="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase tracking-[0.2em]">
+                        # ${post.series_name || 'General'}
+                    </span>
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest italic">
+                        ${post.date}
+                    </span>
+                </div>
+
+                <h1 class="text-3xl md:text-5xl font-[1000] text-slate-900 dark:text-white leading-[1.1] tracking-tighter">
+                    ${post.title}
+                </h1>
+
+                ${post.image ? `
+                    <div class="rounded-[2rem] overflow-hidden shadow-2xl">
+                        <img src="${post.image}" class="w-full h-auto object-cover max-h-[500px]">
+                    </div>
+                ` : ''}
+
+                ${post.tags && post.tags.length > 0 ? `
+                    <div class="flex flex-wrap gap-2">
+                        ${post.tags.map(tag => `<span class="text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-md">#${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+
+                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
+                    ${post.content.replace(/\n/g, '<br>')}
+                </div>
+
+                <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex items-center gap-8">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Views</span>
+                            <span class="text-xl font-black dark:text-white">${post.views}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Likes</span>
+                            <span class="text-xl font-black dark:text-white">${post.likes}</span>
+                        </div>
+                    </div>
+                    ${urlButton}
                 </div>
             </div>
         `;
 
-        // تحديث عداد المشاهدات في الصفحة الرئيسية أيضاً
+        // تحديث العداد في الخلفية (Feed)
         const viewSpan = document.getElementById(`view-count-${postId}`);
         if(viewSpan) viewSpan.innerText = post.views;
 
     } catch (err) {
-        content.innerHTML = '<p class="text-red-500">Failed to load post.</p>';
+        content.innerHTML = `<div class="p-10 text-center text-rose-500 font-bold">Failed to load content. Please try again.</div>`;
     }
 }
 
@@ -294,13 +350,16 @@ function closePostModal() {
 }
 document.getElementById('add-post-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-
+    const rawTags = document.getElementById('post-tags').value;
+    const tagsArray = rawTags.split(',')
+                             .map(tag => tag.trim()) // إزالة المسافات الزائدة
+                             .filter(tag => tag !== ""); // إزالة المدخلات الفارغة
     const payload = {
         title: document.getElementById('post-title').value,
         series_id: document.getElementById('post-series').value,
         content: document.getElementById('post-content').value,
         original_url: document.getElementById('post-url').value,
-        tags: document.getElementById('post-tags').value
+        tags: tagsArray
     };
 
     try {
@@ -318,4 +377,5 @@ document.getElementById('add-post-form').addEventListener('submit', async (e) =>
     } catch (error) {
         console.error("Error:", error);
     }
+    console.log("Sending Tags:", tagsArray);
 });

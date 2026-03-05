@@ -225,7 +225,17 @@ def blogs():
     posts = Post.objects.order_by('-created_at')
     # جلب السلاسل لغرض التصفية (Filtering) في الصفحة
     series_list = Series.objects.all()
-
+    safe_posts = []
+    for post in posts:
+        try:
+            # محاولة الوصول للاسم لاختبار المرجع
+            if post.series:
+                _ = post.series.name
+            safe_posts.append(post)
+        except Exception:
+            # إذا كان المرجع تالفاً، نربطه بسلسلة وهمية أو نتركه None
+            post.series = None
+            safe_posts.append(post)
     return render_template('blogs.html', posts=posts, series_list=series_list)
 
 
@@ -233,19 +243,34 @@ def blogs():
 def get_post_detail(post_id):
     try:
         post = Post.objects.get(id=post_id)
-        # تحديث المشاهدات عند الفتح
+
+        # زيادة المشاهدات
         post.views_count = (post.views_count or 0) + 1
         post.save()
+
+        # فحص آمن للسلسلة (Series Safe Check)
+        series_name = "General"
+        try:
+            if post.series and post.series.name:
+                series_name = post.series.name
+        except Exception:
+            # في حال كان المرجع تالفاً (الخطأ الذي يظهر لك)
+            series_name = "General"
 
         return jsonify({
             "title": post.title,
             "content": post.content,
             "image": post.post_images[0] if post.post_images else None,
             "date": post.created_at.strftime('%B %d, 2026'),
-            "views": post.views_count
+            "series_name": series_name,  # القيمة الآمنة هنا
+            "original_url": post.original_url or "#",
+            "tags": post.post_tags or [],
+            "views": post.views_count,
+            "likes": post.likes_count or 0
         })
-    except:
-        return jsonify({"error": "Post not found"}), 404
+    except Exception as e:
+        print(f"Error fetching post {post_id}: {str(e)}")
+        return jsonify({"error": "Post details unavailable"}), 404
 
 
 @portfolio.route('/api/posts/create', methods=['POST'])
@@ -253,16 +278,13 @@ def create_post():
     try:
         data = request.get_json()
 
-        # تحويل التاجات من نص إلى قائمة
-        tags = [t.strip() for t in data.get('tags', '').split(',')] if data.get('tags') else []
-
         # إنشاء المنشور بناءً على المودل الخاص بك
         new_post = Post(
             title=data.get('title'),
             content=data.get('content'),
             series=data.get('series_id'),  # MongoEngine يقبل الـ ID مباشرة هنا
             original_url=data.get('original_url', '#'),
-            post_tags=tags,
+            post_tags=data.get('tags'),
             views_count=0,
             likes_count=0,
             shares_count=0,
