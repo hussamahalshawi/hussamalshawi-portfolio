@@ -256,3 +256,39 @@ async function incrementView(postId) {
         console.error("Tracking Error:", error);
     }
 }
+
+async function openPostModal(postId) {
+    const modal = document.getElementById('post-detail-modal');
+    const content = document.getElementById('modal-content');
+
+    modal.classList.remove('hidden');
+    content.innerHTML = '<div class="text-center p-10"><i class="fas fa-spinner animate-spin text-3xl text-blue-600"></i></div>';
+
+    try {
+        const response = await fetch(`/api/posts/${postId}`);
+        const post = await response.json();
+
+        content.innerHTML = `
+            <button onclick="closePostModal()" class="absolute top-6 right-6 text-slate-400 hover:text-red-500"><i class="fas fa-times text-2xl"></i></button>
+            <div class="space-y-6">
+                <span class="text-blue-600 text-xs font-black uppercase tracking-widest">${post.date}</span>
+                <h1 class="text-3xl md:text-4xl font-[1000] dark:text-white leading-tight">${post.title}</h1>
+                ${post.image ? `<img src="${post.image}" class="w-full rounded-2xl shadow-lg">` : ''}
+                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+                    ${post.content}
+                </div>
+            </div>
+        `;
+
+        // تحديث عداد المشاهدات في الصفحة الرئيسية أيضاً
+        const viewSpan = document.getElementById(`view-count-${postId}`);
+        if(viewSpan) viewSpan.innerText = post.views;
+
+    } catch (err) {
+        content.innerHTML = '<p class="text-red-500">Failed to load post.</p>';
+    }
+}
+
+function closePostModal() {
+    document.getElementById('post-detail-modal').classList.add('hidden');
+}

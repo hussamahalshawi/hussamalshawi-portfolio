@@ -229,6 +229,24 @@ def blogs():
     return render_template('blogs.html', posts=posts, series_list=series_list)
 
 
+@portfolio.route('/api/posts/<post_id>')
+def get_post_detail(post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        # تحديث المشاهدات عند الفتح
+        post.views_count = (post.views_count or 0) + 1
+        post.save()
+
+        return jsonify({
+            "title": post.title,
+            "content": post.content,
+            "image": post.post_images[0] if post.post_images else None,
+            "date": post.created_at.strftime('%B %d, 2026'),
+            "views": post.views_count
+        })
+    except:
+        return jsonify({"error": "Post not found"}), 404
+
 @portfolio.route('/api/feedback', methods=['POST'])
 def add_feedback():
     try:
