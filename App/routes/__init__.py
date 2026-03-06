@@ -219,25 +219,44 @@ def all_skills():
         return redirect(url_for('index'))
 
 
+from flask import request, render_template
+
+
 @portfolio.route('/blogs')
 def blogs():
-    # جلب جميع المنشورات وترتيبها حسب التاريخ (الأحدث أولاً)
-    posts = Post.objects.order_by('-created_at')
-    # جلب السلاسل لغرض التصفية (Filtering) في الصفحة
+    # 1. التقاط الهشتاق من الرابط (مثال: /blogs?tag=python)
+    tag_filter = request.args.get('tag')
+
+    # 2. جلب السلاسل لغرض التصفية في القائمة المنسدلة
     series_list = Series.objects.all()
+
+    # 3. تحديد الاستعلام: هل هو فلتر لتاج معين أم عرض للكل؟
+    if tag_filter:
+        # البحث عن التاج داخل مصفوفة post_tags في MongoDB
+        posts_query = Post.objects(post_tags=tag_filter).order_by('-created_at')
+        display_title = f"Insights tagged #{tag_filter}"
+    else:
+        posts_query = Post.objects.order_by('-created_at')
+        display_title = "Articles & Insights"
+
+    # 4. نظام الحماية (Safe Check) لتنظيف المنشورات من المراجع التالفة
     safe_posts = []
-    for post in posts:
+    for post in posts_query:
         try:
-            # محاولة الوصول للاسم لاختبار المرجع
+            # محاولة اختبار مرجع السلسلة لضمان عدم وجود DoesNotExist
             if post.series:
                 _ = post.series.name
             safe_posts.append(post)
         except Exception:
-            # إذا كان المرجع تالفاً، نربطه بسلسلة وهمية أو نتركه None
+            # في حال كان المرجع تالفاً في قاعدة البيانات
             post.series = None
             safe_posts.append(post)
-    return render_template('blogs.html', posts=posts, series_list=series_list)
 
+    # 5. إرسال safe_posts بدلاً من posts_query لضمان عدم انهيار الصفحة
+    return render_template('blogs.html',
+                           posts=safe_posts,
+                           series_list=series_list,
+                           display_title=display_title)
 
 @portfolio.route('/api/posts/<post_id>')
 def get_post_detail(post_id):
