@@ -122,7 +122,7 @@
 
             <div class="px-5 pb-2">
                 <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">{{ post.content |
-                    striptags }}</p>
+                    safe }}</p>
                 {% if post.post_tags %}
                 <div class="flex flex-wrap gap-2 mb-2" onclick="event.stopPropagation()">
                     {% for tag in post.post_tags %}

@@ -404,20 +404,29 @@ function removeSelectedImage() {
     document.getElementById('image-preview-container').classList.add('hidden');
 }
 
-// 4. إضافة وسوم الكود البرمجي داخل النص
 function insertCodeTag() {
     const textarea = document.getElementById('post-content');
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const text = textarea.value;
 
-    // إدراج الوسوم حول النص المحدد أو في مكان المؤشر
-    const before = text.substring(0, start);
-    const selection = text.substring(start, end) || "Your Code Here";
-    const after = text.substring(end);
+    // إدراج وسم pre و code (نظام البوك ماركت للكود)
+    const replacement = `<pre><code>${text.substring(start, end)}</code></pre>`;
 
-    textarea.value = before + "```\n" + selection + "\n```" + after;
+    textarea.value = text.substring(0, start) + replacement + text.substring(end);
     textarea.focus();
+}
+
+// أضف هذه أيضاً إذا أردت زر للاقتباسات
+function insertQuoteTag() {
+    const textarea = document.getElementById('post-content');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+
+    const replacement = `<blockquote>${text.substring(start, end)}</blockquote>`;
+
+    textarea.value = text.substring(0, start) + replacement + text.substring(end);
 }
 document.getElementById('add-post-form').addEventListener('submit', async (e) => {
     e.preventDefault(); // منع الصفحة من التحديث التلقائي

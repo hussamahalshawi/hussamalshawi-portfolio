@@ -317,3 +317,32 @@ html, body {
     transition: opacity 0.3s ease, transform 0.3s ease;
     will-change: opacity, transform;
 }
+
+/* تنسيق الاقتباس (Bookmark Style) */
+.post-content-area blockquote {
+    border-left: 4px solid #2563eb;
+    background: rgba(37, 99, 235, 0.05);
+    padding: 1rem 1.5rem;
+    margin: 1rem 0;
+    border-radius: 0 1rem 1rem 0;
+    font-style: italic;
+    color: #475569;
+}
+
+/* تنسيق الكود (Code Block) */
+.post-content-area pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    border: 1px solid #1e293b;
+}
+
+.dark .post-content-area blockquote {
+    background: rgba(37, 99, 235, 0.1);
+    color: #cbd5e1;
+}
