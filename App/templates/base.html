@@ -238,7 +238,8 @@
         </div>
     </div>
 </div>
-<div id="feedback-toast-container" class="fixed bottom-24 right-6 z-[99] flex flex-col gap-4 pointer-events-none">
+<div id="feedback-toast-container"
+     class="fixed bottom-40 right-6 z-[99] flex flex-col gap-4 pointer-events-none items-end">
 </div>
 <script>
     function openDirectFeedbackForm() {
@@ -364,48 +365,52 @@
 
         const toast = document.createElement('div');
         // استعمل الـ Classes الخاصة بك هنا...
-        toast.className = "flex items-center gap-4 p-4 bg-white/10 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-2xl rounded-2xl transition-all duration-500 opacity-0 translate-y-10 w-72 md:w-80 pointer-events-auto";
+        toast.className = "flex items-center gap-4 p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl transition-all duration-700 opacity-0 translate-y-20 w-72 md:w-80 pointer-events-auto mb-2";
         toast.innerHTML = `
     <div class="relative flex-shrink-0">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg border-2 border-white/20">
             <span class="text-white text-xs font-black uppercase">${feedback.person_name ? feedback.person_name.charAt(0) : 'U'}</span>
         </div>
     </div>
 
     <div class="flex-1 min-w-0">
-        <div class="flex justify-between items-start mb-1">
-            <div class="truncate">
-                <p class="text-[10px] font-black dark:text-white uppercase truncate tracking-tight">${feedback.person_name}</p>
-                <p class="text-[8px] text-blue-500 font-bold leading-none italic">${feedback.job_title || 'Professional'}</p>
+        <div class="flex justify-between items-center mb-1 gap-2">
+            <div class="flex-1 min-w-0">
+                <p class="text-[10px] font-black dark:text-white uppercase truncate tracking-tight leading-none mb-0.5">${feedback.person_name}</p>
+                <p class="text-[8px] text-blue-500 font-bold leading-none italic truncate">${feedback.job_title || 'Professional'}</p>
             </div>
-            <div class="flex gap-2">
+
+            <div class="flex items-center gap-1.5 flex-shrink-0">
                 <a href="mailto:${feedback.contact_email}" title="Send Email"
-                   class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm group/mail">
-                    <i class="fas fa-envelope text-xs"></i>
+                   class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm">
+                    <i class="fas fa-envelope text-[10px]"></i>
                 </a>
             ${(feedback.linkedin_url && feedback.linkedin_url.trim() !== "") ? `
-                <a href="${feedback.linkedin_url }"
+                <a href="${feedback.linkedin_url}"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all duration-300 shadow-sm">
-                        <i class="fab fa-linkedin-in text-xs"></i>
+                   class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all duration-300 shadow-sm">
+                        <i class="fab fa-linkedin-in text-[10px]"></i>
                 </a>
             ` : ''}
-        </div>
+            </div>
         </div>
 
-        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed italic line-clamp-2">
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed italic line-clamp-2 mt-1">
             "${feedback.feedback_text}"
         </p>
     </div>
 `;
 
         container.appendChild(toast);
-        setTimeout(() => toast.classList.remove('opacity-0', 'translate-y-10'), 50);
-        setTimeout(() => {
-            toast.classList.add('opacity-0', '-translate-y-20');
-            setTimeout(() => toast.remove(), 500);
-        }, 5000);
+        // تأكد أن الأنيميشن يزيل الـ translate-y لترتفع البطاقة
+setTimeout(() => toast.classList.remove('opacity-0', 'translate-y-20'), 50);
+
+// عند الاختفاء، تذهب للأعلى وتتلاشى
+setTimeout(() => {
+    toast.classList.add('opacity-0', '-translate-y-10');
+    setTimeout(() => toast.remove(), 700);
+}, 5000);
 
         feedbackIndex = (feedbackIndex + 1) % feedbacks.length;
         setTimeout(showNextFeedback, 2000);
