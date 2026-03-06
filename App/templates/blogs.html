@@ -168,10 +168,11 @@
                 </div>
 
                 {% if post.post_images %}
-                <div class="mt-4 relative bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <img src="{{ post.post_images[0] }}" class="w-full h-auto max-h-[400px] object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                {% endif %}
+<div class="mt-4 relative rounded-xl overflow-hidden">
+    <img src="{{ post.post_images[0] }}"
+         class="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.01]">
+</div>
+{% endif %}
 
                 <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between bg-slate-50/30 dark:bg-slate-800/20">
                     <div class="flex items-center gap-6" onclick="event.stopPropagation()">
