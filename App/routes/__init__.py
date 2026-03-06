@@ -1,9 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for
+
+from App.translations import translations
 from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType, Post, Series
 from flask import request, jsonify
 import json
 from datetime import datetime, timezone
 import datetime
+from flask import Flask, request, session, g
+
 portfolio = Blueprint('portfolio', __name__)
 
 
@@ -19,6 +23,21 @@ def inject_user_data():
 
     # يمكنك أيضاً جلب أعداد المهارات أو الكورسات هنا إذا كانت تظهر في base.html
     return dict(user=user_data)
+
+
+@portfolio.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in ['ar', 'en']:
+        session['lang'] = lang
+    # العودة إلى الصفحة التي جاء منها المستخدم
+    return redirect(request.referrer or url_for('portfolio.index'))
+
+# تأكد من وجود هذا الـ before_request في مشروعك
+@portfolio.before_request
+def load_language():
+    g.lang = session.get('lang', 'en')  # اللغة الافتراضية English
+    g.t = translations.get(g.lang, translations['en'])
+
 
 @portfolio.route('/')
 def index():

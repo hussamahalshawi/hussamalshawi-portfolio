@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="{{ g.lang }}" dir="{{ 'rtl' if g.lang == 'ar' else 'ltr' }}" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,19 +53,21 @@
             </div>
         </div>
 
-        <div class="hidden md:flex flex-1 justify-center items-center space-x-8 text-sm font-bold uppercase tracking-wide">
-            <a href="/" class="hover:text-blue-500 transition-colors">Home</a>
-            <a href="{{ url_for('portfolio.all_projects') }}" class="hover:text-blue-500 transition-colors">Projects</a>
-            <a href="{{ url_for('portfolio.all_skills') }}" class="hover:text-blue-500 transition-colors">Skills</a>
-            <a href="{{ url_for('portfolio.blogs') }}" class="hover:text-blue-500 transition-colors">Blog</a>
+        <div class="hidden md:flex flex-1 justify-center items-center space-x-8 {{ 'space-x-reverse' if g.lang == 'ar' }} text-sm font-bold uppercase tracking-wide">
+            <a href="/" class="hover:text-blue-500 transition-colors">{{ g.t['nav_home'] }}</a>
+            <a href="{{ url_for('portfolio.all_projects') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_projects'] }}</a>
+            <a href="{{ url_for('portfolio.all_skills') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_skills'] }}</a>
+            <a href="{{ url_for('portfolio.blogs') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_blog'] }}</a>
         </div>
 
-        <div class="flex-1 flex justify-end items-center space-x-4">
-            <div class="flex items-center gap-2 border-r dark:border-slate-700 pr-4 mr-2">
-                <a href="?ar" class="text-[10px] font-bold hover:text-blue-500 transition">AR</a>
-                <span class="text-slate-300">|</span>
-                <a href="?en" class="text-[10px] font-bold text-blue-500 transition">EN</a>
-            </div>
+        <div class="flex-1 flex justify-end items-center space-x-4 {{ 'space-x-reverse' if g.lang == 'ar' }}">
+            <div class="flex items-center gap-2 border-r dark:border-slate-700 pr-4 mr-2 {{ 'border-l border-r-0 pl-4 pr-0 ml-2 mr-0' if g.lang == 'ar' }}">
+    <a href="{{ url_for('portfolio.set_language', lang='ar') }}"
+       class="text-[10px] font-bold {{ 'text-blue-500' if g.lang == 'ar' else 'text-slate-400 hover:text-blue-500' }} transition">AR</a>
+    <span class="text-slate-300">|</span>
+    <a href="{{ url_for('portfolio.set_language', lang='en') }}"
+       class="text-[10px] font-bold {{ 'text-blue-500' if g.lang == 'en' else 'text-slate-400 hover:text-blue-500' }} transition">EN</a>
+</div>
 
             <button onclick="toggleTheme()"
                     class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-300 hover:scale-110 transition">
@@ -74,7 +76,7 @@
 
             <button onclick="toggleContactModal()"
                     class="hidden sm:block bg-blue-600 text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 active:scale-95">
-                Contact Me
+                {{ g.t['contact_me_btn'] }}
             </button>
 
             <button id="mobile-menu-button" class="md:hidden text-slate-600 dark:text-slate-300 p-2">
@@ -85,13 +87,13 @@
 
     <div id="mobile-menu"
          class="absolute top-full left-0 w-full bg-white dark:bg-darkBg border-b dark:border-slate-800 hidden flex-col p-8 space-y-6 shadow-2xl md:hidden text-center animate-fade-in">
-        <a href="/" class="text-lg font-bold">Home</a>
-        <a href="{{ url_for('portfolio.all_projects') }}" class="text-lg font-bold">Projects</a>
-        <a href="{{ url_for('portfolio.all_skills') }}" class="text-lg font-bold">Skills</a>
-        <a href="{{ url_for('portfolio.blogs') }}" class="text-lg font-bold">Blog</a>
-
+        <a href="/" class="text-lg font-bold">{{ g.t['nav_home'] }}</a>
+        <a href="{{ url_for('portfolio.all_projects') }}" class="text-lg font-bold">{{ g.t['nav_projects'] }}</a>
+        <a href="{{ url_for('portfolio.all_skills') }}" class="text-lg font-bold">{{ g.t['nav_skills'] }}</a>
+        <a href="{{ url_for('portfolio.blogs') }}" class="text-lg font-bold">{{ g.t['nav_blog'] }}</a>
     </div>
 </nav>
+
 <div id="contactModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="toggleContactModal()"></div>
 
@@ -99,7 +101,7 @@
          data-aos="zoom-in">
 
         <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
-            <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tighter">Get In Touch</h3>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tighter">{{ g.t['get_in_touch'] }}</h3>
             <button onclick="toggleContactModal()" class="text-slate-400 hover:text-rose-500 transition-colors">
                 <i class="fas fa-times text-xl"></i>
             </button>
@@ -107,7 +109,7 @@
 
         <div class="p-8 space-y-8">
             <div>
-                <span class="block text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 mb-4">Social Networks</span>
+                <span class="block text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 mb-4">{{ g.t['social_networks'] }}</span>
                 <div class="grid grid-cols-2 gap-4">
                     {% if user.linkedin_url %}
                     <a href="{{ user.linkedin_url }}" target="_blank"
@@ -128,27 +130,13 @@
                         <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">GitHub</span>
                     </a>
                     {% endif %}
-                    <a href="{{ user.facebook_url }}" target="_blank"
-                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#1877F2] transition-all group">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1877F2]/10 group-hover:bg-[#1877F2] transition-all duration-300">
-                            <i class="fab fa-facebook text-[#1877F2] group-hover:text-white text-xl transition-colors"></i>
-                        </div>
-                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Facebook</span>
-                    </a>
 
-                    <a href="{{ user.instagram_url }}" target="_blank"
-                       class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#E4405F] transition-all group">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#E4405F]/10 group-hover:bg-[#E4405F] transition-all duration-300">
-                            <i class="fab fa-instagram text-[#E4405F] group-hover:text-white text-xl transition-colors"></i>
-                        </div>
-                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Instagram</span>
-                    </a>
                     <a href="mailto:{{ user.email if user.email else 'hussam@example.com' }}"
                        class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-[#EA4335] transition-all group">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#EA4335]/10 group-hover:bg-[#EA4335] transition-all duration-300">
                             <i class="fas fa-envelope text-[#EA4335] group-hover:text-white text-xl transition-colors"></i>
                         </div>
-                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">Email</span>
+                        <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">{{ g.t['email_label'] }}</span>
                     </a>
 
                     <a href="https://wa.me/{{ user.phone if user.phone else 'yournumber' }}"
@@ -159,56 +147,53 @@
                         </div>
                         <span class="text-sm font-black dark:text-slate-300 uppercase tracking-wider">WhatsApp</span>
                     </a>
-
                 </div>
             </div>
 
             <div class="p-5 rounded-2xl bg-blue-600/5 border border-blue-600/10">
                 <div class="flex items-center gap-3 mb-3">
                     <i class="fas fa-clock text-blue-600"></i>
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Availability</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">{{ g.t['availability_title'] }}</span>
                 </div>
                 <div class="space-y-2">
                     <div class="flex justify-between text-xs">
-                        <span class="font-bold text-slate-500">Sun - Thu:</span>
+                        <span class="font-bold text-slate-500">{{ g.t['work_days'] }}:</span>
                         <span class="font-black dark:text-white">09:00 AM - 05:00 PM</span>
                     </div>
                     <div class="flex justify-between text-xs">
-                        <span class="font-bold text-slate-500">Fri - Sat:</span>
-                        <span class="text-rose-500 font-black uppercase">Emergencies Only</span>
+                        <span class="font-bold text-slate-500">{{ g.t['weekend_days'] }}:</span>
+                        <span class="text-rose-500 font-black uppercase">{{ g.t['emergency_only'] }}</span>
                     </div>
                 </div>
-                <p class="text-[10px] text-slate-400 mt-4 italic text-center">* Response time is usually within 2
-                    hours.</p>
+                <p class="text-[10px] text-slate-400 mt-4 italic text-center">{{ g.t['response_time_note'] }}</p>
             </div>
         </div>
     </div>
 </div>
+
 <main class="flex-grow">
     {% block content %}{% endblock %}
 </main>
 
 <footer class="py-12 mt-auto text-center text-slate-400 text-xs uppercase tracking-widest border-t dark:border-slate-800/50">
-    <p>&copy; 2026 Hussam Alshawi - Built with Python & Integrity</p>
+    <p>&copy; 2026 Hussam Alshawi - {{ g.t['footer_motto'] }}</p>
 </footer>
-<div class="fixed bottom-6 right-6 z-[100] flex flex-col items-center gap-4">
+
+<div class="fixed bottom-6 {{ 'left-6' if g.lang == 'ar' else 'right-6' }} z-[100] flex flex-col items-center gap-4">
     <button onclick="toggleFeedbackModal()"
-            title="View Feedbacks"
+            title="{{ g.t['view_feedbacks'] }}"
             class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-[0_10px_30px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 group relative">
         <i class="fas fa-comment-dots text-xl group-hover:rotate-12"></i>
         <span class="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-20"></span>
     </button>
 
     <button onclick="openDirectFeedbackForm()"
-            title="Add Feedback"
+            title="{{ g.t['add_feedback_btn'] }}"
             class="w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-[0_10px_30px_rgba(16,185,129,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 group relative">
         <i class="fas fa-plus text-xl group-hover:rotate-90 transition-transform duration-300"></i>
         <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-20"></span>
     </button>
 </div>
-<!--<button onclick="toggleFeedbackModal()" class="fixed bottom-6 right-6 z-[60] w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center border-4 border-white dark:border-slate-800">-->
-<!--    <i class="fas fa-comment-alt text-xl"></i>-->
-<!--</button>-->
 
 <div id="feedback-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 md:p-8">
     <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onclick="toggleFeedbackModal()"></div>
@@ -217,13 +202,13 @@
 
         <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
             <div>
-                <h2 class="text-xl font-black dark:text-white uppercase tracking-tighter">Professional Feedbacks</h2>
-                <p class="text-xs text-slate-500 font-medium">What colleagues & clients say about my</p>
+                <h2 class="text-xl font-black dark:text-white uppercase tracking-tighter">{{ g.t['prof_feedbacks'] }}</h2>
+                <p class="text-xs text-slate-500 font-medium">{{ g.t['feedback_sub'] }}</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="showFeedbackForm()"
                         class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-700 transition-all flex items-center gap-2">
-                    <i class="fas fa-plus"></i> ADD FEEDBACK
+                    <i class="fas fa-plus"></i> {{ g.t['add_feedback_btn'] }}
                 </button>
 
                 <button onclick="toggleFeedbackModal()"
@@ -238,261 +223,209 @@
         </div>
     </div>
 </div>
+
 <div id="feedback-toast-container"
-     class="fixed bottom-40 right-6 z-[99] flex flex-col gap-4 pointer-events-none items-end">
+     class="fixed bottom-40 {{ 'left-6 items-start' if g.lang == 'ar' else 'right-6 items-end' }} z-[99] flex flex-col gap-4 pointer-events-none">
 </div>
+
 <script>
-    function openDirectFeedbackForm() {
-    // 1. فتح المودال أولاً
-    const modal = document.getElementById('feedback-modal');
-    modal.classList.remove('hidden');
-
-    // 2. استدعاء دالة تحويل المحتوى لفورم (التي كتبناها سابقاً)
-    showFeedbackForm();
-}
-    function showFeedbackForm() {
-    const grid = document.getElementById('modal-feedback-grid');
-
-    grid.innerHTML = `
-        <div class="col-span-full max-w-2xl mx-auto w-full p-4 animate-in fade-in slide-in-from-bottom-4">
-            <form id="new-feedback-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Full Name</label>
-                    <input type="text" id="fb-name" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                </div>
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Email Address</label>
-                    <input type="email" id="fb-email" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Job Title</label>
-                    <input type="text" id="fb-title" placeholder="e.g. Senior Developer" class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
-                </div>
-                <div class="md:col-span-1">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">LinkedIn URL (Optional)</label>
-                    <input type="url" id="fb-linkedin" placeholder="https://linkedin.com/in/..." class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">Feedback Text</label>
-                    <textarea id="fb-text" rows="4" required class="w-full p-4 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="md:col-span-2 flex gap-3 pt-4">
-                    <button type="button" onclick="location.reload()" class="flex-1 p-4 rounded-2xl font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase text-xs tracking-widest">Cancel</button>
-                    <button type="submit" class="flex-1 p-4 rounded-2xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/30 transition-all uppercase text-xs tracking-widest">Publish Feedback</button>
-                </div>
-            </form>
-        </div>
-    `;
-
-    document.getElementById('new-feedback-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    // تغيير حالة الزر أثناء الإرسال لتبدو احترافية
-    const originalBtnText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> SENDING...';
-    submitBtn.disabled = true;
-
-    const payload = {
-        person_name: document.getElementById('fb-name').value,
-        contact_email: document.getElementById('fb-email').value,
-        job_title: document.getElementById('fb-title').value,
-        linkedin_url: document.getElementById('fb-linkedin').value,
-        feedback_text: document.getElementById('fb-text').value
+    // تمرير نصوص الواجهة للجافا سكريبت لاستخدامها في الفورم
+    const trans = {
+        fullName: "{{ g.t['fb_name_label'] }}",
+        email: "{{ g.t['fb_email_label'] }}",
+        jobTitle: "{{ g.t['fb_job_label'] }}",
+        linkedin: "{{ g.t['fb_linkedin_label'] }}",
+        feedback: "{{ g.t['fb_text_label'] }}",
+        cancel: "{{ g.t['fb_cancel'] }}",
+        publish: "{{ g.t['fb_publish'] }}",
+        sending: "{{ g.t['fb_sending'] }}",
+        success: "{{ g.t['fb_success'] }}",
+        successMsg: "{{ g.t['fb_success_text'] }}",
+        verified: "{{ g.t['fb_verified_source'] }}"
     };
 
-    try {
-        const response = await fetch('/api/feedback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            // 1. إظهار رسالة النجاح (باستخدام تنبيه بسيط أو Toast)
-            Swal.fire({
-            title: 'Success!',
-            text: 'Your feedback has been published.',
-            icon: 'success',
-            confirmButtonColor: '#2563eb', // لون أزرق مطابق لبراند موقعك
-            timer: 2000
-             });
-
-            // 2. تبييض (تفريغ) الفورم
-            form.reset();
-
-            // 3. العودة لعرض التقييمات بدلاً من الفورم
-            // يمكنك استدعاء الدالة التي تجلب البيانات وتعرضها مرة أخرى هنا
-            // لنفترض أن اسمها loadFeedbacks()
-            setTimeout(() => {
-                location.reload(); // أو استبدلها بدالة تحديث الـ UI بدون ريفريش
-            }, 500);
-
-        } else {
-            alert("❌ Error: " + result.message);
-            submitBtn.innerHTML = originalBtnText;
-            submitBtn.disabled = false;
-        }
-    } catch (error) {
-        console.error("Submission failed:", error);
-        alert("Something went wrong. Please try again.");
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
+    function openDirectFeedbackForm() {
+        const modal = document.getElementById('feedback-modal');
+        modal.classList.remove('hidden');
+        showFeedbackForm();
     }
-});
-}
-    // الطريقة الصحيحة والمباشرة لحقن JSON من Flask إلى JS
-    // لا تضع علامات تنصيص '' حول القوسين
+
+    function showFeedbackForm() {
+        const grid = document.getElementById('modal-feedback-grid');
+        grid.innerHTML = `
+            <div class="col-span-full max-w-2xl mx-auto w-full p-4 animate-in fade-in slide-in-from-bottom-4">
+                <form id="new-feedback-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-1">
+                        <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">${trans.fullName}</label>
+                        <input type="text" id="fb-name" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">${trans.email}</label>
+                        <input type="email" id="fb-email" required class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">${trans.jobTitle}</label>
+                        <input type="text" id="fb-title" placeholder="e.g. Senior Developer" class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">${trans.linkedin}</label>
+                        <input type="url" id="fb-linkedin" placeholder="https://linkedin.com/in/..." class="w-full p-3 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-black mb-2 dark:text-white uppercase tracking-widest text-blue-600">${trans.feedback}</label>
+                        <textarea id="fb-text" rows="4" required class="w-full p-4 rounded-2xl border border-slate-200 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="md:col-span-2 flex gap-3 pt-4">
+                        <button type="button" onclick="location.reload()" class="flex-1 p-4 rounded-2xl font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase text-xs tracking-widest">${trans.cancel}</button>
+                        <button type="submit" class="flex-1 p-4 rounded-2xl font-black text-white bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/30 transition-all uppercase text-xs tracking-widest">${trans.publish}</button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        document.getElementById('new-feedback-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> ${trans.sending}`;
+            submitBtn.disabled = true;
+
+            const payload = {
+                person_name: document.getElementById('fb-name').value,
+                contact_email: document.getElementById('fb-email').value,
+                job_title: document.getElementById('fb-title').value,
+                linkedin_url: document.getElementById('fb-linkedin').value,
+                feedback_text: document.getElementById('fb-text').value
+            };
+
+            try {
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        title: trans.success,
+                        text: trans.successMsg,
+                        icon: 'success',
+                        confirmButtonColor: '#2563eb',
+                        timer: 2000
+                    });
+                    form.reset();
+                    setTimeout(() => { location.reload(); }, 500);
+                } else {
+                    const res = await response.json();
+                    alert("❌ Error: " + res.message);
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                alert("Something went wrong.");
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
     const feedbacks = {{ feedbacks_json | safe if feedbacks_json else '[]' }};
-
-    console.log("Check this out - Feedbacks from Server:", feedbacks);
-
     let feedbackIndex = 0;
 
     function showNextFeedback() {
-        if (!feedbacks || feedbacks.length === 0) {
-            console.warn("Notification system: Empty feedback list.");
-            return;
-        }
-
+        if (!feedbacks || feedbacks.length === 0) return;
         const feedback = feedbacks[feedbackIndex];
         const container = document.getElementById('feedback-toast-container');
         if (!container) return;
 
         const toast = document.createElement('div');
-        // استعمل الـ Classes الخاصة بك هنا...
         toast.className = "flex items-center gap-4 p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl transition-all duration-700 opacity-0 translate-y-20 w-72 md:w-80 pointer-events-auto mb-2";
         toast.innerHTML = `
-    <div class="relative flex-shrink-0">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg border-2 border-white/20">
-            <span class="text-white text-xs font-black uppercase">${feedback.person_name ? feedback.person_name.charAt(0) : 'U'}</span>
-        </div>
-    </div>
-
-    <div class="flex-1 min-w-0">
-        <div class="flex justify-between items-center mb-1 gap-2">
+            <div class="relative flex-shrink-0">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg border-2 border-white/20">
+                    <span class="text-white text-xs font-black uppercase">${feedback.person_name.charAt(0)}</span>
+                </div>
+            </div>
             <div class="flex-1 min-w-0">
-                <p class="text-[10px] font-black dark:text-white uppercase truncate tracking-tight leading-none mb-0.5">${feedback.person_name}</p>
-                <p class="text-[8px] text-blue-500 font-bold leading-none italic truncate">${feedback.job_title || 'Professional'}</p>
+                <div class="flex justify-between items-center mb-1 gap-2">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] font-black dark:text-white uppercase truncate tracking-tight leading-none mb-0.5">${feedback.person_name}</p>
+                        <p class="text-[8px] text-blue-500 font-bold leading-none italic truncate">${feedback.job_title || 'Expert'}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <a href="mailto:${feedback.contact_email}" class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                            <i class="fas fa-envelope text-[10px]"></i>
+                        </a>
+                        ${feedback.linkedin_url ? `<a href="${feedback.linkedin_url}" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all shadow-sm"><i class="fab fa-linkedin-in text-[10px]"></i></a>` : ''}
+                    </div>
+                </div>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed italic line-clamp-2 mt-1">"${feedback.feedback_text}"</p>
             </div>
-
-            <div class="flex items-center gap-1.5 flex-shrink-0">
-                <a href="mailto:${feedback.contact_email}" title="Send Email"
-                   class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm">
-                    <i class="fas fa-envelope text-[10px]"></i>
-                </a>
-            ${(feedback.linkedin_url && feedback.linkedin_url.trim() !== "") ? `
-                <a href="${feedback.linkedin_url}"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all duration-300 shadow-sm">
-                        <i class="fab fa-linkedin-in text-[10px]"></i>
-                </a>
-            ` : ''}
-            </div>
-        </div>
-
-        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed italic line-clamp-2 mt-1">
-            "${feedback.feedback_text}"
-        </p>
-    </div>
-`;
+        `;
 
         container.appendChild(toast);
-        // تأكد أن الأنيميشن يزيل الـ translate-y لترتفع البطاقة
-setTimeout(() => toast.classList.remove('opacity-0', 'translate-y-20'), 50);
-
-// عند الاختفاء، تذهب للأعلى وتتلاشى
-setTimeout(() => {
-    toast.classList.add('opacity-0', '-translate-y-10');
-    setTimeout(() => toast.remove(), 700);
-}, 5000);
+        setTimeout(() => toast.classList.remove('opacity-0', 'translate-y-20'), 50);
+        setTimeout(() => {
+            toast.classList.add('opacity-0', '-translate-y-10');
+            setTimeout(() => toast.remove(), 700);
+        }, 5000);
 
         feedbackIndex = (feedbackIndex + 1) % feedbacks.length;
         setTimeout(showNextFeedback, 2000);
     }
 
-    window.addEventListener('load', () => {
-        if (feedbacks.length > 0) {
-            setTimeout(showNextFeedback, 1000);
-        }
-    });
+    window.addEventListener('load', () => { if (feedbacks.length > 0) setTimeout(showNextFeedback, 1000); });
 
     function toggleFeedbackModal() {
-    const modal = document.getElementById('feedback-modal');
-    const grid = document.getElementById('modal-feedback-grid');
+        const modal = document.getElementById('feedback-modal');
+        const grid = document.getElementById('modal-feedback-grid');
+        modal.classList.toggle('hidden');
 
-    // تبديل الظهور
-    modal.classList.toggle('hidden');
-
-    // إذا تم فتح النافذة، قم بملء البيانات
-    if (!modal.classList.contains('hidden')) {
-        grid.innerHTML = feedbacks.map(f => `
-    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 hover:border-blue-500/30 transition-all group relative">
-        <div class="flex justify-between items-start mb-3">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-600 font-black text-xs border border-blue-600/20">
-                    ${f.person_name.charAt(0)}
+        if (!modal.classList.contains('hidden')) {
+            grid.innerHTML = feedbacks.map(f => `
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 hover:border-blue-500/30 transition-all group relative">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-600 font-black text-xs border border-blue-600/20">${f.person_name.charAt(0)}</div>
+                            <div>
+                                <h4 class="text-[11px] font-black dark:text-white uppercase">${f.person_name}</h4>
+                                <p class="text-[9px] text-blue-500 font-bold tracking-tight">${f.job_title || 'Expert'}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="mailto:${f.contact_email}" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"><i class="fas fa-envelope text-xs"></i></a>
+                            ${f.linkedin_url ? `<a href="${f.linkedin_url}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all shadow-sm"><i class="fab fa-linkedin-in text-xs"></i></a>` : ''}
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed mb-4">"${f.feedback_text}"</p>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <i class="fas fa-at text-[9px] text-blue-500/50"></i>
+                            <span class="text-[9px] text-slate-500 dark:text-slate-400 font-mono break-all">${f.contact_email}</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <span class="text-[7px] text-slate-300 dark:text-slate-600 font-bold uppercase tracking-widest">${trans.verified}</span>
+                            <i class="fas fa-user-shield text-[8px] text-green-500/50"></i>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="text-[11px] font-black dark:text-white uppercase">${f.person_name}</h4>
-                    <p class="text-[9px] text-blue-500 font-bold tracking-tight">${f.job_title || 'Expert'}</p>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <a href="mailto:${f.contact_email}"
-                   title="Contact via Email"
-                   class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm group/mail">
-                    <i class="fas fa-envelope text-xs"></i>
-                </a>
-
-                ${f.linkedin_url ? `
-                    <a href="${f.linkedin_url.startsWith('http') ? f.linkedin_url : 'https://' + f.linkedin_url}"
-                       target="_blank" rel="noopener noreferrer"
-                       class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all duration-300 shadow-sm">
-                        <i class="fab fa-linkedin-in text-xs"></i>
-                    </a>
-                ` : ''}
-            </div>
-        </div>
-
-        <p class="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed mb-4">
-            "${f.feedback_text}"
-        </p>
-
-        <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-            <div class="flex items-center gap-1.5 min-w-0">
-        <i class="fas fa-at text-[9px] text-blue-500/50"></i>
-        <span class="text-[9px] text-slate-500 dark:text-slate-400 font-mono break-all selection:bg-blue-500/30">
-            ${f.contact_email}
-        </span>
-    </div>
-    <div class="flex items-center gap-2 flex-shrink-0">
-        <span class="text-[7px] text-slate-300 dark:text-slate-600 font-bold uppercase tracking-widest">Verified Source</span>
-        <i class="fas fa-user-shield text-[8px] text-green-500/50"></i>
-    </div>
-             </div>
-    </div>
-`).join('');
+            `).join('');
+        }
     }
-}
+
     function toggleContactModal() {
-    const modal = document.getElementById('contactModal');
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.body.style.overflow = 'hidden'; // منع السكرول عند فتح النافذة
-    } else {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.body.style.overflow = 'auto'; // إعادة السكرول
+        const modal = document.getElementById('contactModal');
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
     }
-}
 </script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
