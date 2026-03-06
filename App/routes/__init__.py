@@ -224,17 +224,23 @@ from flask import request, render_template
 
 @portfolio.route('/blogs')
 def blogs():
-    # 1. التقاط الهشتاق من الرابط (مثال: /blogs?tag=python)
+    # 1. التقاط الهشتاق والسلسلة من الرابط
     tag_filter = request.args.get('tag')
+    series_id = request.args.get('series') # أضفنا التقاط السلسلة هنا
 
-    # 2. جلب السلاسل لغرض التصفية في القائمة المنسدلة
+    # 2. جلب السلاسل لغرض التصفية في القائمة المنسدلة والجانبية
     series_list = Series.objects.all()
 
-    # 3. تحديد الاستعلام: هل هو فلتر لتاج معين أم عرض للكل؟
+    # 3. تحديد الاستعلام: هل هو فلتر لتاج معين، سلسلة معينة، أم عرض للكل؟
     if tag_filter:
-        # البحث عن التاج داخل مصفوفة post_tags في MongoDB
         posts_query = Post.objects(post_tags=tag_filter).order_by('-created_at')
         display_title = f"Insights tagged #{tag_filter}"
+    elif series_id:
+        # البحث عن المنشورات المرتبطة بسلسلة معينة
+        posts_query = Post.objects(series=series_id).order_by('-created_at')
+        # محاولة جلب اسم السلسلة للعنوان
+        s_obj = Series.objects.with_id(series_id)
+        display_title = s_obj.name if s_obj else "Series Insights"
     else:
         posts_query = Post.objects.order_by('-created_at')
         display_title = "Articles & Insights"
@@ -252,7 +258,7 @@ def blogs():
             post.series = None
             safe_posts.append(post)
 
-    # 5. إرسال safe_posts بدلاً من posts_query لضمان عدم انهيار الصفحة
+    # 5. إرسال البيانات للقالب
     return render_template('blogs.html',
                            posts=safe_posts,
                            series_list=series_list,
