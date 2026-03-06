@@ -404,29 +404,32 @@ function removeSelectedImage() {
     document.getElementById('image-preview-container').classList.add('hidden');
 }
 
+// دالة عامة لإضافة الوسوم حول النص المحدد
+function insertTag(tagName) {
+    const textarea = document.getElementById('post-content');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    // إذا لم يتم تحديد نص، نضع نصاً افتراضياً
+    const content = selectedText || (tagName === 'li' ? 'List item' : 'Text');
+    const replacement = `<${tagName}>${content}</${tagName}>`;
+
+    textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+    textarea.focus();
+}
+
+// دالة خاصة بالكود (لأنه يحتاج pre و code معاً)
 function insertCodeTag() {
     const textarea = document.getElementById('post-content');
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const text = textarea.value;
+    const selectedText = textarea.value.substring(start, end);
 
-    // إدراج وسم pre و code (نظام البوك ماركت للكود)
-    const replacement = `<pre><code>${text.substring(start, end)}</code></pre>`;
+    const replacement = `<pre><code>${selectedText || 'Code here...'}</code></pre>`;
 
-    textarea.value = text.substring(0, start) + replacement + text.substring(end);
+    textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
     textarea.focus();
-}
-
-// أضف هذه أيضاً إذا أردت زر للاقتباسات
-function insertQuoteTag() {
-    const textarea = document.getElementById('post-content');
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-
-    const replacement = `<blockquote>${text.substring(start, end)}</blockquote>`;
-
-    textarea.value = text.substring(0, start) + replacement + text.substring(end);
 }
 document.getElementById('add-post-form').addEventListener('submit', async (e) => {
     e.preventDefault(); // منع الصفحة من التحديث التلقائي
