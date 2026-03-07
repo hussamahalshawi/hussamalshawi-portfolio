@@ -214,31 +214,30 @@
             {% endif %}
          );">
 
-                        <div class="bg-white dark:bg-[#0d1321] rounded-[calc(1rem-1px)] p-4 h-full w-full flex flex-col items-center justify-center text-center">
+                      <div class="bg-white dark:bg-[#0d1321] rounded-xl p-3 min-h-[80px] w-full flex flex-col items-center justify-center text-center border border-slate-100 dark:border-slate-800/50 hover:border-blue-500/30 transition-all shadow-sm">
 
-                            <div class="w-full flex flex-col items-center gap-2 z-10">
-                <span class="text-[8px] font-black tracking-[0.2em] text-slate-400 dark:text-slate-500 uppercase">
-                    {{ skill.skill_type.type_name if skill.skill_type else 'Dev' }}
-                </span>
+    <div class="w-full flex flex-col items-center gap-2 z-10">
+        <span class="text-[7px] font-black tracking-[0.15em] text-slate-400 dark:text-slate-500 uppercase">
+            {{ skill.skill_type.type_name if skill.skill_type else 'Dev' }}
+        </span>
 
-                                <div class="flex flex-row items-center justify-center gap-2 w-full">
-                                    <h3 class="text-[13px] font-black text-slate-900 dark:text-white truncate tracking-tight uppercase">
-                                        {{ skill.skill_name }}
-                                    </h3>
+        <div class="flex flex-wrap items-center justify-center gap-2 w-full px-1">
 
-                                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded-md
-                        {% if skill.level >= 90 %} bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10
-                        {% elif skill.level >= 75 %} bg-blue-50 text-blue-600 dark:bg-blue-500/10
-                        {% elif skill.level >= 50 %} bg-amber-50 text-amber-600 dark:bg-amber-500/10
-                        {% else %} bg-slate-50 text-slate-600 dark:bg-slate-500/10
-                        {% endif %}">
-                        {{ skill.level }}%
-                    </span>
-                                </div>
+            <h3 class="text-[14px] font-bold text-slate-900 dark:text-white tracking-tight leading-tight break-words max-w-full">
+                {{ skill.skill_name }}
+            </h3>
 
-                                <i class="fas fa-bolt text-[8px] {% if skill.level >= 75 %} text-amber-500 animate-pulse {% else %} text-slate-500 {% endif %}"></i>
-                            </div>
-                        </div>
+            <span class="text-[9px] font-black px-1.5 py-0.5 rounded-md flex-shrink-0 whitespace-nowrap
+                {% if skill.level >= 90 %} bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10
+                {% elif skill.level >= 75 %} bg-blue-50 text-blue-600 dark:bg-blue-500/10
+                {% elif skill.level >= 50 %} bg-amber-50 text-amber-600 dark:bg-amber-500/10
+                {% else %} bg-slate-50 text-slate-600 dark:bg-slate-500/10
+                {% endif %}">
+                {{ skill.level }}%
+            </span>
+        </div>
+    </div>
+</div>
                     </div>
                     {% endfor %}
                 </div>
@@ -729,14 +728,14 @@
 
             <div class="space-y-8">
                 <div class="flex items-center justify-center gap-6 mb-12" data-aos="fade-up">
-    <div class="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-amber-500/40"></div>
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-amber-500/40"></div>
 
-    <span class="text-xl md:text-2xl font-[1000] tracking-[0.3em] text-slate-900 dark:text-white uppercase text-center">
+                    <span class="text-xl md:text-2xl font-[1000] tracking-[0.3em] text-slate-900 dark:text-white uppercase text-center">
         Recog<span class="text-amber-500">nition</span>
     </span>
 
-    <div class="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-amber-500/40"></div>
-</div>
+                    <div class="h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-amber-500/40"></div>
+                </div>
 
                 <div class="space-y-6">
                     {% for award in achievements %}
