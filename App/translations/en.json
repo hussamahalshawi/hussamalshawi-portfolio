@@ -38,5 +38,11 @@
   "dev_default": "Dev",
   "years_suffix": "y",
   "default_bio": "Passionate developer creating intuitive digital experiences.",
+  "roadmap_title_main": "Professional",
+  "roadmap_title_accent": "Career Roadmap",
+  "roadmap_desc": "Strategic Growth & Technology Mastery",
+  "roadmap_year": "Year",
+  "roadmap_status_label": "Progress Status",
+  "roadmap_status_val": "Processing Plan",
   "default_title": "Full Stack Developer"
 }
