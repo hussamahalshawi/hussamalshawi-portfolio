@@ -1,14 +1,90 @@
 from flask import Blueprint, render_template, redirect, url_for
 
-from App.translations import translations
 from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType, Post, Series
 from flask import request, jsonify
 import json
 from datetime import datetime, timezone
 import datetime
 from flask import Flask, request, session, g
+import logging
 
+# Defining the Blueprint for the portfolio
 portfolio = Blueprint('portfolio', __name__)
+
+
+def load_translations(lang):
+    """
+    Loads translation strings from a JSON file located in the translations folder.
+    Adheres to global standards for error handling and logging.
+    """
+    # Define the log file path - Ensure this is in one place for consistency
+    log_file_path = os.path.join(current_app.root_path, 'errors.log')
+
+    # Configure the file handler for logging errors locally (not sent to GitHub)
+    file_handler = logging.FileHandler(log_file_path)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+
+    # Use current_app to access the logger as Blueprints don't have their own logger
+    if not current_app.logger.handlers:
+        current_app.logger.addHandler(file_handler)
+
+    # Determine the absolute path to the translations directory
+    translations_dir = os.path.join(current_app.root_path, 'translations')
+    file_path = os.path.join(translations_dir, f'{lang}.json')
+
+    try:
+        # Check if the file exists to provide a specific error message if missing
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Missing language file: {file_path}")
+
+        # Open and read the translation file with UTF-8 support
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    except FileNotFoundError as e:
+        # Log missing file error specifically to our local log file
+        current_app.logger.error(f"Translation Error: {str(e)}")
+        return {}
+
+    except json.JSONDecodeError as e:
+        # Log syntax errors if the JSON is malformed
+        current_app.logger.error(f"JSON Syntax Error in {lang}.json: {str(e)}")
+        return {}
+
+    except Exception as e:
+        # Generic catch-all for unexpected issues to prevent site crash
+        current_app.logger.error(f"Critical error loading translations: {str(e)}")
+        return {}
+
+
+@portfolio.before_request
+def load_language_config():
+    """
+    Pre-request hook to set up global language configuration (g object).
+    Centralizes all language metadata in one location.
+    """
+    # 1. Define available languages and their properties in a single place
+    available_languages = {
+        'ar': {'direction': 'rtl', 'label': 'AR'},
+        'en': {'direction': 'ltr', 'label': 'EN'}
+    }
+
+    # 2. Retrieve the user's preferred language, defaulting to English
+    current_lang = session.get('lang', 'en')
+
+    # 3. Inject configuration into Flask's global 'g' object for template access
+    g.lang = current_lang
+    g.available_languages = available_languages
+    g.lang_config = available_languages.get(current_lang, available_languages['en'])
+
+    # 4. Load the actual text dictionary into g.t
+    g.t = load_translations(current_lang)
+
+
+# Git Commit Message:
+# fix: upgrade translation loader to use current_app.logger and implement local file logging
 
 
 @portfolio.context_processor
@@ -32,11 +108,7 @@ def set_language(lang):
     # العودة إلى الصفحة التي جاء منها المستخدم
     return redirect(request.referrer or url_for('portfolio.index'))
 
-# تأكد من وجود هذا الـ before_request في مشروعك
-@portfolio.before_request
-def load_language():
-    g.lang = session.get('lang', 'en')  # اللغة الافتراضية English
-    g.t = translations.get(g.lang, translations['en'])
+
 
 
 @portfolio.route('/')

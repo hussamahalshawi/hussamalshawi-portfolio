@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="{{ g.lang }}" dir="{{ 'rtl' if g.lang == 'ar' else 'ltr' }}" class="light">
+<html lang="{{ g.lang }}" dir="{{ g.lang_config.direction }}" class="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% block title %} HussamAlshawi-Portfolio {% endblock %}
     </title>
+
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <script>
+        /* Immediately Invoked Function to handle theme persistence and avoid flickering */
         (function() {
             const savedTheme = localStorage.getItem('theme');
             const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -26,13 +30,24 @@
             }
         })();
     </script>
+
     <script>
+        /* Tailwind Configuration for Dark Mode and Custom Colors */
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: { colors: { darkBg: '#050a18', darkCard: '#0b1426', accentBlue: '#00d2ff' } } }
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#050a18',
+                        darkCard: '#0b1426',
+                        accentBlue: '#00d2ff'
+                    }
+                }
+            }
         }
     </script>
 </head>
+
 <body class="bg-[#f8fafc] dark:bg-darkBg text-slate-800 dark:text-white transition-all duration-500 font-sans flex flex-col min-h-screen">
 
 <nav class="fixed w-full z-50 px-6 md:px-10 py-4 bg-white/80 dark:bg-darkBg/80 backdrop-blur-md border-b dark:border-slate-800">
@@ -53,21 +68,24 @@
             </div>
         </div>
 
-        <div class="hidden md:flex flex-1 justify-center items-center space-x-8 {{ 'space-x-reverse' if g.lang == 'ar' }} text-sm font-bold uppercase tracking-wide">
+        <div class="hidden md:flex flex-1 justify-center items-center space-x-8 {{ 'space-x-reverse' if g.lang_config.direction == 'rtl' }} text-sm font-bold uppercase tracking-wide">
             <a href="/" class="hover:text-blue-500 transition-colors">{{ g.t['nav_home'] }}</a>
             <a href="{{ url_for('portfolio.all_projects') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_projects'] }}</a>
             <a href="{{ url_for('portfolio.all_skills') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_skills'] }}</a>
             <a href="{{ url_for('portfolio.blogs') }}" class="hover:text-blue-500 transition-colors">{{ g.t['nav_blog'] }}</a>
         </div>
 
-        <div class="flex-1 flex justify-end items-center space-x-4 {{ 'space-x-reverse' if g.lang == 'ar' }}">
-            <div class="flex items-center gap-2 border-r dark:border-slate-700 pr-4 mr-2 {{ 'border-l border-r-0 pl-4 pr-0 ml-2 mr-0' if g.lang == 'ar' }}">
-    <a href="{{ url_for('portfolio.set_language', lang='ar') }}"
-       class="text-[10px] font-bold {{ 'text-blue-500' if g.lang == 'ar' else 'text-slate-400 hover:text-blue-500' }} transition">AR</a>
-    <span class="text-slate-300">|</span>
-    <a href="{{ url_for('portfolio.set_language', lang='en') }}"
-       class="text-[10px] font-bold {{ 'text-blue-500' if g.lang == 'en' else 'text-slate-400 hover:text-blue-500' }} transition">EN</a>
-</div>
+        <div class="flex-1 flex justify-end items-center space-x-4 {{ 'space-x-reverse' if g.lang_config.direction == 'rtl' }}">
+
+            <div class="flex items-center gap-2 border-r dark:border-slate-700 pr-4 mr-2 {{ 'border-l border-r-0 pl-4 pr-0 ml-2 mr-0' if g.lang_config.direction == 'rtl' }}">
+                {% for lang_code, lang_info in g.available_languages.items() %}
+                    <a href="{{ url_for('portfolio.set_language', lang=lang_code) }}"
+                       class="text-[10px] font-bold {{ 'text-blue-500' if g.lang == lang_code else 'text-slate-400 hover:text-blue-500' }} transition">
+                       {{ lang_info.label }}
+                    </a>
+                    {% if not loop.last %}<span class="text-slate-300">|</span>{% endif %}
+                {% endfor %}
+            </div>
 
             <button onclick="toggleTheme()"
                     class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-300 hover:scale-110 transition">
@@ -179,7 +197,7 @@
     <p>&copy; 2026 Hussam Alshawi - {{ g.t['footer_motto'] }}</p>
 </footer>
 
-<div class="fixed bottom-6 {{ 'left-6' if g.lang == 'ar' else 'right-6' }} z-[100] flex flex-col items-center gap-4">
+<div class="fixed bottom-6 {{ 'left-6' if g.lang_config.direction == 'rtl' else 'right-6' }} z-[100] flex flex-col items-center gap-4">
     <button onclick="toggleFeedbackModal()"
             title="{{ g.t['view_feedbacks'] }}"
             class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-[0_10px_30px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 group relative">
@@ -225,11 +243,11 @@
 </div>
 
 <div id="feedback-toast-container"
-     class="fixed bottom-40 {{ 'left-6 items-start' if g.lang == 'ar' else 'right-6 items-end' }} z-[99] flex flex-col gap-4 pointer-events-none">
+     class="fixed bottom-40 {{ 'left-6 items-start' if g.lang_config.direction == 'rtl' else 'right-6 items-end' }} z-[99] flex flex-col gap-4 pointer-events-none">
 </div>
 
 <script>
-    // تمرير نصوص الواجهة للجافا سكريبت لاستخدامها في الفورم
+    /* Interface translations passed to JS for dynamic form rendering */
     const trans = {
         fullName: "{{ g.t['fb_name_label'] }}",
         email: "{{ g.t['fb_email_label'] }}",
