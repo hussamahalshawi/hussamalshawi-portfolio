@@ -8,3 +8,4 @@ psycopg2-binary==2.9.9
 pymongo==3.12.3
 dnspython==2.4.2
 certifi==2024.2.2
+pymongo[srv]==4.6.1
