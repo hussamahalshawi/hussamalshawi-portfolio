@@ -283,56 +283,55 @@ async function openPostModal(postId) {
             : `<button disabled class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-400 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest cursor-not-allowed">
                 No External Link <i class="fas fa-lock text-[10px]"></i>
                </button>`;
+// بناء محتوى المودال مع تثبيت الجزء العلوي وفصله عن منطقة التمرير
+content.innerHTML = `
+    <div class="sticky top-0 z-50 bg-white dark:bg-slate-900 px-8 pt-8 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex flex-wrap items-center gap-4">
+            <span class="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase tracking-[0.2em]">
+                # ${post.series_name || 'General'}
+            </span>
+            <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest italic">
+                ${post.date}
+            </span>
+        </div>
 
-        // بناء محتوى المودال
-        content.innerHTML = `
-            <button onclick="closePostModal()" class="absolute top-6 right-6 text-slate-400 hover:text-rose-500 transition-colors z-10">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
+        <button onclick="closePostModal()" class="text-slate-400 hover:text-rose-500 transition-colors">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
 
-            <div class="space-y-8">
-                <div class="flex flex-wrap items-center gap-4">
-                    <span class="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase tracking-[0.2em]">
-                        # ${post.series_name || 'General'}
-                    </span>
-                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest italic">
-                        ${post.date}
-                    </span>
+    <div class="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-100px)] custom-scrollbar">
+        <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
+            ${post.content.replace(/\n/g, '<br>')}
+        </div>
+
+        ${post.image ? `
+            <div class="rounded-[2rem] overflow-hidden shadow-2xl bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800">
+                <img src="${post.image}" class="w-full h-auto block">
+            </div>
+        ` : ''}
+
+        ${post.tags && post.tags.length > 0 ? `
+            <div class="flex flex-wrap gap-2">
+                ${post.tags.map(tag => `<span class="text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-md">#${tag}</span>`).join('')}
+            </div>
+        ` : ''}
+
+        <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex items-center gap-8">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Views</span>
+                    <span class="text-xl font-black dark:text-white">${post.views}</span>
                 </div>
-
-                <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
-                    ${post.content.replace(/\n/g, '<br>')}
-                </div>
-
-                ${post.image ? `
-                    <div class="rounded-[2rem] overflow-hidden shadow-2xl">
-                        <img src="${post.image}" class="w-full h-auto object-cover max-h-[500px]">
-                    </div>
-                ` : ''}
-
-                ${post.tags && post.tags.length > 0 ? `
-                    <div class="flex flex-wrap gap-2">
-                        ${post.tags.map(tag => `<span class="text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-md">#${tag}</span>`).join('')}
-                    </div>
-                ` : ''}
-
-
-
-                <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div class="flex items-center gap-8">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Views</span>
-                            <span class="text-xl font-black dark:text-white">${post.views}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Likes</span>
-                            <span class="text-xl font-black dark:text-white">${post.likes}</span>
-                        </div>
-                    </div>
-                    ${urlButton}
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Likes</span>
+                    <span class="text-xl font-black dark:text-white">${post.likes}</span>
                 </div>
             </div>
-        `;
+            ${urlButton}
+        </div>
+    </div>
+`;
 
         // تحديث العداد في الخلفية (Feed)
         const viewSpan = document.getElementById(`view-count-${postId}`);
