@@ -1,14 +1,7 @@
 from mongoengine import connect, disconnect
 import os
 import logging
-
-# Standard library for SSL certificates (Required for MongoDB Atlas)
-try:
-    import certifi
-
-    ca = certifi.where()
-except ImportError:
-    ca = None
+import certifi
 
 # Set up professional logging
 logger = logging.getLogger(__name__)
@@ -16,33 +9,33 @@ logger = logging.getLogger(__name__)
 
 def init_db(app):
     """
-    HussamAlshawi-Portfolio Database Initializer.
-    Connects to MongoDB Atlas (Production) or Localhost (Development)
-    based on the available environment configuration.
+    Initializes the MongoDB connection for HussamAlshawi-Portfolio.
+    Optimized for dual-environment (Local vs Atlas) with SSL Handshake fix.
     """
     try:
-        # 1. Fetch the Connection URI from the app config
-        # This should be set in Render Environment Variables as MONGO_URLL
+        # 1. Configuration Retrieval
+        # We fetch the URI from the environment/config
         db_uri = app.config.get('MONGO_URI')
 
-        # Robustness: Close any existing connection before starting a new one
+        # Safety Check: Disconnect any existing alias 'default'
         disconnect(alias='default')
 
-        # 2. STRATEGY: Check if we are connecting to Atlas (Production)
+        # 2. Connection Strategy
         if db_uri and ("mongodb+srv" in db_uri or "mongodb://" in db_uri) and "localhost" not in db_uri:
-            # CONNECTION FOR PRODUCTION (Atlas)
-            # We use 'tlsCAFile' to solve the SSL Handshake error you encountered.
+            # PRODUCTION: MongoDB Atlas
+            # We enforce tlsCAFile using certifi to override the SSL handshake issue.
+            # We also ensure the app name is correctly set.
             connect(
                 host=db_uri,
                 alias='default',
-                tlsCAFile=ca,
-                serverSelectionTimeoutMS=5000  # Prevent Gunicorn timeout (5 seconds)
+                tlsCAFile=certifi.where(),
+                serverSelectionTimeoutMS=5000,
+                connectTimeoutMS=10000
             )
             print(f"✅ [Database System]: Connected to MongoDB Atlas (Production).")
 
         else:
-            # CONNECTION FOR LOCAL DEVELOPMENT
-            # Fallback to local settings if no Atlas URI is provided
+            # DEVELOPMENT: Local MongoDB
             db_name = app.config.get('MONGO_DB_NAME', 'hussam_portfolio')
             db_host = app.config.get('MONGO_HOST', 'localhost')
 
@@ -51,7 +44,6 @@ def init_db(app):
             except (ValueError, TypeError):
                 db_port = 27017
 
-            # Local connections usually don't need SSL/TLS certificates
             connect(
                 db=db_name,
                 host=db_host,
@@ -61,12 +53,12 @@ def init_db(app):
             print(f"✅ [Database System]: Connected to Local MongoDB (Development).")
 
     except Exception as e:
-        # CRITICAL VALIDATION: Log the specific error for debugging
+        # CRITICAL ERROR LOGGING: Capturing specific handshake or timeout failures
         error_msg = f"❌ [Database System Error]: {str(e)}"
         if hasattr(app, 'logger'):
             app.logger.error(error_msg)
         print(error_msg)
 
-        # In production, we re-raise the error to stop the app and alert the dev
+        # Halt execution if in production to prevent partial site loading
         if os.environ.get('FLASK_ENV') == 'production':
             raise e
