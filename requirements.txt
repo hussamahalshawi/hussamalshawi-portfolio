@@ -1,11 +1,17 @@
+# Framework and Admin
 flask~=3.0.3
 flask-admin~=2.0.2
 python-dotenv~=1.0.1
 gunicorn==21.2.0
+
+# Database Logic
 Flask-SQLAlchemy==3.1.1
-mongoengine==0.24.2
 psycopg2-binary==2.9.9
-pymongo==3.12.3
-dnspython==2.4.2
-certifi==2024.2.2
-pymongo[srv]==4.6.1
+mongoengine>=0.27.0
+
+# MongoDB Modern Drivers (Essential for Atlas & SSL)
+# We removed pymongo==3.12.3 to fix the conflict with pymongo[srv]
+pymongo[srv]>=4.6.1
+dnspython>=2.4.2
+certifi>=2024.2.2
+pyopenssl>=24.0.0
