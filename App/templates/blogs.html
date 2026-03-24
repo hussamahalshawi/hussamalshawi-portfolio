@@ -53,142 +53,96 @@
                 {% endif %}
             </div>
 
-            {% if not request.args.get('tag') and not request.args.get('series') %}
-            <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border-2 border-dashed border-slate-200 dark:border-slate-800 p-6 shadow-sm mb-8 transition-all hover:border-blue-500/50 group"
-                 data-aos="fade-up">
-
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="relative">
-                        <img src="{{ url_for('static', filename='images/favicon.png') }}"
-                             class="w-10 h-10 rounded-full border border-blue-600 p-0.5 shadow-sm">
-                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
-                    </div>
-                    <div>
-                        <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.2em]">Create New Insight</h3>
-                        <p class="text-[9px] text-slate-400 font-bold uppercase italic">Drafting as Hussam</p>
-                    </div>
-                </div>
-
-                <form id="add-post-form" class="space-y-5">
-                    <div class="relative">
-                    <textarea id="post-content" rows="5"
-                              placeholder="What's your latest technical insight?"
-                              class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-[1.25rem] p-4 text-sm focus:ring-2 focus:ring-blue-600 outline-none dark:text-white placeholder:text-slate-400 resize-none transition-all"></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="relative group/select">
-                            <i class="fas fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <select id="post-series"
-                                    class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs font-bold focus:ring-2 focus:ring-blue-600 outline-none dark:text-slate-300 appearance-none cursor-pointer">
-                                <option value="" disabled selected>Choose a Series...</option>
-                                {% for s in series_list %}
-                                <option value="{{ s.id }}">{{ s.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="relative">
-                            <i class="fas fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="url" id="post-url" placeholder="Original URL"
-                                   class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
-                        </div>
-
-                        <div class="relative">
-                            <i class="fas fa-hashtag absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="text" id="post-tags" placeholder="Tags (python, ai...)"
-                                   class="w-full bg-slate-50 dark:bg-slate-800/40 border-none rounded-xl py-3 pl-10 pr-4 text-xs focus:ring-2 focus:ring-blue-600 outline-none dark:text-white">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/50 mt-4">
-                        <div class="flex gap-3 text-slate-400">
-                            <button type="button" onclick="insertTag('b')" class="hover:text-blue-500 transition-colors" title="Bold"><i class="fas fa-bold"></i></button>
-                            <button type="button" onclick="insertTag('i')" class="hover:text-blue-500 transition-colors" title="Italic"><i class="fas fa-italic"></i></button>
-                            <button type="button" onclick="insertTag('h3')" class="hover:text-blue-500 transition-colors" title="Heading"><i class="fas fa-heading"></i></button>
-                            <button type="button" onclick="insertTag('blockquote')" class="hover:text-blue-500 transition-colors" title="Quote"><i class="fas fa-quote-left"></i></button>
-                            <button type="button" onclick="insertCodeTag()" class="hover:text-blue-500 transition-colors" title="Code Block"><i class="fas fa-code"></i></button>
-                            <button type="button" onclick="insertTag('li')" class="hover:text-blue-500 transition-colors" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-                            <button type="button" onclick="triggerFileInput()" class="hover:text-blue-500 transition-colors" title="Add Image"><i class="fas fa-image"></i></button>
-                            <input type="file" id="post-image-input" accept="image/*" class="hidden" onchange="previewImage(this)">
-                        </div>
-
-                        <div id="image-preview-container" class="hidden mt-3 relative">
-                            <img id="image-preview" src="#" class="w-20 h-20 object-cover rounded-lg border-2 border-blue-600">
-                            <button type="button" onclick="removeSelectedImage()" class="absolute -top-2 -left-2 bg-red-500 text-white rounded-full w-5 h-5 text-[10px]"><i class="fas fa-times"></i></button>
-                        </div>
-                        <button type="submit" class="bg-blue-600 text-white px-10 py-3 rounded-full text-[10px] font-[1000] uppercase tracking-[0.25em] hover:bg-blue-700 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-blue-500/20 flex items-center gap-2">
-                            Publish <i class="fas fa-paper-plane text-[9px]"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            {% endif %}
-
             {% for post in posts %}
-            <article class="post-card group bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
-                    data-post-id="{{ post.id }}"
-                    onclick="openPostModal('{{ post.id }}')"
-                    data-aos="fade-up">
+            <article class="post-card group bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer relative"
+        data-post-id="{{ post.id }}"
+        onclick="openPostModal('{{ post.id }}')"
+        data-aos="fade-up">
 
-                <div class="p-5 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full border-2 border-blue-600 p-0.5 overflow-hidden">
-                            <img src="{{ url_for('static', filename='images/favicon.png') }}" class="w-full h-full object-cover rounded-full">
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-black dark:text-white leading-tight">Hussam Alshawi</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ post.created_at.strftime('%B %d, 2026') }}</p>
-                        </div>
-                    </div>
-                    <a href="{{ url_for('portfolio.blogs', series=post.series.id) if post.series else '#' }}"
-                       onclick="event.stopPropagation()"
-                       class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] font-black rounded-lg uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                        # {{ post.series.name if post.series else 'General' }}
-                    </a>
+    <div class="absolute top-5 right-5 z-20" onclick="event.stopPropagation()">
+        <div class="relative inline-block text-left">
+            <button onclick="toggleCardOptions('{{ post.id }}', event)"
+                    class="w-8 h-8 rounded-lg bg-slate-100/50 dark:bg-slate-800/50 flex items-center justify-center text-slate-500 hover:bg-blue-600 hover:text-white transition-all backdrop-blur-sm">
+                <i class="fas fa-ellipsis-v text-xs"></i>
+            </button>
+
+            <div id="card-menu-{{ post.id }}"
+     class="hidden absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-[999] overflow-hidden">
+    <div class="py-1">
+
+<!--                    <button onclick="editPost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">-->
+<!--                        <i class="fas fa-edit w-3"></i> Edit-->
+<!--                    </button>-->
+                    <button onclick="sharePost('{{ post.id }}')"
+        class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">
+    <i class="fas fa-share-alt w-3"></i> Share Story
+</button>
+<!--                    <button onclick="archivePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-all border-t border-slate-50 dark:border-slate-800">-->
+<!--                        <i class="fas fa-archive w-3"></i> Archive-->
+<!--                    </button>-->
+<!--                    <button onclick="deletePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all border-t border-slate-50 dark:border-slate-800">-->
+<!--                        <i class="fas fa-trash-alt w-3"></i> Delete Permanent-->
+<!--                    </button>-->
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="px-5 pb-2">
-                    <div class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
-                        {{ post.content | safe }}
-                    </div>
-                    {% if post.post_tags %}
-                    <div class="flex flex-wrap gap-2 mt-3" onclick="event.stopPropagation()">
-                        {% for tag in post.post_tags %}
-                        <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
-                           class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline transition-all">
-                            #{{ tag }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
+    <div class="p-5 flex items-center justify-between pr-14"> <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full border-2 border-blue-600 p-0.5 overflow-hidden">
+                <img src="{{ url_for('static', filename='images/favicon.png') }}" class="w-full h-full object-cover rounded-full">
+            </div>
+            <div>
+                <h3 class="text-sm font-black dark:text-white leading-tight">Hussam Alshawi</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ post.created_at.strftime('%B %d, 2026') }}</p>
+            </div>
+        </div>
 
-                {% if post.post_images %}
-<div class="mt-4 relative rounded-xl overflow-hidden">
-    <img src="{{ post.post_images[0] }}"
-         class="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.01]">
-</div>
-{% endif %}
+        <a href="{{ url_for('portfolio.blogs', series=post.series.id) if post.series else '#' }}"
+           onclick="event.stopPropagation()"
+           class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] font-black rounded-lg uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all hidden sm:block">
+            # {{ post.series.name if post.series else 'General' }}
+        </a>
+    </div>
 
-                <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between bg-slate-50/30 dark:bg-slate-800/20">
-                    <div class="flex items-center gap-6" onclick="event.stopPropagation()">
-                        <button onclick="handleLike('{{ post.id }}', this)"
-                                class="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-all">
-                            <i class="far fa-heart font-bold"></i>
-                            <span class="text-xs font-black like-count">{{ post.likes_count or 0 }}</span>
-                        </button>
-                        <div class="flex items-center gap-1.5 text-slate-400 text-xs">
-                            <i class="far fa-eye"></i>
-                            <span id="view-count-{{ post.id }}" class="font-bold">{{ post.views_count or 0 }}</span>
-                        </div>
-                    </div>
-                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Click to Read Full Story</span>
-                </div>
-            </article>
+    <div class="px-5 pb-2">
+        <div class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
+            {{ post.content | safe }}
+        </div>
+        {% if post.post_tags %}
+        <div class="flex flex-wrap gap-2 mt-3" onclick="event.stopPropagation()">
+            {% for tag in post.post_tags %}
+            <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
+               class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline transition-all">
+                #{{ tag }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    {% if post.post_images %}
+    <div class="mt-4 relative rounded-xl overflow-hidden">
+        <img src="{{ post.post_images[0] }}"
+             class="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.01]">
+    </div>
+    {% endif %}
+
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between bg-slate-50/30 dark:bg-slate-800/20">
+        <div class="flex items-center gap-6" onclick="event.stopPropagation()">
+            <button onclick="handleLike('{{ post.id }}', this)"
+                    class="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-all">
+                <i class="far fa-heart font-bold"></i>
+                <span class="text-xs font-black like-count">{{ post.likes_count or 0 }}</span>
+            </button>
+            <div class="flex items-center gap-1.5 text-slate-400 text-xs">
+                <i class="far fa-eye"></i>
+                <span id="view-count-{{ post.id }}" class="font-bold">{{ post.views_count or 0 }}</span>
+            </div>
+        </div>
+        <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Click to Read Full Story</span>
+    </div>
+</article>
             {% endfor %}
         </div>
     </div>
