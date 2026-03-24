@@ -25,6 +25,7 @@ class Config:
 
     # 3. Database Defaults
     MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'hussam_portfolio')
+    MONGO_URI = os.getenv('MONGO_URLL')
     MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
 
     @staticmethod
@@ -33,27 +34,16 @@ class Config:
         Validates the presence of critical environment variables.
         Raises ValueError if a required configuration is missing.
         """
-        required_vars = {
-            'SECRET_KEY': Config.SECRET_KEY,
-            'MONGO_DB_NAME': Config.MONGO_DB_NAME
-        }
-
-        for var_name, value in required_vars.items():
-            if not value:
-                # CRITICAL VALIDATION: Halt system if security keys are missing
-                raise ValueError(f"[-] Critical Error: {var_name} is not set in the environment.")
-
+        if not Config.SECRET_KEY:
+            raise ValueError("[-] Critical Error: SECRET_KEY is not set.")
 
 class DevelopmentConfig(Config):
     """
     Configuration for Local Development environment.
     """
     DEBUG = True
-    # Ensure port is handled as an integer with a safety fallback
-    try:
-        MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))
-    except (ValueError, TypeError):
-        MONGO_PORT = 27017
+    MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
+    MONGO_PORT = int(os.getenv('MONGO_PORT', 27017))
 
 
 class ProductionConfig(Config):
@@ -62,7 +52,7 @@ class ProductionConfig(Config):
     """
     DEBUG = False
     # In production, we typically use a full MongoDB URI
-    MONGO_URI = os.getenv('MONGO_URI')
+    pass
 
 
 # --- CONFIGURATION FACTORY ---
@@ -72,6 +62,13 @@ config_map = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
+def get_config():
+    # Render يضبط FLASK_ENV تلقائياً إذا أردت، أو نستخدم الحالة الافتراضية
+    env = os.getenv('FLASK_ENV', 'production').lower()
+    selected_config = config_map.get(env, config_map['default'])
+    selected_config.validate()
+    return selected_config
 
 
 def get_config():

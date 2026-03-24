@@ -57,6 +57,7 @@ def configure_admin(app):
     except Exception as admin_error:
         app.logger.error(f"[-] Admin Interface Registration Error: {admin_error}")
 
+from config import get_config
 
 def create_app():
     """
@@ -67,7 +68,7 @@ def create_app():
 
     # 1. Configuration Validation
     try:
-        app.config.from_object(Config)
+        app.config.from_object(get_config())
         # Ensure SECRET_KEY is set for session security
         if not app.config.get('SECRET_KEY'):
             raise ValueError("SECRET_KEY must be configured in the environment.")

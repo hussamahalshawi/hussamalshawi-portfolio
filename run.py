@@ -5,7 +5,7 @@ from App import create_app
 # --- DESIGN PATTERN: SINGLETON-LIKE INSTANTIATION ---
 # We ensure the app instance is created only once to prevent resource duplication.
 try:
-    hussam_app_instance = create_app()
+    app = create_app()
 except Exception as e:
     # CRITICAL VALIDATION: If the app fails to initialize, log the error and exit
     # This prevents the server from hanging in a broken state.
@@ -27,7 +27,7 @@ def run_server():
     # EXECUTION: Running the Flask development server
     # Note: debug=True is strictly for development environments
     try:
-        hussam_app_instance.run(
+        app.run(
             host='0.0.0.0',
             port=port,
             debug=True,
