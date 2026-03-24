@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-
+from collections import Counter
 from App.models import Profile, Project, Experience, Skill, Course, Goal, Category, Language, Education, SelfStudy, Achievement, Feedback, SkillType, Post, Series
 from flask import request, jsonify
 import json
@@ -338,21 +338,28 @@ def blogs():
 
     # 4. نظام الحماية (Safe Check) لتنظيف المنشورات من المراجع التالفة
     safe_posts = []
+    all_tags = []
+    # trending_tags = []
     for post in posts_query:
         try:
             # محاولة اختبار مرجع السلسلة لضمان عدم وجود DoesNotExist
             if post.series:
                 _ = post.series.name
             safe_posts.append(post)
+            if post.post_tags:
+                # نفترض أن post_tags هي قائمة من الهاشتاجات
+                all_tags.extend(post.post_tags)
         except Exception:
             # في حال كان المرجع تالفاً في قاعدة البيانات
             post.series = None
             safe_posts.append(post)
 
+    trending_tags = Counter(all_tags).most_common(15)
     # 5. إرسال البيانات للقالب
     return render_template('blogs.html',
                            posts=safe_posts,
                            series_list=series_list,
+                           trending_tags=trending_tags,
                            display_title=display_title)
 
 @portfolio.route('/api/posts/<post_id>')
