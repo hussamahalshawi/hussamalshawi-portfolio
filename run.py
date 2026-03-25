@@ -10,7 +10,6 @@ except Exception as e:
     # CRITICAL VALIDATION: If the app fails to initialize, log the error and exit
     # This prevents the server from hanging in a broken state.
     print(f"[-] Critical Error: Failed to initialize HussamAlshawi-Portfolio: {e}")
-    print(f"[-] Critical Error: Failed to initialize HussamAlshawi-Portfolio: {e}")
     sys.exit(1)
 
 
