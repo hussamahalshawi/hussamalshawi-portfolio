@@ -14,6 +14,12 @@ from flask_admin import expose
 from App.services.skill_service import SkillService
 import logging
 from flask import request
+from .utils import upload_media_to_cloud
+import logging
+
+
+# Setup local error logging
+logger = logging.getLogger(__name__)
 
 # --- DESIGN PATTERN: BASE CLASS FOR SYSTEM INTEGRITY ---
 class BaseSecureView(ModelView):
@@ -49,23 +55,91 @@ class BaseSecureView(ModelView):
 
 
 # --- INDIVIDUAL MODEL VIEWS WITH FULL DETAILS ---
-
 class ProfileView(BaseSecureView):
+    """
+    Admin View for Profile Management.
+    Handles cloud image uploads via Cloudinary and updates MongoDB.
+    """
     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
     column_labels = {
         'full_name': 'Full Name',
         'experience_years': 'Years of Exp',
         'overall_score': 'Master Score %'
     }
-    form_overrides = {'profile_image': FileUploadField, 'profile_image2': FileUploadField}
-    form_args = {
-        'profile_image': {'label': 'Avatar Image',
-                          'base_path': Config.UPLOAD_PATH,
-                          'allow_overwrite': True},
-        'profile_image2': {'label': 'Avatar Image2',
-                          'base_path': Config.UPLOAD_PATH,
-                          'allow_overwrite': True}
+
+    # Use FileUploadField to handle the binary stream from the browser
+    form_overrides = {
+        'profile_image': FileUploadField,
+        'profile_image2': FileUploadField
     }
+
+    # Configuration for the form fields
+    form_args = {
+        'profile_image': {
+            'label': 'Avatar Image (Cloud)',
+            'base_path': Config.UPLOAD_PATH # Keep as fallback, but we will override logic
+        },
+        'profile_image2': {
+            'label': 'Avatar Image 2 (Cloud)',
+            'base_path': Config.UPLOAD_PATH
+        }
+    }
+
+    def on_model_change(self, form, model, is_created):
+        """
+        Intercepts the model saving process to upload files to Cloudinary
+        instead of keeping them on the local Render filesystem.
+        """
+        try:
+            # 1. Handle primary profile image
+            if form.profile_image.data:
+                file_data = request.files.get('profile_image')
+                if file_data:
+                    # Reset file pointer to the beginning to avoid "Empty file" error
+                    file_data.seek(0)
+                    cloud_url = upload_media_to_cloud(file_data, folder_name="profile")
+                    if cloud_url:
+                        model.profile_image = cloud_url
+                    else:
+                        flash("Failed to upload primary image to cloud.", "error")
+
+            # 2. Handle secondary profile image
+            if form.profile_image2.data:
+                file_data2 = request.files.get('profile_image2')
+                if file_data2:
+                    # Reset file pointer to the beginning to avoid "Empty file" error
+                    file_data2.seek(0)
+                    cloud_url2 = upload_media_to_cloud(file_data2, folder_name="profile")
+                    if cloud_url2:
+                        model.profile_image2 = cloud_url2
+                    else:
+                        flash("Failed to upload secondary image to cloud.", "error")
+
+        except Exception as e:
+            # Log the error locally for debugging
+            logger.error(f"Error in ProfileView model change: {str(e)}")
+            flash(f"An error occurred during the cloud upload process: {str(e)}", "error")
+
+        # English Comment: This method ensures that the string saved in MongoDB
+        # is the HTTPS URL from Cloudinary, not the local filename.
+        return super(ProfileView, self).on_model_change(form, model, is_created)
+
+# class ProfileView(BaseSecureView):
+#     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
+#     column_labels = {
+#         'full_name': 'Full Name',
+#         'experience_years': 'Years of Exp',
+#         'overall_score': 'Master Score %'
+#     }
+#     form_overrides = {'profile_image': FileUploadField, 'profile_image2': FileUploadField}
+#     form_args = {
+#         'profile_image': {'label': 'Avatar Image',
+#                           'base_path': Config.UPLOAD_PATH,
+#                           'allow_overwrite': True},
+#         'profile_image2': {'label': 'Avatar Image2',
+#                           'base_path': Config.UPLOAD_PATH,
+#                           'allow_overwrite': True}
+#     }
 
 
 class EducationView(BaseSecureView):

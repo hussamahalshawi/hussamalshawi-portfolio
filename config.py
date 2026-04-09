@@ -1,41 +1,64 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-
+import cloudinary
 # Load environment variables from .env file
 load_dotenv()
 
 
 class Config:
     """
-    Base configuration class. Contains shared settings and
-    comprehensive validation logic.
+    Base configuration class. Contains shared settings, Cloudinary integration,
+    and comprehensive validation logic.
     """
     # 1. Core Security & Identification
     PROJECT_NAME = "HussamAlshawi-Portfolio"
     SECRET_KEY = os.getenv('SECRET_KEY')
 
-    # 2. Path Management (Using Pathlib for modern cross-platform support)
+    # 2. Cloudinary Configuration (The New Integration)
+    # These values should be set in your .env locally and Render Dashboard in production
+    CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
+    CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY')
+    CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
+
+    # 3. Path Management (Legacy/Local - Keep if you still need local storage for other things)
     BASE_DIR = Path(__file__).resolve().parent
     UPLOAD_PATH = BASE_DIR / 'App' / 'static' / 'images'
-    UPLOAD_URL_PREFIX = '/static/images/'
-
-    # تأكد من إنشاء المجلد عند تشغيل التطبيق
     UPLOAD_PATH.mkdir(parents=True, exist_ok=True)
 
-    # 3. Database Defaults
+    # 4. Database Defaults
     MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'hussam_portfolio')
     MONGO_URI = os.getenv('MONGO_URLL')
-    MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
 
     @staticmethod
     def validate():
         """
         Validates the presence of critical environment variables.
-        Raises ValueError if a required configuration is missing.
+        Ensures Cloudinary and Secret keys are present before starting.
         """
-        if not Config.SECRET_KEY:
-            raise ValueError("[-] Critical Error: SECRET_KEY is not set.")
+        critical_vars = {
+            "SECRET_KEY": Config.SECRET_KEY,
+            "CLOUDINARY_CLOUD_NAME": Config.CLOUDINARY_CLOUD_NAME,
+            "CLOUDINARY_API_KEY": Config.CLOUDINARY_API_KEY,
+            "CLOUDINARY_API_SECRET": Config.CLOUDINARY_API_SECRET
+        }
+
+        for var_name, value in critical_vars.items():
+            if not value:
+                raise ValueError(f"[-] Critical Error: {var_name} is not set in environment variables.")
+
+    @staticmethod
+    def init_cloudinary():
+        """
+        Initializes the Cloudinary SDK and prints confirmation to Terminal.
+        """
+        cloudinary.config(
+            cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+            api_key=Config.CLOUDINARY_API_KEY,
+            api_secret=Config.CLOUDINARY_API_SECRET,
+            secure=True
+        )
+        print(f"☁️  [Cloudinary]: SDK Initialized for cloud: {Config.CLOUDINARY_CLOUD_NAME}")
 
 class DevelopmentConfig(Config):
     """
@@ -63,21 +86,18 @@ config_map = {
     'default': DevelopmentConfig
 }
 
-def get_config():
-    # Render يضبط FLASK_ENV تلقائياً إذا أردت، أو نستخدم الحالة الافتراضية
-    env = os.getenv('FLASK_ENV', 'production').lower()
-    selected_config = config_map.get(env, config_map['default'])
-    selected_config.validate()
-    return selected_config
-
 
 def get_config():
     """
-    Returns the appropriate configuration based on the environment variable.
+    Returns the appropriate configuration and initializes cloud services.
     """
     env = os.getenv('FLASK_ENV', 'development').lower()
     selected_config = config_map.get(env, config_map['default'])
 
-    # Perform integrity check before returning
+    # Perform integrity check
     selected_config.validate()
+
+    # Initialize Cloudinary SDK
+    selected_config.init_cloudinary()
+
     return selected_config

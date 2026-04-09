@@ -239,13 +239,24 @@
         </div>
 
         <div class="lg:w-1/2 w-full flex justify-center lg:justify-end mt-12 lg:mt-0" data-aos="zoom-in">
-            <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full">
-                <img src="{{ url_for('static', filename='images/' + (user.profile_image2 or 'hero-image.jpg')) }}"
-                     class="w-full h-auto object-cover min-h-[500px] lg:min-h-[650px] transition-transform duration-1000 hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-transparent pointer-events-none"></div>
-                <div class="absolute inset-0 border border-white/20 rounded-[2.5rem] pointer-events-none"></div>
-            </div>
-        </div>
+    <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full">
+
+        {# التعديل يبدأ من هنا #}
+        {% if user.profile_image2 and user.profile_image2.startswith('http') %}
+            {# إذا كانت الصورة رابطاً من السحاب (Cloudinary) #}
+            <img src="{{ user.profile_image2 }}"
+                 class="w-full h-auto object-cover min-h-[500px] lg:min-h-[650px] transition-transform duration-1000 hover:scale-110">
+        {% else %}
+            {# إذا كانت الصورة ملفاً محلياً أو الصورة الافتراضية #}
+            <img src="{{ url_for('static', filename='images/' + (user.profile_image2 or 'hero-image.jpg')) }}"
+                 class="w-full h-auto object-cover min-h-[500px] lg:min-h-[650px] transition-transform duration-1000 hover:scale-110">
+        {% endif %}
+        {# التعديل ينتهي هنا #}
+
+        <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-transparent pointer-events-none"></div>
+        <div class="absolute inset-0 border border-white/20 rounded-[2.5rem] pointer-events-none"></div>
+    </div>
+</div>
     </div>
 </section>
 
