@@ -7,58 +7,58 @@
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <aside class="lg:col-span-3 space-y-6">
-    <div class="sticky top-32 space-y-6" data-aos="fade-right">
+            <div class="sticky top-32 space-y-6" data-aos="fade-right">
 
-        <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-            <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
-                <i class="fas fa-layer-group text-blue-600"></i> Series Library
-            </h3>
-            <div class="flex flex-col gap-2">
-                <a href="{{ url_for('portfolio.blogs') }}"
-                   class="flex items-center justify-between p-3 rounded-xl transition-all group {{ 'bg-blue-600 text-white shadow-lg' if not request.args.get('series') else 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500' }}">
-                    <span class="text-[10px] font-black uppercase tracking-wider">All Insights</span>
-                    <i class="fas fa-chevron-right text-[8px]"></i>
-                </a>
-                {% for s in series_list %}
-                <a href="{{ url_for('portfolio.blogs', series=s.id) }}"
-                   class="flex items-center justify-between p-3 rounded-xl transition-all group {{ 'bg-blue-600 text-white shadow-lg' if request.args.get('series') == s.id|string else 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500' }}">
-                    <span class="text-[10px] font-black uppercase tracking-wider">{{ s.name }}</span>
-                    <i class="fas fa-hashtag text-[8px] opacity-40"></i>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
+                <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                        <i class="fas fa-layer-group text-blue-600"></i> Series Library
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="{{ url_for('portfolio.blogs') }}"
+                           class="flex items-center justify-between p-3 rounded-xl transition-all group {{ 'bg-blue-600 text-white shadow-lg' if not request.args.get('series') else 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500' }}">
+                            <span class="text-[10px] font-black uppercase tracking-wider">All Insights</span>
+                            <i class="fas fa-chevron-right text-[8px]"></i>
+                        </a>
+                        {% for s in series_list %}
+                        <a href="{{ url_for('portfolio.blogs', series=s.id) }}"
+                           class="flex items-center justify-between p-3 rounded-xl transition-all group {{ 'bg-blue-600 text-white shadow-lg' if request.args.get('series') == s.id|string else 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500' }}">
+                            <span class="text-[10px] font-black uppercase tracking-wider">{{ s.name }}</span>
+                            <i class="fas fa-hashtag text-[8px] opacity-40"></i>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
 
-        <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-            <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
-                <i class="fas fa-fire text-rose-500"></i> Trending Topics
-            </h3>
+                <div class="bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                    <h3 class="text-[10px] font-black dark:text-white uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                        <i class="fas fa-fire text-rose-500"></i> Trending Topics
+                    </h3>
 
-            <div class="flex flex-wrap gap-2">
-                {% if trending_tags %}
-                    {% for tag, count in trending_tags %}
-                    <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
-                       class="group flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all">
-                        <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-blue-600 transition-colors">#{{ tag }}</span>
-                        <span class="text-[9px] font-black bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-blue-600 group-hover:text-white px-1.5 py-0.5 rounded-md transition-all">
+                    <div class="flex flex-wrap gap-2">
+                        {% if trending_tags %}
+                        {% for tag, count in trending_tags %}
+                        <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
+                           class="group flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-800 hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all">
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-blue-600 transition-colors">#{{ tag }}</span>
+                            <span class="text-[9px] font-black bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-blue-600 group-hover:text-white px-1.5 py-0.5 rounded-md transition-all">
                             {{ count }}
                         </span>
-                    </a>
-                    {% endfor %}
-                {% else %}
-                    <p class="text-[10px] font-bold text-slate-400 italic">No tags discovered yet.</p>
-                {% endif %}
-            </div>
-        </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-[10px] font-bold text-slate-400 italic">No tags discovered yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
 
-        <div class="p-6 rounded-[1.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 text-white hidden lg:block shadow-xl shadow-blue-500/20">
-            <i class="fas fa-lightbulb mb-3 text-amber-300"></i>
-            <p class="text-[9px] font-black leading-relaxed uppercase tracking-[0.15em] opacity-90">
-                Explore my professional series where code meets creativity.
-            </p>
-        </div>
-    </div>
-</aside>
+                <div class="p-6 rounded-[1.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 text-white hidden lg:block shadow-xl shadow-blue-500/20">
+                    <i class="fas fa-lightbulb mb-3 text-amber-300"></i>
+                    <p class="text-[9px] font-black leading-relaxed uppercase tracking-[0.15em] opacity-90">
+                        Explore my professional series where code meets creativity.
+                    </p>
+                </div>
+            </div>
+        </aside>
 
 
         <div class="lg:col-span-9 space-y-8">
@@ -76,95 +76,125 @@
             </div>
 
             {% for post in posts %}
-            <article class="post-card group bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer relative"
-        data-post-id="{{ post.id }}"
-        onclick="openPostModal('{{ post.id }}')"
-        data-aos="fade-up">
+            <article
+                    class="post-card group bg-white dark:bg-slate-900/50 rounded-[1.5rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer relative"
+                    data-post-id="{{ post.id }}"
+                    onclick="openPostModal('{{ post.id }}')"
+                    data-aos="fade-up">
 
-    <div class="absolute top-5 right-5 z-20" onclick="event.stopPropagation()">
-        <div class="relative inline-block text-left">
-            <button onclick="toggleCardOptions('{{ post.id }}', event)"
-                    class="w-8 h-8 rounded-lg bg-slate-100/50 dark:bg-slate-800/50 flex items-center justify-center text-slate-500 hover:bg-blue-600 hover:text-white transition-all backdrop-blur-sm">
-                <i class="fas fa-ellipsis-v text-xs"></i>
-            </button>
+                <div class="absolute top-5 right-5 z-20" onclick="event.stopPropagation()">
+                    <div class="relative inline-block text-left">
+                        <button onclick="toggleCardOptions('{{ post.id }}', event)"
+                                class="w-8 h-8 rounded-lg bg-slate-100/50 dark:bg-slate-800/50 flex items-center justify-center text-slate-500 hover:bg-blue-600 hover:text-white transition-all backdrop-blur-sm">
+                            <i class="fas fa-ellipsis-v text-xs"></i>
+                        </button>
 
-            <div id="card-menu-{{ post.id }}"
-     class="hidden absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-[999] overflow-hidden">
-    <div class="py-1">
+                        <div id="card-menu-{{ post.id }}"
+                             class="hidden absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-[999] overflow-hidden">
+                            <div class="py-1">
 
-<!--                    <button onclick="editPost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">-->
-<!--                        <i class="fas fa-edit w-3"></i> Edit-->
-<!--                    </button>-->
-                    <button onclick="sharePost('{{ post.id }}')"
-        class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">
-    <i class="fas fa-share-alt w-3"></i> Share Story
-</button>
-<!--                    <button onclick="archivePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-all border-t border-slate-50 dark:border-slate-800">-->
-<!--                        <i class="fas fa-archive w-3"></i> Archive-->
-<!--                    </button>-->
-<!--                    <button onclick="deletePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all border-t border-slate-50 dark:border-slate-800">-->
-<!--                        <i class="fas fa-trash-alt w-3"></i> Delete Permanent-->
-<!--                    </button>-->
+                                <!--                    <button onclick="editPost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">-->
+                                <!--                        <i class="fas fa-edit w-3"></i> Edit-->
+                                <!--                    </button>-->
+                                <button onclick="sharePost('{{ post.id }}')"
+                                        class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-all">
+                                    <i class="fas fa-share-alt w-3"></i> Share Story
+                                </button>
+                                <!--                    <button onclick="archivePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2 text-[10px] font-black uppercase text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-all border-t border-slate-50 dark:border-slate-800">-->
+                                <!--                        <i class="fas fa-archive w-3"></i> Archive-->
+                                <!--                    </button>-->
+                                <!--                    <button onclick="deletePost('{{ post.id }}')" class="flex items-center gap-3 w-full px-4 py-2.5 text-[10px] font-black uppercase text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all border-t border-slate-50 dark:border-slate-800">-->
+                                <!--                        <i class="fas fa-trash-alt w-3"></i> Delete Permanent-->
+                                <!--                    </button>-->
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                <div class="p-5 flex items-center justify-between pr-14">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full border-2 border-blue-600 p-0.5 overflow-hidden shadow-sm transition-transform hover:scale-105">
+    {# جلب المسار: يفضل أن يكون ديناميكياً أو القيمة الافتراضية #}
+    {% set logo_path = logo_path if logo_path else 'favicon.png' %}
+
+    <img src="{{ logo_path if logo_path.startswith('http') else url_for('static', filename='images/' + logo_path.lstrip('/')) }}"
+         class="w-full h-full object-cover rounded-full"
+         alt="Logo"
+         onerror="this.src='{{ url_for('static', filename='images/favicon.png') }}';">
+</div>
+                        <div>
+                            <h3 class="text-sm font-black dark:text-white leading-tight">Hussam Alshawi</h3>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{
+                                post.created_at.strftime('%B %d, 2026') }}</p>
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('portfolio.blogs', series=post.series.id) if post.series else '#' }}"
+                       onclick="event.stopPropagation()"
+                       class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] font-black rounded-lg uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all hidden sm:block">
+                        # {{ post.series.name if post.series else 'General' }}
+                    </a>
+                </div>
+
+                <div class="px-5 pb-2">
+                    <div class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
+                        {{ post.content | safe }}
+                    </div>
+                    {% if post.post_tags %}
+                    <div class="flex flex-wrap gap-2 mt-3" onclick="event.stopPropagation()">
+                        {% for tag in post.post_tags %}
+                        <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
+                           class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline transition-all">
+                            #{{ tag }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+              {% if post.post_images %}
+<div class="mt-4 space-y-2">
+    {# الصورة الكبيرة الأساسية #}
+    {% set main_img = post.post_images[0] %}
+    <div class="relative rounded-[2rem] overflow-hidden group border border-slate-100 dark:border-slate-800">
+        <img src="{{ main_img if main_img.startswith('http') else url_for('static', filename='images/' + main_img.split('/')[-1]) }}"
+             class="w-full h-auto max-h-[500px] object-cover block transition-transform duration-700 group-hover:scale-105"
+             alt="Featured Image">
     </div>
 
-    <div class="p-5 flex items-center justify-between pr-14"> <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full border-2 border-blue-600 p-0.5 overflow-hidden">
-                <img src="{{ url_for('static', filename='images/favicon.png') }}" class="w-full h-full object-cover rounded-full">
+    {# المصغرات (إذا وجد أكثر من صورة) #}
+    {% if post.post_images|length > 1 %}
+    <div class="grid grid-cols-4 gap-2">
+        {% for img_url in post.post_images[1:] %} {# يبدأ من الصورة الثانية #}
+        <div class="relative h-20 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 opacity-80 hover:opacity-100 transition-opacity">
+            <img src="{{ img_url if img_url.startswith('http') else url_for('static', filename='images/' + img_url.split('/')[-1]) }}"
+                 class="w-full h-full object-cover">
+            {% if loop.index == 4 and post.post_images|length > 5 %}
+            <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span class="text-white text-xs font-black">+{{ post.post_images|length - 5 }}</span>
             </div>
-            <div>
-                <h3 class="text-sm font-black dark:text-white leading-tight">Hussam Alshawi</h3>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ post.created_at.strftime('%B %d, 2026') }}</p>
-            </div>
+            {% endif %}
         </div>
-
-        <a href="{{ url_for('portfolio.blogs', series=post.series.id) if post.series else '#' }}"
-           onclick="event.stopPropagation()"
-           class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] font-black rounded-lg uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all hidden sm:block">
-            # {{ post.series.name if post.series else 'General' }}
-        </a>
-    </div>
-
-    <div class="px-5 pb-2">
-        <div class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
-            {{ post.content | safe }}
-        </div>
-        {% if post.post_tags %}
-        <div class="flex flex-wrap gap-2 mt-3" onclick="event.stopPropagation()">
-            {% for tag in post.post_tags %}
-            <a href="{{ url_for('portfolio.blogs', tag=tag) }}"
-               class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline transition-all">
-                #{{ tag }}
-            </a>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-
-    {% if post.post_images %}
-    <div class="mt-4 relative rounded-xl overflow-hidden">
-        <img src="{{ post.post_images[0] }}"
-             class="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.01]">
+        {% endfor %}
     </div>
     {% endif %}
-
-    <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between bg-slate-50/30 dark:bg-slate-800/20">
-        <div class="flex items-center gap-6" onclick="event.stopPropagation()">
-            <button onclick="handleLike('{{ post.id }}', this)"
-                    class="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-all">
-                <i class="far fa-heart font-bold"></i>
-                <span class="text-xs font-black like-count">{{ post.likes_count or 0 }}</span>
-            </button>
-            <div class="flex items-center gap-1.5 text-slate-400 text-xs">
-                <i class="far fa-eye"></i>
-                <span id="view-count-{{ post.id }}" class="font-bold">{{ post.views_count or 0 }}</span>
-            </div>
-        </div>
-        <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Click to Read Full Story</span>
-    </div>
-</article>
+</div>
+{% endif %}
+                <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between bg-slate-50/30 dark:bg-slate-800/20">
+                    <div class="flex items-center gap-6" onclick="event.stopPropagation()">
+                        <button onclick="handleLike('{{ post.id }}', this)"
+                                class="flex items-center gap-2 text-slate-500 hover:text-rose-500 transition-all">
+                            <i class="far fa-heart font-bold"></i>
+                            <span class="text-xs font-black like-count">{{ post.likes_count or 0 }}</span>
+                        </button>
+                        <div class="flex items-center gap-1.5 text-slate-400 text-xs">
+                            <i class="far fa-eye"></i>
+                            <span id="view-count-{{ post.id }}" class="font-bold">{{ post.views_count or 0 }}</span>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Click to Read Full Story</span>
+                </div>
+            </article>
             {% endfor %}
         </div>
     </div>
@@ -172,7 +202,8 @@
 
 <div id="post-detail-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-xl" onclick="closePostModal()"></div>
-    <div id="modal-content" class="relative bg-white dark:bg-slate-900 w-full max-w-3xl max-h-[90vh] rounded-[2rem] shadow-2xl overflow-y-auto custom-scrollbar p-8">
+    <div id="modal-content"
+         class="relative bg-white dark:bg-slate-900 w-full max-w-3xl max-h-[90vh] rounded-[2rem] shadow-2xl overflow-y-auto custom-scrollbar p-8">
     </div>
 </div>
 {% endblock %}

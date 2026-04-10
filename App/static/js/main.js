@@ -336,11 +336,32 @@ async function openPostModal(postId) {
                     ${post.content.replace(/\n/g, '<br>')}
                 </div>
 
-                ${post.image ? `
-                    <div class="rounded-[2.5rem] overflow-hidden shadow-2xl bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800">
-                        <img src="${post.image}" class="w-full h-auto block">
-                    </div>
-                ` : ''}
+${post.images && post.images.length > 0 ? `
+    <div class="mt-8 space-y-8">
+        ${post.images.map((img, index) => {
+            // معالجة المسار ليدعم الكلاود (http) والمحلي (تنظيف التكرار)
+            const finalSrc = img.startsWith('http')
+                ? img
+                : '/static/images/' + img.split('/').pop();
+
+            return `
+                <div class="rounded-[2.5rem] overflow-hidden shadow-2xl bg-white dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 group">
+                    <img src="${finalSrc}"
+                         class="w-full h-auto block transition-transform duration-700 hover:scale-[1.02]"
+                         alt="Project Image ${index + 1}"
+                         loading="lazy"
+                         onerror="this.style.display='none'">
+                </div>
+            `;
+        }).join('')}
+    </div>
+` : (post.image ? `
+    /* حالة احتياطية إذا وصلت صورة واحدة فقط */
+    <div class="mt-8 rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800">
+        <img src="${post.image.startsWith('http') ? post.image : '/static/images/' + post.image.split('/').pop()}"
+             class="w-full h-auto block">
+    </div>
+` : '')}
 
                 ${post.tags && post.tags.length > 0 ? `
                     <div class="flex flex-wrap gap-2">

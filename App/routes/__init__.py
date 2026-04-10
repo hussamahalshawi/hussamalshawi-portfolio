@@ -382,9 +382,12 @@ def get_post_detail(post_id):
 
         return jsonify({
             "content": post.content,
+            # نرسل المصفوفة كاملة هنا بدلاً من العنصر الأول فقط
+            "images": post.post_images or [],
+            # نترك هذا للاحتياط أو التوافق مع أجزاء أخرى
             "image": post.post_images[0] if post.post_images else None,
             "date": post.created_at.strftime('%B %d, 2026'),
-            "series_name": series_name,  # القيمة الآمنة هنا
+            "series_name": series_name,
             "original_url": post.original_url or "#",
             "tags": post.post_tags or [],
             "views": post.views_count,
@@ -395,6 +398,40 @@ def get_post_detail(post_id):
         return jsonify({"error": "Post details unavailable"}), 404
 
 
+@portfolio.route('/share-project-to-feed/<project_id>', methods=['POST'])
+def share_project_to_feed(project_id):
+    try:
+        # 1. جلب بيانات المشروع
+        project = Project.objects.get(id=project_id)
+
+        # 2. تجهيز محتوى المنشور (Content)
+        # يمكنك تخصيص النص كما تحب
+        share_content = f"🚀 New Project Published: {project.project_name}\n\n{project.description[:200]}..."
+
+        # 3. إنشاء المنشور بناءً على الموديل الخاص بك
+        new_post = Post(
+            content=share_content,
+            # نضع تاجات المشروع كتاجات للمنشور
+            post_tags=['ProjectShare'] + (project.skills_used if project.skills_used else []),
+            # نأخذ صور المشروع ونضعها في صور المنشور
+            post_images=project.project_image,
+            # الرابط الأصلي للمشروع (رابط صفحة المشروع الحالية)
+            original_url=url_for('portfolio.project_details', project_id=project.id, _external=True),
+            views_count=0,
+            likes_count=0,
+            shares_count=0,
+            comments_count=0,
+            created_at=datetime.now(timezone.utc)
+        )
+
+        # 4. حفظ في MongoDB
+        new_post.save()
+
+        return jsonify({"success": True, "message": "Post created successfully!"})
+
+    except Exception as e:
+        print(f"Error while sharing: {str(e)}")  # للديبيج في التيرمينال
+        return jsonify({"success": False, "error": str(e)}), 500
 # @portfolio.route('/fix-db-refs')
 # def fix_db_refs():
 #

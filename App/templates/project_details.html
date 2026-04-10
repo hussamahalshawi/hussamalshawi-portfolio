@@ -4,12 +4,18 @@
 <section class="h-auto w-full pt-32 pb-12 relative overflow-hidden bg-white dark:bg-[#0a0f1a]">
 
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div class="absolute top-[10%] left-[5%] text-blue-600/20 text-7xl animate-float-slow"><i class="fab fa-python"></i></div>
-        <div class="absolute top-[40%] left-[2%] text-orange-600/20 text-6xl animate-float-delayed"><i class="fas fa-code-branch"></i></div>
-        <div class="absolute bottom-[15%] left-[8%] text-slate-700/20 text-6xl animate-float-slow"><i class="fas fa-terminal"></i></div>
-        <div class="absolute top-[5%] left-[45%] text-amber-600/20 text-4xl animate-pulse"><i class="fas fa-microchip"></i></div>
-        <div class="absolute top-[50%] left-[48%] text-purple-600/20 text-5xl animate-float-slow"><i class="fas fa-brain"></i></div>
-        <div class="absolute top-[15%] right-[5%] text-emerald-600/20 text-7xl animate-float-slow"><i class="fas fa-database"></i></div>
+        <div class="absolute top-[10%] left-[5%] text-blue-600/20 text-7xl animate-float-slow"><i
+                class="fab fa-python"></i></div>
+        <div class="absolute top-[40%] left-[2%] text-orange-600/20 text-6xl animate-float-delayed"><i
+                class="fas fa-code-branch"></i></div>
+        <div class="absolute bottom-[15%] left-[8%] text-slate-700/20 text-6xl animate-float-slow"><i
+                class="fas fa-terminal"></i></div>
+        <div class="absolute top-[5%] left-[45%] text-amber-600/20 text-4xl animate-pulse"><i
+                class="fas fa-microchip"></i></div>
+        <div class="absolute top-[50%] left-[48%] text-purple-600/20 text-5xl animate-float-slow"><i
+                class="fas fa-brain"></i></div>
+        <div class="absolute top-[15%] right-[5%] text-emerald-600/20 text-7xl animate-float-slow"><i
+                class="fas fa-database"></i></div>
         <div class="absolute bottom-[10%] right-[10%] text-indigo-600/20 text-8xl animate-float-slow">{ }</div>
     </div>
 
@@ -20,7 +26,8 @@
                 <nav class="mb-6">
                     <a href="{{ url_for('portfolio.all_projects') }}"
                        class="group flex items-center gap-2 text-blue-500 font-black text-[10px] uppercase tracking-[0.3em]">
-                        <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i> Back to Archive
+                        <i class="fas fa-chevron-left transition-transform group-hover:-translate-x-1"></i> Back to
+                        Archive
                     </a>
                 </nav>
                 <h1 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white leading-none tracking-tighter">
@@ -45,25 +52,26 @@
             <div class="lg:col-span-7 space-y-8" data-aos="fade-right">
                 <div class="relative group rounded-[3.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl bg-black h-[350px] md:h-[500px]">
                     {% if project.project_video %}
-                        <video controls class="w-full h-full object-cover">
-                            <source src="{{ url_for('static', filename='videos/' + project.project_video) }}" type="video/mp4">
-                        </video>
+                    <video controls class="w-full h-full object-cover">
+                        <source src="{{ url_for('static', filename='videos/' + project.project_video) }}"
+                                type="video/mp4">
+                    </video>
                     {% else %}
-                        {% set first_img = project.project_image[0] if project.project_image else 'default.jpg' %}
-                        <img id="main-project-image"
-                             src="{{ first_img if first_img.startswith('http') else url_for('static', filename='images/' + first_img) }}"
-                             class="w-full h-full object-cover transition-opacity duration-500 ease-in-out">
+                    {% set first_img = project.project_image[0] if project.project_image else 'default.jpg' %}
+                    <img id="main-project-image"
+                         src="{{ first_img if first_img.startswith('http') else url_for('static', filename='images/' + first_img) }}"
+                         class="w-full h-full object-cover transition-opacity duration-500 ease-in-out">
                     {% endif %}
                 </div>
 
                 {% if project.project_image|length > 1 %}
                 <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide px-2">
                     {% for img in project.project_image %}
-                        {% set img_url = img if img.startswith('http') else url_for('static', filename='images/' + img) %}
-                        <div class="flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden border-2 border-transparent hover:border-blue-500 transition-all duration-300 w-24 h-16 md:w-28 md:h-20 shadow-lg bg-slate-100 dark:bg-slate-800"
-                             onclick="updateMainImage('{{ img_url }}', this)">
-                            <img src="{{ img_url }}" class="w-full h-full object-cover" alt="thumbnail">
-                        </div>
+                    {% set img_url = img if img.startswith('http') else url_for('static', filename='images/' + img) %}
+                    <div class="flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden border-2 border-transparent hover:border-blue-500 transition-all duration-300 w-24 h-16 md:w-28 md:h-20 shadow-lg bg-slate-100 dark:bg-slate-800"
+                         onclick="updateMainImage('{{ img_url }}', this)">
+                        <img src="{{ img_url }}" class="w-full h-full object-cover" alt="thumbnail">
+                    </div>
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -72,7 +80,8 @@
             <div class="lg:col-span-5 space-y-10" data-aos="fade-left">
 
                 <div class="bg-white/50 dark:bg-slate-900/30 backdrop-blur-md p-8 rounded-[3rem] border border-slate-100 dark:border-slate-800/50">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-6">Mission & Execution</h3>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-6">Mission &
+                        Execution</h3>
                     <p class="text-slate-600 dark:text-slate-300 leading-relaxed font-medium text-lg">
                         {{ project.description }}
                     </p>
@@ -92,38 +101,128 @@
                 </div>
 
                 <div class="pt-6 space-y-6">
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-wrap items-center gap-3">
+
                         {% if project.github_url %}
                         <a href="{{ project.github_url }}" target="_blank"
-                           class="flex-1 flex items-center justify-center gap-3 px-8 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black uppercase text-[10px] tracking-widest transition-all hover:-translate-y-2 shadow-2xl active:scale-95">
-                            <i class="fab fa-github text-xl"></i> Source Architecture
+                           class="flex-1 min-w-[180px] flex items-center justify-center gap-3 px-6 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] active:scale-95 group">
+                            <i class="fab fa-github text-lg group-hover:rotate-12 transition-transform"></i>
+                            <span>Source Code</span>
                         </a>
                         {% endif %}
+
+                        <button onclick="copyProjectLink()" title="Copy Project Link"
+                                class="w-[58px] h-[58px] flex items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:-translate-y-1 transition-all duration-300 active:scale-90 group relative">
+                            <i id="copy-icon"
+                               class="fas fa-link text-sm group-hover:scale-110 transition-transform"></i>
+                            <span id="copy-tooltip"
+                                  class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[8px] px-2 py-1 rounded opacity-0 transition-opacity pointer-events-none">Copied!</span>
+                        </button>
+
+                        <button onclick="publishToMyFeed('{{ project.id }}')"
+        title="Publish to my Feed"
+        class="w-[58px] h-[58px] flex items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:text-blue-500 hover:-translate-y-1 transition-all duration-300 active:scale-90 group">
+    <i id="share-feed-icon" class="fas fa-paper-plane text-sm group-hover:rotate-12 transition-transform"></i>
+</button>
                     </div>
 
-                    <div class="flex items-center gap-3 text-slate-400 text-[9px] font-bold uppercase tracking-widest px-4">
-                        <i class="fas fa-history text-blue-500"></i>
-                        Last Verified Audit: {{ project.last_updated.strftime('%d %B, %Y') }}
+                    <div class="flex items-center gap-3 text-slate-400 text-[9px] font-bold uppercase tracking-widest px-2 opacity-70">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                        Last Audit Verified: {{ project.last_updated.strftime('%d %B, %Y') }}
                     </div>
                 </div>
-            </div> </div> </div>
+
+            </div>
+        </div>
+    </div>
 </section>
 
 <script>
-// وظيفة تبديل الصورة الرئيسية بسلاسة
-function updateMainImage(src, element) {
-    const mainImg = document.getElementById('main-project-image');
-    if(!mainImg) return;
+    /**
+     * Smoothly updates the main project preview image
+     */
+    function updateMainImage(src, element) {
+        const mainImg = document.getElementById('main-project-image');
+        if(!mainImg) return;
 
-    mainImg.style.opacity = '0';
-    setTimeout(() => {
-        mainImg.src = src;
-        mainImg.style.opacity = '1';
-    }, 200);
+        mainImg.style.opacity = '0';
+        setTimeout(() => {
+            mainImg.src = src;
+            mainImg.style.opacity = '1';
+        }, 200);
 
-    // تحديث حدود المصغر النشط
-    document.querySelectorAll('.flex-shrink-0').forEach(el => el.classList.remove('border-blue-500'));
-    if(element) element.classList.add('border-blue-500');
+        // Update active thumbnail styling
+        document.querySelectorAll('.flex-shrink-0').forEach(el => el.classList.remove('border-blue-500'));
+        if(element) element.classList.add('border-blue-500');
+    }
+
+    /**
+     * Handles Clipboard API for copying the current URL
+     */
+    function copyProjectLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const tooltip = document.getElementById('copy-tooltip');
+            const icon = document.getElementById('copy-icon');
+
+            // Show Tooltip
+            tooltip.style.opacity = '1';
+
+            // Visual Feedback (Icon Change)
+            icon.className = 'fas fa-check text-sm';
+
+            setTimeout(() => {
+                tooltip.style.opacity = '0';
+                icon.className = 'fas fa-link text-sm';
+            }, 2000);
+        }).catch(err => {
+            console.error('Copy failed', err);
+        });
+    }
+
+        /**
+     * وظيفة المشاركة الاحترافية
+     * تحاول فتح قائمة المشاركة في الجهاز، وإذا لم تتوفر تفتح مشاركة LinkedIn
+     */
+    function publishToMyFeed(projectId) {
+    const btn = event.currentTarget; // الزر الذي تم الضغط عليه
+    const icon = btn.querySelector('i');
+
+    // تغيير الشكل لبدء التحميل
+    icon.className = 'fas fa-spinner fa-spin text-sm';
+    btn.classList.add('pointer-events-none', 'opacity-50');
+
+    fetch(`/share-project-to-feed/${projectId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 1. تغيير الأيقونة لعلامة نجاح
+            icon.className = 'fas fa-check text-blue-500';
+
+            // 2. فتح صفحة المدونة في نافذة جديدة
+            window.open("{{ url_for('portfolio.blogs') }}", "_blank");
+
+            // 3. إعادة الزر لحالته بعد وقت قصير
+            setTimeout(() => {
+                icon.className = 'fas fa-paper-plane text-sm';
+                btn.classList.remove('pointer-events-none', 'opacity-50');
+            }, 2000);
+        } else {
+            console.error("Server Error:", data.error);
+            alert("حدث خطأ أثناء المشاركة");
+            icon.className = 'fas fa-paper-plane text-sm';
+            btn.classList.remove('pointer-events-none', 'opacity-50');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch Error:', error);
+        icon.className = 'fas fa-paper-plane text-sm';
+        btn.classList.remove('pointer-events-none', 'opacity-50');
+    });
 }
 </script>
 {% endblock %}
