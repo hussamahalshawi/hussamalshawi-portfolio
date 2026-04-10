@@ -55,74 +55,134 @@ class BaseSecureView(ModelView):
 
 
 # --- INDIVIDUAL MODEL VIEWS WITH FULL DETAILS ---
+
 class ProfileView(BaseSecureView):
     """
     Admin View for Profile Management.
-    Handles cloud image uploads via Cloudinary and updates MongoDB.
+    Provides 5 dedicated file upload slots for the gallery.
     """
-    column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
-    column_labels = {
-        'full_name': 'Full Name',
-        'experience_years': 'Years of Exp',
-        'overall_score': 'Master Score %'
+    column_list = ('full_name', 'title', 'last_updated')
+
+    # تعريف حقول إضافية كأزرار رفع ملفات (ليست مربعات نص)
+    extra_image_fields = {
+        'img_slot_1': FileUploadField('Image 1', base_path=Config.UPLOAD_PATH),
+        'img_slot_2': FileUploadField('Image 2', base_path=Config.UPLOAD_PATH),
+        'img_slot_3': FileUploadField('Image 3', base_path=Config.UPLOAD_PATH),
+        'img_slot_4': FileUploadField('Image 4', base_path=Config.UPLOAD_PATH),
+        'img_slot_5': FileUploadField('Image 5', base_path=Config.UPLOAD_PATH),
     }
 
-    # Use FileUploadField to handle the binary stream from the browser
-    form_overrides = {
-        'profile_image': FileUploadField,
-        'profile_image2': FileUploadField
-    }
+    # إضافة الحقول للنموذج
+    form_extra_fields = extra_image_fields
 
-    # Configuration for the form fields
-    form_args = {
-        'profile_image': {
-            'label': 'Avatar Image (Cloud)',
-            'base_path': Config.UPLOAD_PATH # Keep as fallback, but we will override logic
-        },
-        'profile_image2': {
-            'label': 'Avatar Image 2 (Cloud)',
-            'base_path': Config.UPLOAD_PATH
-        }
-    }
+    # تحديد ترتيب الحقول (إخفاء الحقل النصي الأصلي وإظهار الأزرار)
+    form_columns = ('full_name', 'title', 'experience_years', 'overall_score', 'bio',
+                    'linkedin_url', 'github_url', 'facebook_url', 'instagram_url',
+                    'img_slot_1', 'img_slot_2', 'img_slot_3', 'img_slot_4', 'img_slot_5')
 
     def on_model_change(self, form, model, is_created):
         """
-        Intercepts the model saving process to upload files to Cloudinary
-        instead of keeping them on the local Render filesystem.
+        Collects files from the slots and saves their Cloudinary URLs to profile_images list.
         """
         try:
-            # 1. Handle primary profile image
-            if form.profile_image.data:
-                file_data = request.files.get('profile_image')
-                if file_data:
-                    # Reset file pointer to the beginning to avoid "Empty file" error
+            uploaded_urls = []
+
+            # نمر على كل حقل من حقول الرفع الـ 5
+            for i in range(1, 6):
+                field_name = f'img_slot_{i}'
+                file_data = request.files.get(field_name)
+
+                if file_data and file_data.filename != '':
+                    # إرجاع مؤشر الملف للبداية لضمان قراءة كاملة
                     file_data.seek(0)
+                    # الرفع للسحاب (Cloudinary)
                     cloud_url = upload_media_to_cloud(file_data, folder_name="profile")
                     if cloud_url:
-                        model.profile_image = cloud_url
-                    else:
-                        flash("Failed to upload primary image to cloud.", "error")
+                        uploaded_urls.append(cloud_url)
 
-            # 2. Handle secondary profile image
-            if form.profile_image2.data:
-                file_data2 = request.files.get('profile_image2')
-                if file_data2:
-                    # Reset file pointer to the beginning to avoid "Empty file" error
-                    file_data2.seek(0)
-                    cloud_url2 = upload_media_to_cloud(file_data2, folder_name="profile")
-                    if cloud_url2:
-                        model.profile_image2 = cloud_url2
-                    else:
-                        flash("Failed to upload secondary image to cloud.", "error")
+            # إذا رفع المستخدم صوراً جديدة، نحدث القائمة
+            if uploaded_urls:
+                # يمكنك الإبقاء على الصور القديمة أو استبدالها، هنا سنستبدلها بالجديد
+                model.profile_images = uploaded_urls
 
         except Exception as e:
-            # Log the error locally for debugging
-            logger.error(f"Error in ProfileView model change: {str(e)}")
-            flash(f"An error occurred during the cloud upload process: {str(e)}", "error")
+            logger.error(f"Multi-upload failed: {str(e)}")
+            flash(f"Error during image upload: {str(e)}", "error")
 
-        # English Comment: This method ensures that the string saved in MongoDB
-        # is the HTTPS URL from Cloudinary, not the local filename.
         return super(ProfileView, self).on_model_change(form, model, is_created)
+
+    # English Comment: We use form_extra_fields to force Flask-Admin to render
+    # FileUpload elements instead of standard StringField text boxes for the list.
+
+
+# class ProfileView(BaseSecureView):
+#     """
+#     Admin View for Profile Management.
+#     Handles cloud image uploads via Cloudinary and updates MongoDB.
+#     """
+#     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
+#     column_labels = {
+#         'full_name': 'Full Name',
+#         'experience_years': 'Years of Exp',
+#         'overall_score': 'Master Score %'
+#     }
+#
+#     # Use FileUploadField to handle the binary stream from the browser
+#     form_overrides = {
+#         'profile_image': FileUploadField,
+#         'profile_image2': FileUploadField
+#     }
+#
+#     # Configuration for the form fields
+#     form_args = {
+#         'profile_image': {
+#             'label': 'Avatar Image (Cloud)',
+#             'base_path': Config.UPLOAD_PATH # Keep as fallback, but we will override logic
+#         },
+#         'profile_image2': {
+#             'label': 'Avatar Image 2 (Cloud)',
+#             'base_path': Config.UPLOAD_PATH
+#         }
+#     }
+#
+#     def on_model_change(self, form, model, is_created):
+#         """
+#         Intercepts the model saving process to upload files to Cloudinary
+#         instead of keeping them on the local Render filesystem.
+#         """
+#         try:
+#             # 1. Handle primary profile image
+#             if form.profile_image.data:
+#                 file_data = request.files.get('profile_image')
+#                 if file_data:
+#                     # Reset file pointer to the beginning to avoid "Empty file" error
+#                     file_data.seek(0)
+#                     cloud_url = upload_media_to_cloud(file_data, folder_name="profile")
+#                     if cloud_url:
+#                         model.profile_image = cloud_url
+#                     else:
+#                         flash("Failed to upload primary image to cloud.", "error")
+#
+#             # 2. Handle secondary profile image
+#             if form.profile_image2.data:
+#                 file_data2 = request.files.get('profile_image2')
+#                 if file_data2:
+#                     # Reset file pointer to the beginning to avoid "Empty file" error
+#                     file_data2.seek(0)
+#                     cloud_url2 = upload_media_to_cloud(file_data2, folder_name="profile")
+#                     if cloud_url2:
+#                         model.profile_image2 = cloud_url2
+#                     else:
+#                         flash("Failed to upload secondary image to cloud.", "error")
+#
+#         except Exception as e:
+#             # Log the error locally for debugging
+#             logger.error(f"Error in ProfileView model change: {str(e)}")
+#             flash(f"An error occurred during the cloud upload process: {str(e)}", "error")
+#
+#         # English Comment: This method ensures that the string saved in MongoDB
+#         # is the HTTPS URL from Cloudinary, not the local filename.
+#         return super(ProfileView, self).on_model_change(form, model, is_created)
 
 # class ProfileView(BaseSecureView):
 #     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')

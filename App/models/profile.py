@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, FloatField, DateTimeField, EmailField
+from mongoengine import Document, StringField, FloatField, DateTimeField, EmailField, ListField
 from datetime import datetime, timezone
 
 
@@ -23,8 +23,7 @@ class Profile(Document):
     instagram_url = StringField()
 
     # --- ASSETS & METRICS ---
-    profile_image = StringField()
-    profile_image2 = StringField()
+    profile_images = ListField(StringField())
     last_updated = DateTimeField(default=lambda: datetime.now(timezone.utc))
 
     # PERSISTED METRICS: These are recalculated via signals
@@ -33,7 +32,9 @@ class Profile(Document):
 
     meta = {
         'collection': 'profile',
-        'indexes': ['email']  # Optimized for fast identity retrieval
+        'indexes': ['email'],  # Optimized for fast identity retrieval
+        'strict': False  # هذا السطر يمنع الخطأ إذا وجد حقولاً زائدة في القاعدة
+
     }
 
     # --- LOGIC: REFRESH ALL METRICS ---

@@ -43,7 +43,8 @@
             <div class="flex items-center space-x-6 mb-8 w-full {{ 'space-x-reverse' if g.lang_config.direction == 'rtl' }}">
                 <div class="flex flex-col items-center flex-shrink-0">
                     <div class="w-48 h-48 md:w-56 md:h-56 rounded-full border-4 border-blue-500 p-2 shadow-2xl shadow-blue-500/30 overflow-hidden transition-all duration-500">
-                        <img src="{{ url_for('static', filename='images/' + (user.profile_image or 'default.png')) }}"
+                        {% set primary_img = user.profile_images[0] if user.profile_images else 'default.png' %}
+                        <img src="{{ primary_img if primary_img.startswith('http') else url_for('static', filename='images/' + primary_img) }}"
                              class="rounded-full w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700 transform hover:scale-110">
                     </div>
 
@@ -238,25 +239,58 @@
             </div>
         </div>
 
-        <div class="lg:w-1/2 w-full flex justify-center lg:justify-end mt-12 lg:mt-0" data-aos="zoom-in">
-    <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full">
+        <div class="lg:w-1/2 w-full flex flex-col items-center lg:items-end mt-12 lg:mt-0" data-aos="zoom-in">
+    <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full max-w-[550px]">
 
-        {# التعديل يبدأ من هنا #}
-        {% if user.profile_image2 and user.profile_image2.startswith('http') %}
-            {# إذا كانت الصورة رابطاً من السحاب (Cloudinary) #}
-            <img src="{{ user.profile_image2 }}"
-                 class="w-full h-auto object-cover min-h-[500px] lg:min-h-[650px] transition-transform duration-1000 hover:scale-110">
-        {% else %}
-            {# إذا كانت الصورة ملفاً محلياً أو الصورة الافتراضية #}
-            <img src="{{ url_for('static', filename='images/' + (user.profile_image2 or 'hero-image.jpg')) }}"
-                 class="w-full h-auto object-cover min-h-[500px] lg:min-h-[650px] transition-transform duration-1000 hover:scale-110">
+        <div class="relative h-[500px] lg:h-[650px] overflow-hidden">
+            {% if user.profile_images %}
+                {% for img_url in user.profile_images %}
+                <div id="slide-{{ loop.index }}" class="absolute inset-0 transition-opacity duration-1000 {% if not loop.first %}opacity-0 pointer-events-none{% endif %}">
+                    <img src="{{ img_url if img_url.startswith('http') else url_for('static', filename='images/' + img_url) }}"
+                         class="w-full h-full object-cover transition-transform duration-1000 hover:scale-110">
+                </div>
+                {% endfor %}
+            {% else %}
+                <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" class="w-full h-full object-cover">
+            {% endif %}
+        </div>
+
+        {% if user.profile_images|length > 1 %}
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+            {% for img_url in user.profile_images %}
+            <button onclick="showSlide({{ loop.index }})"
+                    class="slide-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300 {% if loop.first %} !bg-blue-500 w-8 {% endif %}"
+                    data-slide="{{ loop.index }}">
+            </button>
+            {% endfor %}
+        </div>
         {% endif %}
-        {# التعديل ينتهي هنا #}
 
         <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-transparent pointer-events-none"></div>
         <div class="absolute inset-0 border border-white/20 rounded-[2.5rem] pointer-events-none"></div>
     </div>
 </div>
+
+<script>
+function showSlide(index) {
+    // إخفاء كل الصور
+    document.querySelectorAll('[id^="slide-"]').forEach(el => {
+        el.classList.add('opacity-0', 'pointer-events-none');
+    });
+    // إظهار الصورة المطلوبة
+    const activeSlide = document.getElementById('slide-' + index);
+    activeSlide.classList.remove('opacity-0', 'pointer-events-none');
+
+    // تحديث شكل النقاط (Dots)
+    document.querySelectorAll('.slide-dot').forEach(dot => {
+        dot.classList.remove('!bg-blue-500', 'w-8');
+        dot.classList.add('bg-white/50', 'w-3');
+    });
+    const activeDot = document.querySelector(`[data-slide="${index}"]`);
+    activeDot.classList.add('!bg-blue-500', 'w-8');
+    activeDot.classList.remove('w-3');
+}
+</script>
     </div>
 </section>
 
@@ -434,18 +468,32 @@
          class="snap-section min-h-screen w-full flex flex-col pt-28 lg:pt-32 lg:justify-center relative overflow-hidden bg-white/5 dark:bg-darkBg/5 px-6 md:px-10">
 
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div class="absolute top-[10%] left-[5%] text-blue-500/20 dark:text-blue-400/15 text-7xl animate-float-slow"><i class="fab fa-python"></i></div>
-        <div class="absolute top-[40%] left-[2%] text-orange-500/20 dark:text-orange-400/15 text-6xl animate-float-delayed"><i class="fas fa-code-branch"></i></div>
-        <div class="absolute bottom-[15%] left-[8%] text-slate-700/20 dark:text-slate-300/15 text-6xl animate-float-slow"><i class="fas fa-terminal"></i></div>
-        <div class="absolute top-[70%] left-[12%] text-teal-500/20 dark:text-teal-400/15 text-5xl animate-float-delayed"><i class="fas fa-code"></i></div>
-        <div class="absolute top-[5%] left-[45%] text-amber-500/20 dark:text-amber-400/15 text-4xl animate-pulse"><i class="fas fa-microchip"></i></div>
-        <div class="absolute top-[50%] left-[48%] text-purple-500/20 dark:text-purple-400/15 text-5xl animate-float-slow"><i class="fas fa-brain"></i></div>
-        <div class="absolute bottom-[10%] left-[42%] text-sky-500/20 dark:text-sky-400/15 text-5xl animate-float-delayed"><i class="fas fa-cloud"></i></div>
-        <div class="absolute top-[15%] right-[5%] text-emerald-500/20 dark:text-emerald-400/15 text-7xl animate-float-slow"><i class="fas fa-database"></i></div>
-        <div class="absolute top-[45%] right-[8%] text-cyan-500/20 dark:text-cyan-400/15 text-4xl animate-float-delayed"><i class="fas fa-link"></i></div>
-        <div class="absolute bottom-[20%] right-[4%] text-rose-500/20 dark:text-rose-400/15 text-8xl font-mono animate-float-slow opacity-20">01</div>
-        <div class="absolute top-[75%] right-[12%] text-indigo-500/20 dark:text-indigo-400/15 text-6xl animate-float-delayed">{ }</div>
-        <div class="absolute top-[30%] right-[30%] text-orange-500/15 dark:text-orange-300/10 text-4xl -rotate-45 animate-float-slow"><i class="fas fa-rocket"></i></div>
+        <div class="absolute top-[10%] left-[5%] text-blue-500/20 dark:text-blue-400/15 text-7xl animate-float-slow"><i
+                class="fab fa-python"></i></div>
+        <div class="absolute top-[40%] left-[2%] text-orange-500/20 dark:text-orange-400/15 text-6xl animate-float-delayed">
+            <i class="fas fa-code-branch"></i></div>
+        <div class="absolute bottom-[15%] left-[8%] text-slate-700/20 dark:text-slate-300/15 text-6xl animate-float-slow">
+            <i class="fas fa-terminal"></i></div>
+        <div class="absolute top-[70%] left-[12%] text-teal-500/20 dark:text-teal-400/15 text-5xl animate-float-delayed">
+            <i class="fas fa-code"></i></div>
+        <div class="absolute top-[5%] left-[45%] text-amber-500/20 dark:text-amber-400/15 text-4xl animate-pulse"><i
+                class="fas fa-microchip"></i></div>
+        <div class="absolute top-[50%] left-[48%] text-purple-500/20 dark:text-purple-400/15 text-5xl animate-float-slow">
+            <i class="fas fa-brain"></i></div>
+        <div class="absolute bottom-[10%] left-[42%] text-sky-500/20 dark:text-sky-400/15 text-5xl animate-float-delayed">
+            <i class="fas fa-cloud"></i></div>
+        <div class="absolute top-[15%] right-[5%] text-emerald-500/20 dark:text-emerald-400/15 text-7xl animate-float-slow">
+            <i class="fas fa-database"></i></div>
+        <div class="absolute top-[45%] right-[8%] text-cyan-500/20 dark:text-cyan-400/15 text-4xl animate-float-delayed">
+            <i class="fas fa-link"></i></div>
+        <div class="absolute bottom-[20%] right-[4%] text-rose-500/20 dark:text-rose-400/15 text-8xl font-mono animate-float-slow opacity-20">
+            01
+        </div>
+        <div class="absolute top-[75%] right-[12%] text-indigo-500/20 dark:text-indigo-400/15 text-6xl animate-float-delayed">
+            { }
+        </div>
+        <div class="absolute top-[30%] right-[30%] text-orange-500/15 dark:text-orange-300/10 text-4xl -rotate-45 animate-float-slow">
+            <i class="fas fa-rocket"></i></div>
         <div class="absolute top-[10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-500/5 blur-[150px] rounded-full"></div>
         <div class="absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-500/5 blur-[150px] rounded-full"></div>
     </div>
@@ -454,7 +502,8 @@
         <div class="w-full mb-12 relative flex flex-col items-center">
             <div class="text-center" data-aos="fade-down">
                 <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight">
-                    {{ g.t['projects_title_main'] }} <span class="text-blue-500">{{ g.t['projects_title_accent'] }}</span>
+                    {{ g.t['projects_title_main'] }} <span
+                        class="text-blue-500">{{ g.t['projects_title_accent'] }}</span>
                 </h2>
                 <p class="text-slate-500 dark:text-slate-400 mt-2 font-mono text-[10px] uppercase tracking-[0.3em]">
                     {{ g.t['projects_subtitle'] }}
@@ -558,7 +607,8 @@
     <div class="max-w-[1800px] mx-auto w-full relative z-10 px-4 md:px-8 lg:px-12">
         <div class="text-center mb-16" data-aos="fade-down">
             <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
-                {{ g.t['exp_honors_title_main'] }} <span class="text-amber-500">{{ g.t['exp_honors_title_accent'] }}</span>
+                {{ g.t['exp_honors_title_main'] }} <span
+                    class="text-amber-500">{{ g.t['exp_honors_title_accent'] }}</span>
             </h2>
             <div class="h-1.5 w-24 bg-blue-600 mx-auto mt-4 rounded-full"></div>
         </div>
@@ -696,7 +746,8 @@
                 <div class="space-y-6" data-aos="fade-right">
                     <h1 class="text-xl md:text-2xl font-black text-blue-600 uppercase tracking-[0.3em] mb-10 flex items-center justify-center gap-4">
                         <div class="h-px w-12 bg-blue-600/40"></div>
-                        <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> {{ g.t['education_label'] }}
+                        <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> {{ g.t['education_label']
+                        }}
                         <div class="h-px w-12 bg-blue-600/40"></div>
                     </h1>
                     {% for edu in educations %}
@@ -707,7 +758,8 @@
                             </h4>
                             <span class="text-[10px] font-black text-blue-600">{{ edu.start_date.year }} - {{ edu.end_date.year }}</span>
                         </div>
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-4">{{ g.t.get(edu.institution|trim, edu.institution) }}</p>
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-4">{{ g.t.get(edu.institution|trim,
+                            edu.institution) }}</p>
 
                         <div class="p-5 bg-slate-100 dark:bg-black/20 rounded-2xl border border-slate-200/50 dark:border-slate-700/50">
                             <p class="text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
@@ -746,7 +798,8 @@
             <div class="lg:col-span-8 space-y-6" data-aos="fade-left">
                 <h3 class="text-xl md:text-2xl font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em] mb-10 flex items-center justify-center gap-4">
                     <div class="h-px w-12 bg-slate-400/20"></div>
-                    <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> {{ g.t['courses_label_section'] }}
+                    <span class="w-3 h-3 rounded-full bg-blue-600 animate-pulse"></span> {{ g.t['courses_label_section']
+                    }}
                     <div class="h-px w-12 bg-slate-400/20"></div>
                 </h3>
                 <div class="grid grid-cols-1 gap-4">
