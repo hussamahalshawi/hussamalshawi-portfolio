@@ -239,58 +239,60 @@
             </div>
         </div>
 
-        <div class="lg:w-1/2 w-full flex flex-col items-center lg:items-end mt-12 lg:mt-0" data-aos="zoom-in">
-    <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full max-w-[550px]">
+        <div class="lg:w-1/2 w-full flex justify-center lg:justify-end mt-12 lg:mt-0 aos-init aos-animate" data-aos="zoom-in">
+            <div class="relative rounded-[2.5rem] overflow-hidden border-[10px] border-white dark:border-slate-800 shadow-2xl w-full">
 
-        <div class="relative h-[500px] lg:h-[650px] overflow-hidden">
-            {% if user.profile_images %}
-                {% for img_url in user.profile_images %}
-                <div id="slide-{{ loop.index }}" class="absolute inset-0 transition-opacity duration-1000 {% if not loop.first %}opacity-0 pointer-events-none{% endif %}">
-                    <img src="{{ img_url if img_url.startswith('http') else url_for('static', filename='images/' + img_url) }}"
-                         class="w-full h-full object-cover transition-transform duration-1000 hover:scale-110">
+                <div class="relative h-[500px] lg:h-[650px] overflow-hidden">
+                    {% if user.profile_images %}
+                    {% for img_url in user.profile_images %}
+                    <div id="slide-{{ loop.index }}"
+                         class="absolute inset-0 transition-opacity duration-1000 {% if not loop.first %}opacity-0 pointer-events-none{% endif %}">
+                        <img src="{{ img_url if img_url.startswith('http') else url_for('static', filename='images/' + img_url) }}"
+                             class="w-full h-full object-cover transition-transform duration-1000 hover:scale-110">
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/hero-image.jpg') }}"
+                         class="w-full h-full object-cover">
+                    {% endif %}
                 </div>
-                {% endfor %}
-            {% else %}
-                <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" class="w-full h-full object-cover">
-            {% endif %}
+
+                {% if user.profile_images|length > 1 %}
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+                    {% for img_url in user.profile_images %}
+                    <button onclick="showSlide({{ loop.index }})"
+                            class="slide-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300 {% if loop.first %} !bg-blue-500 w-8 {% endif %}"
+                            data-slide="{{ loop.index }}">
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 border border-white/20 rounded-[2.5rem] pointer-events-none"></div>
+            </div>
         </div>
 
-        {% if user.profile_images|length > 1 %}
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-            {% for img_url in user.profile_images %}
-            <button onclick="showSlide({{ loop.index }})"
-                    class="slide-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300 {% if loop.first %} !bg-blue-500 w-8 {% endif %}"
-                    data-slide="{{ loop.index }}">
-            </button>
-            {% endfor %}
-        </div>
-        {% endif %}
+        <script>
+            function showSlide(index) {
+                // إخفاء كل الصور
+                document.querySelectorAll('[id^="slide-"]').forEach(el => {
+                    el.classList.add('opacity-0', 'pointer-events-none');
+                });
+                // إظهار الصورة المطلوبة
+                const activeSlide = document.getElementById('slide-' + index);
+                activeSlide.classList.remove('opacity-0', 'pointer-events-none');
 
-        <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-transparent pointer-events-none"></div>
-        <div class="absolute inset-0 border border-white/20 rounded-[2.5rem] pointer-events-none"></div>
-    </div>
-</div>
-
-<script>
-function showSlide(index) {
-    // إخفاء كل الصور
-    document.querySelectorAll('[id^="slide-"]').forEach(el => {
-        el.classList.add('opacity-0', 'pointer-events-none');
-    });
-    // إظهار الصورة المطلوبة
-    const activeSlide = document.getElementById('slide-' + index);
-    activeSlide.classList.remove('opacity-0', 'pointer-events-none');
-
-    // تحديث شكل النقاط (Dots)
-    document.querySelectorAll('.slide-dot').forEach(dot => {
-        dot.classList.remove('!bg-blue-500', 'w-8');
-        dot.classList.add('bg-white/50', 'w-3');
-    });
-    const activeDot = document.querySelector(`[data-slide="${index}"]`);
-    activeDot.classList.add('!bg-blue-500', 'w-8');
-    activeDot.classList.remove('w-3');
-}
-</script>
+                // تحديث شكل النقاط (Dots)
+                document.querySelectorAll('.slide-dot').forEach(dot => {
+                    dot.classList.remove('!bg-blue-500', 'w-8');
+                    dot.classList.add('bg-white/50', 'w-3');
+                });
+                const activeDot = document.querySelector(`[data-slide="${index}"]`);
+                activeDot.classList.add('!bg-blue-500', 'w-8');
+                activeDot.classList.remove('w-3');
+            }
+        </script>
     </div>
 </section>
 
@@ -548,16 +550,23 @@ function showSlide(index) {
             <div class="relative h-full flex flex-col bg-white dark:bg-[#0d1321] rounded-[2.8rem] overflow-hidden z-10 border border-slate-100 dark:border-slate-800/50 group-hover:border-blue-500/30 transition-colors duration-500 {{ 'text-right' if g.lang_config.direction == 'rtl' }}">
 
                 <div class="relative h-52 overflow-hidden m-2 rounded-[2.2rem]">
-                    <img src="{{ url_for('static', filename='images/' + (project.project_image[0] if project.project_image else 'default.jpg')) }}"
-                         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0d1321]/90 via-transparent to-transparent opacity-60 group-hover:opacity-90 transition-opacity"></div>
-                    <div class="absolute top-4 {{ 'right-4' if g.lang_config.direction == 'rtl' else 'left-4' }}">
-                <span class="px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white rounded-xl text-[8px] font-black uppercase tracking-tighter shadow-lg shadow-blue-900/40">
-                    {# Translate category tag #}
-                    {{ g.t.get(project.category.name, project.category.name if project.category else 'Dev') }}
-                </span>
-                    </div>
-                </div>
+    {# تحديد مسار الصورة الأولى أو الصورة الافتراضية #}
+    {% set img_path = project.project_image[0] if project.project_image else 'default.jpg' %}
+
+    {# فحص المسار: إذا كان يبدأ بـ http يستخدمه مباشرة، وإلا يجلبها من المجلد المحلي #}
+    <img src="{{ img_path if img_path.startswith('http') else url_for('static', filename='images/' + img_path) }}"
+         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+         alt="{{ project.project_name }}">
+
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0d1321]/90 via-transparent to-transparent opacity-60 group-hover:opacity-90 transition-opacity"></div>
+
+    <div class="absolute top-4 {{ 'right-4' if g.lang_config.direction == 'rtl' else 'left-4' }}">
+        <span class="px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white rounded-xl text-[8px] font-black uppercase tracking-tighter shadow-lg shadow-blue-900/40">
+            {# ترجمة اسم القسم #}
+            {{ g.t.get(project.category.name, project.category.name if project.category else 'Dev') }}
+        </span>
+    </div>
+</div>
 
                 <div class="p-6 flex flex-col flex-1">
                     <div class="flex items-center gap-2 mb-3 {{ 'flex-row-reverse' if g.lang_config.direction == 'rtl' }}">

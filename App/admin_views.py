@@ -111,95 +111,6 @@ class ProfileView(BaseSecureView):
 
         return super(ProfileView, self).on_model_change(form, model, is_created)
 
-    # English Comment: We use form_extra_fields to force Flask-Admin to render
-    # FileUpload elements instead of standard StringField text boxes for the list.
-
-
-# class ProfileView(BaseSecureView):
-#     """
-#     Admin View for Profile Management.
-#     Handles cloud image uploads via Cloudinary and updates MongoDB.
-#     """
-#     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
-#     column_labels = {
-#         'full_name': 'Full Name',
-#         'experience_years': 'Years of Exp',
-#         'overall_score': 'Master Score %'
-#     }
-#
-#     # Use FileUploadField to handle the binary stream from the browser
-#     form_overrides = {
-#         'profile_image': FileUploadField,
-#         'profile_image2': FileUploadField
-#     }
-#
-#     # Configuration for the form fields
-#     form_args = {
-#         'profile_image': {
-#             'label': 'Avatar Image (Cloud)',
-#             'base_path': Config.UPLOAD_PATH # Keep as fallback, but we will override logic
-#         },
-#         'profile_image2': {
-#             'label': 'Avatar Image 2 (Cloud)',
-#             'base_path': Config.UPLOAD_PATH
-#         }
-#     }
-#
-#     def on_model_change(self, form, model, is_created):
-#         """
-#         Intercepts the model saving process to upload files to Cloudinary
-#         instead of keeping them on the local Render filesystem.
-#         """
-#         try:
-#             # 1. Handle primary profile image
-#             if form.profile_image.data:
-#                 file_data = request.files.get('profile_image')
-#                 if file_data:
-#                     # Reset file pointer to the beginning to avoid "Empty file" error
-#                     file_data.seek(0)
-#                     cloud_url = upload_media_to_cloud(file_data, folder_name="profile")
-#                     if cloud_url:
-#                         model.profile_image = cloud_url
-#                     else:
-#                         flash("Failed to upload primary image to cloud.", "error")
-#
-#             # 2. Handle secondary profile image
-#             if form.profile_image2.data:
-#                 file_data2 = request.files.get('profile_image2')
-#                 if file_data2:
-#                     # Reset file pointer to the beginning to avoid "Empty file" error
-#                     file_data2.seek(0)
-#                     cloud_url2 = upload_media_to_cloud(file_data2, folder_name="profile")
-#                     if cloud_url2:
-#                         model.profile_image2 = cloud_url2
-#                     else:
-#                         flash("Failed to upload secondary image to cloud.", "error")
-#
-#         except Exception as e:
-#             # Log the error locally for debugging
-#             logger.error(f"Error in ProfileView model change: {str(e)}")
-#             flash(f"An error occurred during the cloud upload process: {str(e)}", "error")
-#
-#         # English Comment: This method ensures that the string saved in MongoDB
-#         # is the HTTPS URL from Cloudinary, not the local filename.
-#         return super(ProfileView, self).on_model_change(form, model, is_created)
-
-# class ProfileView(BaseSecureView):
-#     column_list = ('full_name', 'title', 'experience_years', 'overall_score', 'last_updated')
-#     column_labels = {
-#         'full_name': 'Full Name',
-#         'experience_years': 'Years of Exp',
-#         'overall_score': 'Master Score %'
-#     }
-#     form_overrides = {'profile_image': FileUploadField, 'profile_image2': FileUploadField}
-#     form_args = {
-#         'profile_image': {'label': 'Avatar Image',
-#                           'base_path': Config.UPLOAD_PATH,
-#                           'allow_overwrite': True},
-#         'profile_image2': {'label': 'Avatar Image2',
-#                           'base_path': Config.UPLOAD_PATH,
-#                           'allow_overwrite': True}
-#     }
 
 
 class EducationView(BaseSecureView):
@@ -216,48 +127,63 @@ class CourseView(BaseSecureView):
     column_labels = {'acquired_skills': 'Required Skills'}
 
 
-class ProjectView(ModelView):
+class ProjectView(BaseSecureView):  # تأكد من الوراثة من BaseSecureView للأمان
     """
-    إدارة مشاريع حسام: تتيح اختيار صور متعددة من الجهاز
-    وتخزين مساراتها في ListField.
+    إدارة مشاريع حسام: تتيح اختيار صور متعددة ورفعها مباشرة إلى Cloudinary.
     """
+    column_list = ('project_name', 'project_type', 'last_updated')
 
-    # 2. إضافة حقل اختيار الملفات من الجهاز (بدلاً من الكتابة اليدوية)
+    # 1. حقل اختيار ملفات متعددة من الجهاز
     form_extra_fields = {
-        'image_selector': MultipleFileField('اختر صور المشروع من جهازك')
+        'image_selector': MultipleFileField('Upload Project Images to Cloud')
     }
 
-    # 3. إخفاء حقل القائمة الأصلي لكي لا يظهر كصندوق نصي (String)
+    # 2. إخفاء الحقل النصي الأصلي (ListField) لضمان تجربة مستخدم نظيفة
     form_excluded_columns = ['project_image']
 
     def on_model_change(self, form, model, is_created):
         """
-        هذا الكود يعمل عند الضغط على Save:
-        يأخذ الملفات من جهازك، يحفظها في المجلد، ويضع روابطها في الداتابيز.
+        عند الحفظ: يتم رفع الصور للسحاب وتخزين الروابط في مصفوفة project_image.
         """
-        # جلب الملفات المرفوعة من الحقل الإضافي 'image_selector'
-        files = request.files.getlist('image_selector')
+        try:
+            # جلب قائمة الملفات من الحقل الإضافي
+            files = request.files.getlist('image_selector')
 
-        # التأكد من أن المستخدم اختار ملفات فعلاً
-        if files and files[0].filename != '':
-            model.project_image = []
+            # التحقق من وجود ملفات مختارة
+            if files and any(f.filename != '' for f in files):
+                # تفريغ القائمة القديمة إذا كنت تريد استبدال الصور بالكامل
+                # أو يمكنك الإبقاء عليها والإضافة باستخدام append
+                new_cloud_urls = []
 
-            for file in files:
-                if file:
-                    # تنظيف اسم الملف وحفظه في السيرفر المحلي
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(Config.UPLOAD_PATH, filename))
+                for file in files:
+                    if file and file.filename != '':
+                        try:
+                            file.seek(0)
+                            cloud_url = upload_media_to_cloud(file, folder_name="projects")
 
-                    # حفظ المسار النسبي (Relative Path) لسهولة العرض بـ url_for
-                    db_path = f"{Config.UPLOAD_PATH}/{filename}"
+                            if cloud_url:
+                                new_cloud_urls.append(cloud_url)
+                            else:
+                                # تسجيل الخطأ للملف المحدد فقط
+                                logger.warning(f"⚠️ Skip: {file.filename} failed to upload.")
 
-                    # إضافة المسار للقائمة (ListField)
-                    if filename not in model.project_image:
-                        model.project_image.append(filename)
+                        except Exception as file_error:
+                            # منع انهيار العملية كاملة بسبب ملف واحد
+                            logger.error(f"❌ Error uploading {file.filename}: {str(file_error)}")
+                            continue
+                # تحديث الموديل بالروابط السحابية الجديدة
+                if new_cloud_urls:
+                    model.project_image = new_cloud_urls
+                    flash(f"Successfully uploaded {len(new_cloud_urls)} images to Cloudinary.", "success")
 
-        # ملاحظة: يمكنك إضافة دالة هنا لمسح الصور القديمة إذا أردت (اختياري)
-        print(f"✅ تم رفع {len(model.project_image)} صور للمشروع بنجاح.")
+        except Exception as e:
+            logger.error(f"Error in ProjectView (Cloud Upload): {str(e)}")
+            flash(f"An error occurred: {str(e)}", "error")
 
+        return super(ProjectView, self).on_model_change(form, model, is_created)
+
+    # English Comment: This view overrides the local storage logic to stream
+    # multiple files directly to Cloudinary and store the secure HTTPS URLs in MongoDB.
 
 class CategoryView(BaseSecureView):
     column_list = ('name', 'description', 'created_at')
